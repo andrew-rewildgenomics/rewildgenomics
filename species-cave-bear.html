@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cave Bear — Rewild Genomics</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,200;1,9..144,300;1,9..144,400&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --void: #080C09; --deep: #0F1810; --forest: #162012;
+    --fern: #8FBC6A; --cream: #F4F0E8;
+    --species-color: #D4A882; /* cave bear — warm terracotta */
+    --species-dim: #8A6248;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Instrument Sans', sans-serif; background: var(--void); color: var(--cream); overflow-x: hidden; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; padding: 20px 56px; display: flex; align-items: center; justify-content: space-between; background: rgba(8,12,9,0.88); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(143,188,106,0.07); }
+  .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .logo-mark { width: 28px; height: 28px; border: 1px solid rgba(143,188,106,0.35); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .logo-mark::after { content: ''; width: 7px; height: 7px; background: var(--fern); border-radius: 50%; opacity: 0.8; }
+  .logo-text { font-family: 'Fraunces', serif; font-weight: 300; font-size: 15px; color: var(--cream); }
+  .nav-back { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(244,240,232,0.35); text-decoration: none; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; }
+  .nav-back:hover { color: var(--fern); }
+  .nav-right { display: flex; align-items: center; gap: 32px; }
+  .nav-species-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.7; }
+  .species-hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 0 80px; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: var(--void); }
+  .hero-bg::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 65% 55% at 60% 50%, rgba(212,168,130,0.09) 0%, transparent 55%), radial-gradient(ellipse 35% 40% at 5% 85%, rgba(59,92,42,0.07) 0%, transparent 50%); }
+  .hero-bg::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(212,168,130,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(212,168,130,0.025) 1px, transparent 1px); background-size: 80px 80px; mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%); }
+  .hero-content { position: relative; z-index: 2; padding: 0 56px; max-width: 860px; }
+  .hero-breadcrumb { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.3); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 32px; display: flex; align-items: center; gap: 10px; }
+  .hero-breadcrumb span { color: var(--species-color); opacity: 0.7; }
+  .extinct-badge { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 14px; border-radius: 2px; background: rgba(212,168,130,0.08); border: 1px solid rgba(212,168,130,0.18); color: var(--species-color); }
+  .extinct-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--species-color); opacity: 0.7; }
+  .hero-title { font-family: 'Fraunces', serif; font-size: clamp(60px, 9vw, 120px); font-weight: 200; line-height: 0.92; letter-spacing: -3px; color: var(--cream); margin-bottom: 12px; }
+  .hero-sci { font-family: 'DM Mono', monospace; font-size: 14px; font-style: italic; color: rgba(244,240,232,0.3); letter-spacing: 0.5px; margin-bottom: 32px; }
+  .hero-tagline { font-size: 16px; color: rgba(244,240,232,0.55); line-height: 1.7; font-weight: 300; max-width: 540px; margin-bottom: 56px; }
+  .hero-stats { display: flex; gap: 0; border-top: 1px solid rgba(244,240,232,0.07); padding-top: 36px; }
+  .h-stat { flex: 1; padding: 0 32px 0 0; border-right: 1px solid rgba(244,240,232,0.07); }
+  .h-stat:first-child { padding-left: 0; } .h-stat:last-child { border-right: none; }
+  .h-stat-val { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 200; color: var(--species-color); letter-spacing: -1px; margin-bottom: 4px; }
+  .h-stat-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.3); letter-spacing: 1px; text-transform: uppercase; }
+  .content-section { padding: 96px 56px; max-width: 1200px; margin: 0 auto; }
+  .content-section.alt { background: var(--deep); max-width: none; padding: 96px 0; }
+  .content-section.alt .inner { max-width: 1200px; margin: 0 auto; padding: 0 56px; }
+  .section-tag { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .section-tag::before { content: ''; width: 20px; height: 1px; background: var(--species-color); opacity: 0.5; }
+  .section-title { font-family: 'Fraunces', serif; font-size: clamp(32px, 4vw, 52px); font-weight: 200; color: var(--cream); letter-spacing: -1.5px; line-height: 1.05; margin-bottom: 40px; }
+  .section-title em { font-style: italic; color: var(--species-color); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  .body-text { font-size: 15px; color: rgba(244,240,232,0.6); line-height: 1.85; font-weight: 300; }
+  .body-text p + p { margin-top: 20px; }
+  .body-text strong { color: var(--cream); font-weight: 400; }
+  .pullquote { border-left: 2px solid var(--species-color); padding-left: 28px; margin: 40px 0; font-family: 'Fraunces', serif; font-size: 22px; font-weight: 200; font-style: italic; color: rgba(244,240,232,0.75); line-height: 1.5; letter-spacing: -0.3px; }
+  .timeline { position: relative; padding-left: 32px; margin-top: 48px; }
+  .timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 1px; background: linear-gradient(180deg, var(--species-color), transparent); opacity: 0.3; }
+  .t-event { position: relative; margin-bottom: 40px; }
+  .t-event::before { content: ''; position: absolute; left: -36px; top: 6px; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--species-color); background: var(--void); }
+  .t-date { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .t-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 300; color: var(--cream); margin-bottom: 8px; letter-spacing: -0.3px; }
+  .t-desc { font-size: 13px; color: rgba(244,240,232,0.45); line-height: 1.7; font-weight: 300; }
+  .genomics-box { background: rgba(212,168,130,0.05); border: 1px solid rgba(212,168,130,0.15); border-radius: 4px; padding: 40px; }
+  .genomics-box h3 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 300; color: var(--cream); margin-bottom: 16px; letter-spacing: -0.5px; }
+  .genomics-box p { font-size: 14px; color: rgba(244,240,232,0.55); line-height: 1.8; font-weight: 300; }
+  .genomics-box p + p { margin-top: 14px; }
+  .data-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .data-tag { font-family: 'DM Mono', monospace; font-size: 10px; padding: 5px 12px; border-radius: 2px; background: rgba(212,168,130,0.08); border: 1px solid rgba(212,168,130,0.15); color: var(--species-color); letter-spacing: 0.8px; }
+  .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px; }
+  .impact-card { background: rgba(15,24,16,0.6); border: 1px solid rgba(244,240,232,0.05); padding: 32px 28px; transition: background 0.25s; }
+  .impact-card:hover { background: rgba(212,168,130,0.05); border-color: rgba(212,168,130,0.12); }
+  .impact-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1.5px; margin-bottom: 14px; opacity: 0.6; }
+  .impact-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 300; color: var(--cream); margin-bottom: 10px; letter-spacing: -0.3px; }
+  .impact-desc { font-size: 13px; color: rgba(244,240,232,0.45); line-height: 1.7; font-weight: 300; }
+  .back-strip { background: var(--forest); border-top: 1px solid rgba(244,240,232,0.06); padding: 56px; display: flex; align-items: center; justify-content: space-between; }
+  .back-strip h3 { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 300; color: var(--cream); }
+  .back-strip p { font-size: 13px; color: rgba(244,240,232,0.4); margin-top: 4px; }
+  .btn-species { display: inline-block; border: 1px solid rgba(143,188,106,0.3); color: var(--fern); background: transparent; padding: 12px 28px; border-radius: 2px; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
+  .btn-species:hover { background: rgba(143,188,106,0.08); }
+  footer { background: var(--void); border-top: 1px solid rgba(244,240,232,0.06); padding: 40px 56px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+  .footer-links { display: flex; gap: 24px; list-style: none; }
+  .footer-links a { font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase; color: rgba(244,240,232,0.2); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--fern); }
+  .footer-note { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.15); }
+  @media (max-width: 900px) { nav { padding: 18px 24px; } .hero-content { padding: 0 24px; } .hero-title { font-size: clamp(48px, 15vw, 90px); letter-spacing: -2px; } .hero-stats { flex-wrap: wrap; gap: 24px; } .h-stat { border-right: none; padding: 0; flex: 0 0 45%; } .content-section { padding: 64px 24px; } .content-section.alt .inner { padding: 0 24px; } .two-col { grid-template-columns: 1fr; gap: 40px; } .impact-grid { grid-template-columns: 1fr; } .back-strip { flex-direction: column; align-items: flex-start; gap: 20px; padding: 40px 24px; } footer { padding: 32px 24px; flex-direction: column; } }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo"><div class="logo-mark"></div><span class="logo-text">Rewild Genomics</span></a>
+  <div class="nav-right"><span class="nav-species-label">Species Program</span><a href="index.html#deextinction" class="nav-back">← All Species</a></div>
+</nav>
+
+<section class="species-hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-breadcrumb">Rewild Genomics <span>/</span> De-extinction Programs <span>/</span> Cave Bear</div>
+    <div class="extinct-badge">Extinct · ~24,000 BP</div>
+    <h1 class="hero-title">Cave<br>Bear</h1>
+    <div class="hero-sci">Ursus spelaeus</div>
+    <p class="hero-tagline">The largest bear to ever walk the Earth lived not in open wilderness but deep in cave systems across Europe — sacred enough to ancient humans that their skulls were arranged in ritual formations. Then, at the peak of the last Ice Age, they were gone.</p>
+    <div class="hero-stats">
+      <div class="h-stat"><div class="h-stat-val">~1.2M</div><div class="h-stat-label">Years on Earth</div></div>
+      <div class="h-stat"><div class="h-stat-val">~1.7m</div><div class="h-stat-label">Shoulder height</div></div>
+      <div class="h-stat"><div class="h-stat-val">~1,000 kg</div><div class="h-stat-label">Maximum mass</div></div>
+      <div class="h-stat"><div class="h-stat-val">Carnivora</div><div class="h-stat-label">Order</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="content-section">
+  <div class="two-col">
+    <div>
+      <div class="section-tag">Natural history</div>
+      <h2 class="section-title">Lords of the<br><em>limestone</em></h2>
+      <div class="body-text">
+        <p>Despite its fearsome name and size, the cave bear was predominantly herbivorous — its teeth and jaw structure strongly suggest a diet of plants, berries, roots, and possibly honey, more similar to a giant panda than to the brown bear it resembled externally. The "cave" in its name comes not from predatory hunting behavior but from its extraordinary use of limestone cave systems for hibernation.</p>
+        <p>Cave bears hibernated in enormous numbers in the same cave systems year after year, generation after generation. The floors of caves across Europe — particularly in the Alps, the Carpathians, and the Caucasus — are carpeted with their bones: at Drachenhöhle in Austria alone, the remains of over 30,000 individual bears have been found.</p>
+        <p>These cave systems became, in a sense, the cave bear's great vulnerability. When Neanderthals and then anatomically modern humans began competing for the same sheltered spaces — for fire, for storage, for winter refuge — they were directly displacing the cave bear from the habitat it depended on for survival.</p>
+      </div>
+    </div>
+    <div>
+      <div class="pullquote">"Cave bears hibernated in such numbers that their bones form the literal floors of Alpine cave systems."</div>
+      <div class="body-text">
+        <p>The cave bear holds a unique place in the archaeology of early human ritual. At the Neanderthal site of Bruniquel Cave in France, cave bear skulls were arranged in deliberate patterns alongside stone structures — one of the earliest known examples of symbolic human behavior, dating to approximately 176,000 years ago.</p>
+        <p>This means Neanderthals and cave bears shared Europe for hundreds of thousands of years — a coexistence that somehow worked until modern humans arrived and changed the competitive dynamics entirely.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="content-section alt">
+  <div class="inner">
+    <div class="section-tag">Extinction</div>
+    <h2 class="section-title">Squeezed out<br>from <em>every side</em></h2>
+    <div class="two-col">
+      <div class="body-text">
+        <p>The cave bear's extinction, finalized around 24,000 years ago at the peak of the Last Glacial Maximum, is a case study in how multiple pressures can collapse even a large, successful species when they arrive simultaneously.</p>
+        <p>Genomic studies have revealed a gradual population decline beginning around 50,000 years ago — coinciding with the arrival of anatomically modern humans in Europe. This was not a sudden crash but a slow compression over tens of thousands of years as the bears were progressively pushed out of their cave systems and their forest habitats fragmented under glacial cooling.</p>
+        <p>The bear's specialized dependence on caves for hibernation was its critical vulnerability. Modern humans, arriving with fire and advanced tool technology, had strong incentives to claim the same limestone cave systems — and they did so systematically. Cave bear remains in human-occupied sites show consistent evidence of hunting and butchering; the bears were killed for meat, fat, and fur.</p>
+        <p>By the time the Last Glacial Maximum hit — the coldest period of the last ice age, around 26,000–20,000 BP — the cave bear had lost most of its range, most of its hibernation habitat, and much of its genetic diversity. The final populations were too small and too fragmented to recover.</p>
+      </div>
+      <div>
+        <div class="timeline">
+          <div class="t-event"><div class="t-date">~1,200,000 BP</div><div class="t-title">Divergence from brown bear</div><div class="t-desc">Ursus spelaeus diverges from the lineage that will produce the modern brown bear and American black bear. The cave bear specializes for European forest and cave ecosystems.</div></div>
+          <div class="t-event"><div class="t-date">~400,000–50,000 BP</div><div class="t-title">Peak abundance across Europe</div><div class="t-desc">Cave bears range from the Iberian Peninsula to the Urals. Neanderthals coexist with them, competing for caves but apparently not driving significant population decline.</div></div>
+          <div class="t-event"><div class="t-date">~50,000 BP</div><div class="t-title">Modern humans arrive in Europe</div><div class="t-desc">Genomic data shows the beginning of cave bear population decline correlating with Homo sapiens expansion into Europe. Cave displacement and hunting pressure begins.</div></div>
+          <div class="t-event"><div class="t-date">~30,000–24,000 BP</div><div class="t-title">Rapid collapse</div><div class="t-desc">Population fragmentation accelerates as climate cools and human settlements expand. The bears are hemmed in on all sides — no new caves, no new forests, no escape.</div></div>
+          <div class="t-event"><div class="t-date">~24,000 BP</div><div class="t-title">Final extinction</div><div class="t-desc">The last cave bears disappear from the fossil record. Their remains fill hundreds of European cave systems — a vast, silent archive waiting to be read.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="impact-grid" style="margin-top:64px;">
+      <div class="impact-card"><div class="impact-num">Factor 01</div><div class="impact-title">Cave Competition</div><div class="impact-desc">Human occupation of limestone cave systems directly displaced cave bears from their essential hibernation habitat. Unlike brown bears, which can den in excavated burrows or dense vegetation, cave bears were highly dependent on specific cave structures.</div></div>
+      <div class="impact-card"><div class="impact-num">Factor 02</div><div class="impact-title">Direct Hunting</div><div class="impact-desc">Butchering marks on cave bear bones at multiple European archaeological sites confirm systematic hunting. Cave bear fur, fat, and meat were valuable resources to Paleolithic humans navigating harsh glacial winters.</div></div>
+      <div class="impact-card"><div class="impact-num">Factor 03</div><div class="impact-title">Habitat Fragmentation</div><div class="impact-desc">The Last Glacial Maximum compressed European forests into isolated refugia, fragmenting cave bear populations. Genomic analysis reveals progressive loss of genetic diversity during this period, leaving remaining populations too small to sustain themselves.</div></div>
+    </div>
+  </div>
+</div>
+
+<section class="content-section">
+  <div class="section-tag">Genomics research</div>
+  <h2 class="section-title">A Middle Pleistocene<br><em>genome calibrated</em></h2>
+  <div class="two-col">
+    <div class="body-text">
+      <p>The cave bear has exceptional genomic coverage compared to most extinct species. Because cave systems act as natural bone preservation chambers — stable temperature, humidity, and chemistry — cave bear specimens from across Europe have yielded DNA ranging from 24,000 to over 300,000 years old. Multiple nuclear genomes have been published, along with extensive mitochondrial datasets.</p>
+      <p>A landmark 2020 study published in <em>Current Biology</em> produced a Middle Pleistocene cave bear genome — one of the oldest near-complete nuclear genomes of any extinct species — allowing researchers to calibrate the evolutionary history of bears across over a million years.</p>
+      <p>The cave bear and modern brown bear are more closely related than either is to the American black bear — their genomes show extensive ancient hybridization, with evidence of gene flow between the two species occurring even as cave bear populations were declining. The brown bear is therefore a strong candidate proxy species for any future de-extinction work.</p>
+    </div>
+    <div class="genomics-box">
+      <h3>Research program: Cave Bear</h3>
+      <p>Rewild Genomics is building alignment and comparative analysis pipelines for cave bear genomic data, with particular focus on the herbivory-associated gene clusters that distinguish cave bears from omnivorous brown bears — a rare case of a large carnivoran evolving toward herbivory, with implications for understanding dietary adaptation in mammals broadly.</p>
+      <p>The cave bear's deep genomic record also makes it valuable as a temporal calibration species for testing our aDNA damage-correction and assembly tools across a range of specimen ages.</p>
+      <div class="data-row">
+        <span class="data-tag">Multiple nuclear genomes</span>
+        <span class="data-tag">300K+ year specimens</span>
+        <span class="data-tag">Brown bear proxy</span>
+        <span class="data-tag">NCBI / GenBank</span>
+        <span class="data-tag">Dietary adaptation loci</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="back-strip">
+  <div><h3>Continue exploring species programs</h3><p>Six de-extinction research programs — all built on publicly available genomic data.</p></div>
+  <a href="index.html#deextinction" class="btn-species">← Back to all species</a>
+</div>
+<footer>
+  <a href="index.html" class="nav-logo"><div class="logo-mark"></div><span class="logo-text">Rewild Genomics</span></a>
+  <ul class="footer-links"><li><a href="index.html#deextinction">De-extinction</a></li><li><a href="index.html#tools">Tools</a></li><li><a href="index.html#mission">Mission</a></li><li><a href="https://rewildutah.com">RewildUtah.com</a></li></ul>
+  <span class="footer-note">UVU Biotechnology · Utah · 2025</span>
+</footer>
+</body>
+</html>
