@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pleistocene Megafauna Atlas — Rewild Genomics</title>
+<link rel="icon" type="image/png" href="rewild-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,200;1,9..144,300;1,9..144,400&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --void: #080C09;
+  --deep: #0F1810;
+  --forest: #162012;
+  --fern: #8FBC6A;
+  --cream: #F4F0E8;
+  --muted: rgba(244,240,232,0.45);
+  --dim: rgba(244,240,232,0.18);
+  --border: rgba(143,188,106,0.08);
+  --border-strong: rgba(143,188,106,0.14);
+  --amber: #C8842A;
+  --accent: #E8C472;
+}
+html, body { height: 100%; overflow: hidden; }
+body { font-family: 'Instrument Sans', sans-serif; background: var(--void); color: var(--cream); }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: rgba(143,188,106,0.15); border-radius: 2px; }
+
+/* ── APP SHELL ── */
+#app { display: flex; flex-direction: column; height: 100vh; }
+
+/* ── TOP BAR ── */
+#topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; height: 52px;
+  background: rgba(8,12,9,0.92); backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0; gap: 16px; z-index: 50;
+}
+#wordmark {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase;
+  color: rgba(244,240,232,0.2);
+  white-space: nowrap;
+}
+#wordmark b { color: var(--fern); font-weight: 400; }
+#wordmark span { color: var(--accent); }
+.nav-back-link {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 1px; text-transform: uppercase;
+  color: rgba(244,240,232,0.18); text-decoration: none;
+  transition: color 0.18s; white-space: nowrap;
+}
+.nav-back-link:hover { color: var(--fern); }
+#layer-tabs { display: flex; gap: 2px; }
+.ltab {
+  padding: 5px 16px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(244,240,232,0.25);
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase;
+  cursor: pointer; border-radius: 2px; transition: all 0.18s;
+}
+.ltab:hover:not(.on) { color: rgba(244,240,232,0.5); border-color: var(--border); }
+.ltab.on { color: var(--accent); border-color: rgba(232,196,114,0.25); background: rgba(232,196,114,0.06); }
+#epoch-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 0.8px;
+  color: rgba(244,240,232,0.25);
+  white-space: nowrap; font-style: italic;
+}
+
+/* ── MAIN ── */
+#main { display: flex; flex: 1; overflow: hidden; min-height: 0; }
+
+/* ── SIDEBAR ── */
+#sidebar {
+  width: 224px; flex-shrink: 0;
+  background: var(--deep);
+  border-right: 1px solid var(--border);
+  overflow-y: auto; display: flex; flex-direction: column;
+}
+.sb-section { padding: 20px 16px 12px; }
+.sb-section + .sb-section { border-top: 1px solid var(--border); }
+.sb-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(244,240,232,0.2); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.sb-tag::before { content: ''; width: 16px; height: 1px; background: rgba(244,240,232,0.1); display: block; }
+
+/* Species toggle buttons */
+.sp-btn {
+  display: flex; align-items: center; gap: 9px;
+  width: 100%; padding: 6px 8px;
+  background: transparent; border: none;
+  cursor: pointer; border-radius: 2px;
+  margin-bottom: 1px; transition: background 0.12s;
+  font-family: 'Instrument Sans', sans-serif; text-align: left;
+}
+.sp-btn:hover { background: rgba(143,188,106,0.05); }
+.sp-btn.on { background: rgba(143,188,106,0.06); }
+.sp-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; transition: opacity 0.3s; }
+.sp-name { font-size: 11px; font-weight: 300; color: rgba(244,240,232,0.4); flex: 1; line-height: 1.3; transition: color 0.2s; }
+.sp-btn.on .sp-name { color: rgba(244,240,232,0.8); }
+.sp-role-tag {
+  font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 0.8px;
+  color: rgba(244,240,232,0.15); text-transform: uppercase; flex-shrink: 0;
+}
+.sp-btn.on .sp-role-tag { color: rgba(244,240,232,0.3); }
+
+/* Modern layer controls */
+.overlay-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 7px 8px; border: 1px solid var(--border); border-radius: 2px;
+  margin-bottom: 3px; cursor: pointer; transition: all 0.15s;
+}
+.overlay-row:hover, .overlay-row.on { border-color: var(--border-strong); background: rgba(143,188,106,0.04); }
+.overlay-label { font-size: 11px; font-weight: 300; color: rgba(244,240,232,0.4); }
+.overlay-row.on .overlay-label { color: rgba(244,240,232,0.7); }
+.overlay-state { font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 1px; color: rgba(143,188,106,0.4); }
+.overlay-row.on .overlay-state { color: var(--fern); }
+
+/* Region cards */
+.region-card {
+  border: 1px solid var(--border); border-radius: 2px;
+  padding: 10px 10px 8px; margin-bottom: 3px;
+  transition: border-color 0.15s;
+}
+.region-card:hover { border-color: var(--border-strong); }
+.region-name { font-size: 11px; font-weight: 300; color: rgba(244,240,232,0.5); margin-bottom: 5px; }
+.region-score-num { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 200; letter-spacing: -0.5px; }
+.region-land { font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 0.5px; color: rgba(244,240,232,0.15); margin-top: 3px; }
+
+/* Scenario */
+.cascade-panel {
+  border: 1px solid rgba(143,188,106,0.12); border-radius: 2px;
+  padding: 12px; margin-top: 10px;
+  background: rgba(15,24,16,0.6);
+}
+.cascade-tag {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1.2px;
+  text-transform: uppercase; color: rgba(143,188,106,0.4); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.cascade-tag::before { content: ''; width: 12px; height: 1px; background: rgba(143,188,106,0.3); }
+.cascade-item { display: flex; gap: 6px; margin-bottom: 7px; }
+.cascade-arrow { color: rgba(143,188,106,0.5); font-size: 11px; flex-shrink: 0; margin-top: 2px; }
+.cascade-text { font-size: 10px; font-weight: 300; color: rgba(143,188,106,0.65); line-height: 1.6; }
+
+/* ── MAP AREA ── */
+#map-wrap { flex: 1; position: relative; overflow: hidden; background: var(--void); min-width: 0; }
+#map-svg { width: 100%; height: 100%; display: block; }
+#map-svg .state { fill: #0d1209; stroke: #1a2318; stroke-width: 0.4; }
+#map-svg .state-border { fill: none; stroke: #232f1e; stroke-width: 0.7; }
+
+/* Map overlays */
+.map-tag {
+  position: absolute; top: 14px; left: 14px;
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1.3px;
+  text-transform: uppercase; color: var(--accent);
+  background: rgba(8,12,9,0.85); border: 1px solid rgba(232,196,114,0.18);
+  border-radius: 2px; padding: 4px 10px; pointer-events: none;
+}
+.map-hint {
+  position: absolute; top: 14px; left: 168px;
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.6px;
+  color: rgba(244,240,232,0.2);
+  background: rgba(8,12,9,0.75); border: 1px solid var(--border);
+  border-radius: 2px; padding: 4px 10px; pointer-events: none;
+}
+
+/* Legend */
+#legend {
+  position: absolute; bottom: 80px; left: 14px;
+  background: rgba(8,12,9,0.88); border: 1px solid var(--border);
+  border-radius: 2px; padding: 12px 14px; pointer-events: none;
+}
+.leg-title {
+  font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 1.3px;
+  text-transform: uppercase; color: rgba(244,240,232,0.18); margin-bottom: 8px;
+}
+.leg-row { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; }
+.leg-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.leg-text { font-size: 10px; font-weight: 300; color: rgba(244,240,232,0.35); }
+.leg-div { height: 1px; background: var(--border); margin: 6px 0; }
+.leg-dash { width: 14px; height: 0; border-top: 1px dashed rgba(244,240,232,0.2); flex-shrink: 0; }
+
+/* Tooltip */
+#tooltip {
+  position: fixed; display: none;
+  background: rgba(8,12,9,0.95); border: 1px solid rgba(232,196,114,0.2);
+  border-radius: 2px; padding: 5px 10px;
+  font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent);
+  letter-spacing: 0.5px; pointer-events: none; white-space: nowrap; z-index: 200;
+}
+
+/* ── TIMELINE ── */
+#timeline {
+  padding: 10px 32px 11px;
+  background: rgba(8,12,9,0.92); border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+#tl-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 7px; }
+#tl-epoch {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1px;
+  color: var(--accent); text-transform: uppercase;
+}
+#tl-desc { font-size: 10px; font-weight: 300; color: rgba(244,240,232,0.25); font-style: italic; }
+#tl-slider {
+  width: 100%; height: 2px; -webkit-appearance: none; appearance: none;
+  background: linear-gradient(to right, #7a5a28 0%, #c8842a 35%, #3B5C2A 65%, #1a2c3a 100%);
+  border-radius: 1px; outline: none; cursor: pointer; display: block;
+}
+#tl-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 12px; height: 12px;
+  background: var(--accent); border-radius: 50%; border: 2px solid var(--void); cursor: pointer;
+}
+#tl-slider::-moz-range-thumb {
+  width: 12px; height: 12px;
+  background: var(--accent); border-radius: 50%; border: 2px solid var(--void); cursor: pointer;
+}
+#tl-marks { display: flex; justify-content: space-between; margin-top: 5px; }
+.tl-m { font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 0.6px; color: rgba(244,240,232,0.15); }
+
+/* ── DETAIL PANEL ── */
+#panel {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 304px;
+  background: var(--deep); border-left: 1px solid var(--border);
+  overflow-y: auto; transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(.2,.8,.2,1); z-index: 40;
+}
+#panel.open { transform: translateX(0); }
+#panel-close {
+  position: absolute; top: 14px; right: 14px;
+  background: transparent; border: 1px solid var(--border);
+  color: rgba(244,240,232,0.3); width: 22px; height: 22px; border-radius: 2px;
+  cursor: pointer; font-size: 16px; line-height: 1; display: flex;
+  align-items: center; justify-content: center;
+  font-family: 'Instrument Sans', sans-serif; transition: all 0.15s;
+}
+#panel-close:hover { border-color: var(--border-strong); color: rgba(244,240,232,0.6); }
+#panel-head { padding: 22px 16px 14px; border-bottom: 1px solid var(--border); }
+.ph-badges { display: flex; gap: 5px; margin-bottom: 10px; flex-wrap: wrap; }
+.ph-badge {
+  font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 1px;
+  text-transform: uppercase; padding: 3px 8px; border-radius: 2px;
+}
+.b-extinct { background: rgba(200,132,42,0.1); border: 1px solid rgba(200,132,42,0.2); color: var(--amber); }
+.b-apex    { background: rgba(143,100,200,0.08); border: 1px solid rgba(143,100,200,0.18); color: #a070d8; }
+.b-meso    { background: rgba(80,120,180,0.08); border: 1px solid rgba(80,120,180,0.18); color: #6090c8; }
+.b-grazer  { background: rgba(143,188,106,0.08); border: 1px solid rgba(143,188,106,0.18); color: var(--fern); }
+.b-browser { background: rgba(200,132,42,0.07); border: 1px solid rgba(200,132,42,0.16); color: #b87840; }
+#ph-name { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 200; letter-spacing: -0.5px; color: var(--cream); margin-bottom: 3px; }
+#ph-sci { font-family: 'DM Mono', monospace; font-size: 10px; font-style: italic; color: rgba(244,240,232,0.2); letter-spacing: 0.3px; }
+#panel-body { padding: 16px; }
+.ps { margin-bottom: 18px; }
+.ps-tag {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: rgba(244,240,232,0.2);
+  margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+}
+.ps-tag::before { content: ''; width: 14px; height: 1px; background: rgba(244,240,232,0.12); display: block; }
+.ps-body { font-size: 12px; font-weight: 300; color: rgba(244,240,232,0.55); line-height: 1.75; }
+.stat-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.stat-lbl { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.5px; color: rgba(244,240,232,0.2); }
+.stat-val { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 200; color: var(--accent); letter-spacing: -0.2px; }
+.illus {
+  width: 100%; height: 160px;
+  background: rgba(8,12,9,0.8); border: 1px solid var(--border); border-radius: 2px;
+  overflow: hidden; display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px; position: relative;
+}
+.illus svg { width: 100%; height: 100%; }
+.illus img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center 30%;
+  display: block; filter: saturate(0.85) brightness(0.92);
+}
+.illus-caption {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 0.8px;
+  color: rgba(244,240,232,0.3); padding: 5px 8px;
+  background: linear-gradient(transparent, rgba(8,12,9,0.7));
+  text-transform: uppercase;
+}
+.analog-box {
+  background: rgba(8,12,9,0.5); border: 1px solid var(--border-strong);
+  border-radius: 2px; padding: 12px 13px;
+}
+.analog-name { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 300; color: var(--cream); margin-bottom: 4px; letter-spacing: -0.2px; }
+.analog-desc { font-size: 11px; font-weight: 300; color: rgba(244,240,232,0.4); line-height: 1.7; }
+.niche-box {
+  background: rgba(200,132,42,0.05); border: 1px solid rgba(200,132,42,0.15);
+  border-radius: 2px; padding: 10px 12px; margin-top: 8px;
+}
+.niche-tag { font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 1px; text-transform: uppercase; color: rgba(200,132,42,0.6); margin-bottom: 4px; }
+.niche-body { font-size: 11px; font-weight: 300; color: rgba(200,132,42,0.75); line-height: 1.65; }
+.feas-bar { height: 2px; background: rgba(244,240,232,0.07); border-radius: 1px; margin-top: 5px; overflow: hidden; }
+.feas-fill { height: 100%; border-radius: 1px; transition: width 0.6s cubic-bezier(.2,.8,.2,1); }
+.feas-note { font-size: 10px; font-weight: 300; line-height: 1.6; margin-top: 6px; }
+
+/* Pulse animation for fossil sites */
+@keyframes site-pulse { 0%,100%{opacity:0.9} 50%{opacity:0.35} }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="topbar">
+    <div style="display:flex;align-items:center;gap:24px">
+      <a href="index.html" class="site-nav-logo" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+        <img src="rewild-logo.png" alt="Rewild Genomics" style="height:34px;width:auto;image-rendering:crisp-edges">
+      </a>
+      <div id="wordmark">/ <span>Atlas</span></div>
+      <a href="index.html" class="nav-back-link">← Back to site</a>
+    </div>
+    <div id="layer-tabs">
+      <button class="ltab on" data-layer="historical" onclick="setLayer('historical')">Historical</button>
+      <button class="ltab" data-layer="modern" onclick="setLayer('modern')">Modern</button>
+      <button class="ltab" data-layer="scenario" onclick="setLayer('scenario')">Scenario</button>
+    </div>
+    <div id="epoch-pill">14,000 BP — Late Pleistocene</div>
+  </div>
+
+  <div id="main">
+    <div id="sidebar"></div>
+    <div id="map-wrap">
+      <svg id="map-svg"></svg>
+      <div class="map-tag" id="mode-tag">Historical Layer</div>
+      <div class="map-hint">Toggle species &nbsp;·&nbsp; click site to inspect</div>
+      <div id="legend">
+        <div class="leg-title">Ecological Role</div>
+        <div class="leg-row"><div class="leg-dot" style="background:#a070d8"></div><span class="leg-text">Apex predator</span></div>
+        <div class="leg-row"><div class="leg-dot" style="background:#6090c8"></div><span class="leg-text">Mesopredator</span></div>
+        <div class="leg-row"><div class="leg-dot" style="background:#8FBC6A"></div><span class="leg-text">Grazer</span></div>
+        <div class="leg-row"><div class="leg-dot" style="background:#b87840"></div><span class="leg-text">Browser</span></div>
+        <div class="leg-div"></div>
+        <div class="leg-row"><div class="leg-dash"></div><span class="leg-text">Historical range</span></div>
+        <div class="leg-row"><div class="leg-dot" style="background:#E8C472"></div><span class="leg-text">Fossil site</span></div>
+      </div>
+      <div id="panel">
+        <button id="panel-close" onclick="closePanel()">×</button>
+        <div id="panel-head">
+          <div class="ph-badges" id="ph-badges"></div>
+          <div id="ph-name"></div>
+          <div id="ph-sci"></div>
+        </div>
+        <div id="panel-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="timeline">
+    <div id="tl-top">
+      <span id="tl-epoch">14,000 BP</span>
+      <span id="tl-desc">Late Pleistocene — full megafauna assemblage present</span>
+    </div>
+    <input type="range" id="tl-slider" min="0" max="100" value="0" step="1">
+    <div id="tl-marks">
+      <span class="tl-m">14,000 BP</span>
+      <span class="tl-m">12,000 BP</span>
+      <span class="tl-m">10,000 BP</span>
+      <span class="tl-m">5,000 BP</span>
+      <span class="tl-m">Present</span>
+    </div>
+  </div>
+
+</div>
+<div id="tooltip"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+
+const EPOCHS = [
+  {val:0,  epoch:'14,000 BP', desc:'Late Pleistocene — full megafauna assemblage present'},
+  {val:25, epoch:'12,000 BP', desc:'Clovis horizon — human arrival, first extinctions begin'},
+  {val:50, epoch:'10,000 BP', desc:'Younger Dryas — mass extinction event, climate shift'},
+  {val:75, epoch:'5,000 BP',  desc:'Mid-Holocene — modern fauna assemblage coalescing'},
+  {val:100,epoch:'Present',   desc:'Modern day — ~70% of Pleistocene megafauna extinct'},
+];
+
+const SPECIES = [
+  {
+    id:'mammoth', name:'Columbian Mammoth', sci:'Mammuthus columbi',
+    color:'#E8C472', role:'grazer', extinct:11700, size:'13 ft tall, 22,000 lbs',
+    rangeStates:['CA','NV','UT','AZ','NM','CO','WY','MT','ID','OR','WA','TX','OK','KS','NE','SD','ND','MN','IA','MO','AR','LA','MS','AL','GA','FL','SC','NC','TN','KY','IN','IL','OH','WI','MI'],
+    sites:[[-111.8,40.7],[-117.2,34.1],[-104.8,38.8],[-97.3,30.2],[-85.7,30.5],[-81.4,27.9],[-71.1,42.3],[-83.0,35.5],[-93.2,44.9]],
+    desc:'The largest mammoth species and dominant grazer of North American grasslands, savanna, and shrub-steppe from coast to coast. Columbian mammoths were ecosystem engineers at continental scale — their trampling, grazing, and dung dispersal maintained open grassland structure across the entire continent in ways that no living species replicates.',
+    analog:'Bison (partial grazing analog)',
+    analogDesc:'Plains bison partially replicate grassland maintenance but at roughly 5% of mammoth body mass. No living North American species performs the deep soil disturbance, downed tree clearing, or high-browse-line creation that Columbian mammoths provided.',
+    feasibility:3, niche:null,
+  },
+  {
+    id:'mastodon', name:'American Mastodon', sci:'Mammut americanum',
+    color:'#C8A07A', role:'browser', extinct:10500, size:'10 ft tall, 12,000 lbs',
+    rangeStates:['MI','OH','IN','IL','WI','MN','IA','MO','KY','TN','PA','NY','NJ','MA','CT','VA','NC','SC','GA','FL','AL','MS','AR','LA','TX','OK','KS','NE'],
+    sites:[[-83.7,42.2],[-84.5,39.8],[-73.8,41.0],[-79.4,37.8],[-87.4,41.6],[-91.8,38.6],[-90.1,35.1],[-82.5,30.3],[-96.8,33.1]],
+    desc:'A forest-edge and wetland browser that ranged across the eastern half of the continent. Mastodon teeth were adapted for soft browse — spruce, pine, aquatic vegetation — rather than the high-silica grasses mammoths processed. Remains cluster near paleomarsh and boreal forest deposits across the Great Lakes and Atlantic coast.',
+    analog:'No direct modern analog',
+    analogDesc:'Nothing in North America replicates mastodon-scale woodland browsing. The forest-edge browsing niche at 12,000+ lbs body mass has been vacant across the entire eastern US for 10,500 years.',
+    feasibility:2,
+    niche:'Woodland and wetland-margin browsing niche unoccupied across eastern North America since ~10,500 BP.',
+  },
+  {
+    id:'groundsloth', name:'Giant Ground Sloth', sci:'Megalonyx jeffersonii',
+    color:'#A89070', role:'browser', extinct:11000, size:'9 ft long, 2,200 lbs',
+    rangeStates:['CA','NV','AZ','NM','TX','OK','KS','MO','AR','LA','MS','AL','GA','FL','SC','NC','TN','KY','VA','WV','OH','IN','IL','IA','NE','CO','UT','ID'],
+    sites:[[-117.0,33.8],[-104.5,31.8],[-87.6,30.7],[-84.2,36.1],[-80.2,27.5],[-95.4,30.1],[-111.5,35.2],[-105.0,40.5]],
+    desc:"Named by Thomas Jefferson, who suspected it might still exist in unexplored western territories. Jefferson's ground sloth ranged across most of the continent and could rear on its hind legs to strip foliage from branches 12+ feet up — creating browse lines in forests no living North American animal can replicate. Its large claws disturbed soil at significant scale.",
+    analog:'No direct modern analog',
+    analogDesc:'The high-browse forest niche (8–12 ft elevation) has been vacant for 11,000 years continent-wide. Giraffe serve as a rough functional analog in Africa. This gap has measurably altered canopy structure in eastern deciduous forests.',
+    feasibility:1,
+    niche:'High-browse forest niche entirely vacant continent-wide. No candidate analog species currently exist in North America.',
+  },
+  {
+    id:'americanlion', name:'American Lion', sci:'Panthera atrox',
+    color:'#D4963A', role:'apex', extinct:11000, size:'8 ft long, 500 lbs',
+    rangeStates:['AK','WA','OR','CA','NV','ID','MT','WY','UT','CO','AZ','NM','TX','OK','KS','NE','SD','ND','MN','WI','MI','IA','MO','AR','LA','MS','AL','GA','FL','TN','KY','IN','IL','OH'],
+    sites:[[-119.5,37.8],[-104.8,38.2],[-97.5,35.5],[-84.0,30.5],[-80.9,29.0],[-110.0,44.5],[-85.4,40.2],[-93.8,41.0],[-122.1,47.5]],
+    desc:'The largest cat to ever live in North America — 25% larger than modern African lions, and likely a pride hunter targeting Pleistocene megafauna in open country. Panthera atrox ranged from Alaska to Peru. Its loss removed the continent\'s apex pursuit predator, an ecological absence that fundamentally altered ungulate behavior across all of North America.',
+    analog:'Mountain Lion (partial)',
+    analogDesc:'Mountain lions exist across much of the US but are solitary ambush hunters roughly half the size of Panthera atrox. They cannot exert the same top-down pressure on large ungulate populations that pride-hunting lions delivered at continental scale.',
+    feasibility:4, niche:null,
+  },
+  {
+    id:'smilodon', name:'Saber-toothed Cat', sci:'Smilodon fatalis',
+    color:'#C06030', role:'apex', extinct:10000, size:'5 ft long, 440 lbs',
+    rangeStates:['CA','NV','AZ','NM','TX','OK','AR','LA','MS','AL','GA','FL','TN','KY','MO','KS','CO','UT','OR','WA','ID','WY','MT'],
+    sites:[[-118.4,34.1],[-117.2,32.8],[-97.7,30.3],[-84.5,30.2],[-80.5,25.8],[-104.9,38.9],[-111.7,40.8],[-122.5,45.5],[-95.3,29.8]],
+    desc:'The apex ambush predator of the Pleistocene. Smilodon\'s 11-inch sabers were precision instruments for dispatching large, thick-skinned prey — a hunting strategy with no living analog on this continent. La Brea Tar Pits in Los Angeles has yielded over 2,000 Smilodon specimens. Its extinction left a continent-wide ambush predator niche for megafauna-scale prey permanently vacant.',
+    analog:'No living analog',
+    analogDesc:'The ambush killing of megafauna-scale prey is a vacant ecological function across all of North America. Jaguars reach the US Southwest but are far smaller and hunt differently. This niche has been empty for 10,000 years.',
+    feasibility:1,
+    niche:'Saber-tooth ambush predator niche vacant continent-wide. Megaherbivore herds have lacked this key predation pressure — and the behavioral shaping it drove — for 10,000 years.',
+  },
+  {
+    id:'direwolf', name:'Dire Wolf', sci:'Aenocyon dirus',
+    color:'#9070B0', role:'apex', extinct:9500, size:'6 ft long, 150 lbs',
+    rangeStates:['CA','OR','WA','ID','NV','AZ','NM','UT','CO','WY','MT','TX','OK','KS','NE','MO','AR','LA','MS','AL','GA','FL','TN','KY','IN','OH','PA','VA','NC','SC','IA','MN','SD'],
+    sites:[[-118.4,34.1],[-97.4,35.5],[-84.2,33.8],[-80.2,26.0],[-104.5,37.8],[-122.5,46.1],[-88.0,41.9],[-92.6,44.0],[-78.8,35.6],[-110.2,31.8]],
+    desc:'The most common large carnivore in the North American Pleistocene fossil record — over 4,000 specimens from La Brea alone. Dire wolves hunted in large packs and regulated megafauna populations across the continent. They were likely outcompeted by gray wolves and humans following megafauna collapse at the end of the Pleistocene.',
+    analog:'Gray Wolf (strong candidate)',
+    analogDesc:'Gray wolves are the closest ecological analog — pack hunters that regulate ungulate populations through both direct predation and landscape-of-fear effects. Wolves were extirpated from most of the US and have been partially reintroduced in the northern Rockies. Expanding gray wolf range across the lower 48 is the highest-feasibility rewilding action currently available.',
+    feasibility:8, niche:null,
+  },
+  {
+    id:'cheetah', name:'American Cheetah', sci:'Miracinonyx trumani',
+    color:'#A0B848', role:'meso', extinct:12000, size:'5 ft long, 130 lbs',
+    rangeStates:['CA','NV','AZ','NM','TX','OK','KS','CO','WY','MT','ID','OR','UT','NE','SD','ND','MN','IA'],
+    sites:[[-104.8,38.5],[-117.0,34.5],[-97.8,30.0],[-106.5,35.2],[-111.8,41.5],[-100.5,43.2],[-115.8,43.0],[-104.0,44.8]],
+    desc:'The American cheetah is the evolutionary reason the pronghorn antelope can run 55 mph — the fastest land animal in the Western Hemisphere. No living North American predator can run down a healthy adult pronghorn. Pronghorn are physiologically overbuilt for their current predator community: carrying an enormous cardiovascular system evolved to outrun a cat extinct for 12,000 years.',
+    analog:'Ghost predator — no living replacement',
+    analogDesc:'Pronghorn exist in healthy numbers across the western US but sprint from nothing. The oversized heart, lungs, and trachea pronghorn carry — evolved at significant metabolic cost to outrun Miracinonyx — have no current predation benefit. One of the most striking evolutionary echoes of Pleistocene extinction visible in living animals today.',
+    feasibility:1,
+    niche:"The 'ghost predator' effect: pronghorn retain expensive physiological adaptations evolved to outrun Miracinonyx. No living predator can trigger these adaptations in a chase.",
+  },
+  {
+    id:'camel', name:"Yesterday's Camel", sci:'Camelops hesternus',
+    color:'#C8A860', role:'browser', extinct:10000, size:'7 ft tall, 1,800 lbs',
+    rangeStates:['CA','NV','AZ','NM','TX','OK','KS','CO','UT','ID','OR','WA','MT','WY','NE','SD'],
+    sites:[[-117.5,33.9],[-118.3,34.2],[-104.7,31.7],[-111.9,40.4],[-106.3,35.8],[-119.8,37.2],[-96.5,35.0],[-100.8,42.8]],
+    desc:'North America is the evolutionary birthplace of the camel family. Camelops hesternus ranged across the western half of the continent as a mixed-feeder and browser capable of exploiting coarse, low-quality arid vegetation. Its extinction left the Great Basin and Sonoran desert without a large-bodied high-tolerance forager.',
+    analog:'No direct modern analog',
+    analogDesc:'Camels and llamas both originated in North America before spreading abroad. Camelops\'s extinction left no equivalent arid-adapted large browser anywhere on the continent. The Great Basin and Chihuahuan Desert lost their most drought-tolerant megabrowser.',
+    feasibility:2,
+    niche:'Arid-adapted large browser niche vacant across the entire western US. The evolutionary origin of the camel family is North American, not Asian.',
+  },
+  {
+    id:'horse', name:'North American Horse', sci:'Equus ferus',
+    color:'#C09848', role:'grazer', extinct:10000, size:'5 ft tall, 900 lbs',
+    rangeStates:['CA','NV','AZ','NM','TX','OK','KS','CO','UT','ID','OR','WA','MT','WY','NE','SD','ND','MN','IA','MO','AR','LA'],
+    sites:[[-117.0,35.0],[-104.5,39.5],[-97.5,34.0],[-111.5,40.0],[-119.5,39.2],[-106.2,35.5],[-100.8,42.0],[-93.6,31.8]],
+    desc:'Horses evolved in North America across 55 million years and dozens of genera before going extinct at the Pleistocene boundary. The horse family spread to Asia and Africa via the Bering land bridge, where their descendants survived. Modern mustangs are feral descendants of Spanish reintroductions — not the native subspecies, but representing a lineage whose evolutionary origin is this continent.',
+    analog:'Feral Mustang (repatriated lineage)',
+    analogDesc:'Mustangs represent a genuine evolutionary repatriation — a lineage that originated here. Ecologically, horses fill a real grazer niche in western grasslands. The BLM currently manages ~50,000 feral mustangs across western public lands, often controversially. Whether mustangs should be managed as native wildlife or invasive livestock is an active scientific and policy debate.',
+    feasibility:6, niche:null,
+  },
+  {
+    id:'bison', name:'Ancient Bison', sci:'Bison antiquus',
+    color:'#8A6838', role:'grazer', extinct:10000, size:'8 ft long, 3,000 lbs',
+    rangeStates:['CA','NV','OR','WA','ID','MT','WY','CO','UT','AZ','NM','TX','OK','KS','NE','SD','ND','MN','IA','MO','AR','LA','MS','AL','GA','FL','TN','KY','IN','IL','WI','MI','OH'],
+    sites:[[-104.8,39.2],[-97.3,35.5],[-100.5,43.5],[-84.5,38.0],[-88.0,42.0],[-93.5,44.8],[-117.2,36.5],[-80.3,27.8],[-91.2,31.0]],
+    desc:'Ancient bison were significantly larger than modern plains bison with dramatically wider horn spans. The dominant grazer of Pleistocene North America, they maintained the vast grassland and open shrubland mosaics stretching coast to coast. Modern plains bison are a dwarfed descendant lineage surviving in ecologically fragmented remnant herds — roughly 31,000 animals in conservation herds today.',
+    analog:'Plains Bison (direct descendant)',
+    analogDesc:'Plains bison are the direct ecological and genetic successors to ancient bison. Bison restoration across the Great Plains and intermountain grasslands is ecologically well-supported and represents one of the highest-impact, most achievable rewilding actions available in North America today.',
+    feasibility:7, niche:null,
+  },
+];
+
+const US_REGIONS = [
+  {id:'gr8plains', name:'Great Plains',      score:82, land:'Mixed public/private', lon:-100, lat:42},
+  {id:'rockies',   name:'Northern Rockies',  score:76, land:'NFS/BLM dominant',     lon:-113, lat:46},
+  {id:'southwest', name:'Southwest',         score:68, land:'BLM/NPS',              lon:-110, lat:34},
+  {id:'southeast', name:'Southeast',         score:54, land:'Mostly private',       lon:-83,  lat:32},
+  {id:'pnw',       name:'Pacific Northwest', score:71, land:'NFS dominant',         lon:-121, lat:47},
+  {id:'grlakes',   name:'Great Lakes',       score:49, land:'Mixed',                lon:-87,  lat:44},
+  {id:'appalachia',name:'Appalachia',        score:58, land:'NFS/State',            lon:-82,  lat:37},
+  {id:'california',name:'California',        score:44, land:'Private/NPS',          lon:-120, lat:37},
+];
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let activeLayer = 'historical';
+let enabledSp = new Set(['mammoth','direwolf','bison','americanlion','smilodon']);
+let timelineVal = 0;
+let showLand = false, showModern = false, showScores = false;
+let scenarioSp = new Set();
+let projection = null, geoPath = null, usFeatures = null;
+
+const STATE_ABBR = {
+  'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA',
+  'Colorado':'CO','Connecticut':'CT','Delaware':'DE','Florida':'FL','Georgia':'GA',
+  'Hawaii':'HI','Idaho':'ID','Illinois':'IL','Indiana':'IN','Iowa':'IA',
+  'Kansas':'KS','Kentucky':'KY','Louisiana':'LA','Maine':'ME','Maryland':'MD',
+  'Massachusetts':'MA','Michigan':'MI','Minnesota':'MN','Mississippi':'MS',
+  'Missouri':'MO','Montana':'MT','Nebraska':'NE','Nevada':'NV','New Hampshire':'NH',
+  'New Jersey':'NJ','New Mexico':'NM','New York':'NY','North Carolina':'NC',
+  'North Dakota':'ND','Ohio':'OH','Oklahoma':'OK','Oregon':'OR','Pennsylvania':'PA',
+  'Rhode Island':'RI','South Carolina':'SC','South Dakota':'SD','Tennessee':'TN',
+  'Texas':'TX','Utah':'UT','Vermont':'VT','Virginia':'VA','Washington':'WA',
+  'West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY',
+};
+
+const FIPS = {
+  '01':'Alabama','02':'Alaska','04':'Arizona','05':'Arkansas','06':'California',
+  '08':'Colorado','09':'Connecticut','10':'Delaware','12':'Florida','13':'Georgia',
+  '15':'Hawaii','16':'Idaho','17':'Illinois','18':'Indiana','19':'Iowa',
+  '20':'Kansas','21':'Kentucky','22':'Louisiana','23':'Maine','24':'Maryland',
+  '25':'Massachusetts','26':'Michigan','27':'Minnesota','28':'Mississippi',
+  '29':'Missouri','30':'Montana','31':'Nebraska','32':'Nevada','33':'New Hampshire',
+  '34':'New Jersey','35':'New Mexico','36':'New York','37':'North Carolina',
+  '38':'North Dakota','39':'Ohio','40':'Oklahoma','41':'Oregon','42':'Pennsylvania',
+  '44':'Rhode Island','45':'South Carolina','46':'South Dakota','47':'Tennessee',
+  '48':'Texas','49':'Utah','50':'Vermont','51':'Virginia','53':'Washington',
+  '54':'West Virginia','55':'Wisconsin','56':'Wyoming',
+};
+
+function extOpacity(sp, tv) {
+  const bp = 14000 - tv * 135;
+  if (bp > sp.extinct) return 0.88;
+  return Math.max(0, 0.88 - (sp.extinct - bp) / 1600);
+}
+
+// ── DRAW ───────────────────────────────────────────────────────────────────────
+function draw() {
+  if (!usFeatures) return;
+  const wrap = document.getElementById('map-wrap');
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  projection = d3.geoAlbersUsa().scale(W * 1.18).translate([W * 0.5, H * 0.52]);
+  geoPath = d3.geoPath().projection(projection);
+  const svg = d3.select('#map-svg').attr('width', W).attr('height', H);
+  svg.selectAll('*').remove();
+
+  // Background gradient
+  const defs = svg.append('defs');
+  const rg = defs.append('radialGradient').attr('id','bg').attr('cx','50%').attr('cy','48%').attr('r','72%');
+  rg.append('stop').attr('offset','0%').attr('stop-color','#141d10');
+  rg.append('stop').attr('offset','100%').attr('stop-color','#080C09');
+  svg.append('rect').attr('width',W).attr('height',H).attr('fill','url(#bg)');
+
+  // State fills
+  svg.append('g').selectAll('path').data(usFeatures.states).join('path')
+    .attr('class','state').attr('d', geoPath);
+
+  // Land schematic overlays
+  if (showLand) {
+    const LAND = [
+      {c:'rgba(232,196,114,0.18)', s:'rgba(200,160,60,0.6)',  ll:[[-124,49],[-104,49],[-104,37],[-124,37]]},
+      {c:'rgba(143,188,106,0.16)', s:'rgba(100,160,70,0.5)',  ll:[[-124,49],[-114,49],[-114,44],[-124,44]]},
+      {c:'rgba(80,130,200,0.15)',  s:'rgba(60,100,180,0.5)',  ll:[[-111,44],[-104,44],[-104,40],[-111,40]]},
+      {c:'rgba(160,100,200,0.14)',s:'rgba(120,70,170,0.5)',   ll:[[-108,37],[-102,37],[-102,33],[-108,33]]},
+    ];
+    LAND.forEach(ld => {
+      const pts = ld.ll.map(([lo,la]) => projection([lo,la])).filter(Boolean);
+      if (pts.length < 3) return;
+      svg.append('polygon').attr('points', pts.map(p=>p.join(',')).join(' '))
+        .attr('fill', ld.c).attr('stroke', ld.s)
+        .attr('stroke-width', 0.5).attr('stroke-dasharray','5,4').attr('opacity',0.8);
+    });
+  }
+
+  // State borders
+  svg.append('g').selectAll('path').data(usFeatures.borders).join('path')
+    .attr('class','state-border').attr('d', geoPath);
+
+  const activeSp = SPECIES.filter(s => enabledSp.has(s.id));
+
+  // Species ranges (state-level shading)
+  activeSp.forEach(sp => {
+    const op = extOpacity(sp, timelineVal);
+    if (op < 0.02) return;
+    svg.append('g').selectAll('path')
+      .data(usFeatures.states.filter(f => sp.rangeStates.includes(STATE_ABBR[f.properties.name]||'')))
+      .join('path')
+      .attr('d', geoPath)
+      .attr('fill', sp.color).attr('fill-opacity', op * 0.11)
+      .attr('stroke', sp.color).attr('stroke-opacity', op * 0.2).attr('stroke-width', 0.5)
+      .attr('pointer-events','none');
+  });
+
+  // Fossil sites
+  activeSp.forEach(sp => {
+    const op = extOpacity(sp, timelineVal);
+    if (op < 0.02) return;
+    sp.sites.forEach(lonlat => {
+      const pt = projection(lonlat);
+      if (!pt) return;
+      const g = svg.append('g').attr('transform',`translate(${pt[0]},${pt[1]})`).style('cursor','pointer');
+      // Outer ring — animated
+      g.append('circle').attr('r', 8)
+        .attr('fill', sp.color).attr('fill-opacity', op * 0.1)
+        .attr('stroke', sp.color).attr('stroke-opacity', op * 0.4).attr('stroke-width', 0.8);
+      // Inner dot
+      g.append('circle').attr('r', 3.2)
+        .attr('fill', sp.color).attr('fill-opacity', op * 0.95);
+      g.on('click', () => openPanel(sp))
+        .on('mousemove', evt => showTip(evt, sp.name))
+        .on('mouseleave', hideTip);
+    });
+  });
+
+  // Modern analog + niche gap labels
+  if (showModern) {
+    activeSp.forEach(sp => {
+      const op = extOpacity(sp, timelineVal);
+      if (op < 0.05 || !sp.sites[0]) return;
+      const pt = projection(sp.sites[0]);
+      if (!pt) return;
+      const hasAnalog = sp.analog && !sp.analog.startsWith('No') && !sp.analog.startsWith('Ghost');
+      if (hasAnalog) {
+        svg.append('rect').attr('x',pt[0]-22).attr('y',pt[1]-22).attr('width',46).attr('height',13)
+          .attr('rx',2).attr('fill','#080C09').attr('stroke','rgba(143,188,106,0.3)').attr('stroke-width',0.5).attr('opacity',0.9);
+        svg.append('text').attr('x',pt[0]+1).attr('y',pt[1]-12).attr('text-anchor','middle')
+          .attr('font-size',7).attr('fill','rgba(143,188,106,0.7)').attr('font-family','DM Mono, monospace').attr('letter-spacing','0.08em').text('ANALOG');
+      }
+      if (sp.niche) {
+        svg.append('rect').attr('x',pt[0]-24).attr('y',pt[1]+10).attr('width',50).attr('height',13)
+          .attr('rx',2).attr('fill','#080C09').attr('stroke','rgba(200,132,42,0.3)').attr('stroke-width',0.5).attr('opacity',0.9);
+        svg.append('text').attr('x',pt[0]+1).attr('y',pt[1]+20).attr('text-anchor','middle')
+          .attr('font-size',7).attr('fill','rgba(200,132,42,0.7)').attr('font-family','DM Mono, monospace').attr('letter-spacing','0.08em').text('NICHE GAP');
+      }
+    });
+  }
+
+  // Region score circles
+  if (showScores || activeLayer === 'scenario') {
+    US_REGIONS.forEach(reg => {
+      const pt = projection([reg.lon, reg.lat]);
+      if (!pt) return;
+      const col = reg.score > 70 ? '#8FBC6A' : reg.score > 58 ? '#C8842A' : '#C05030';
+      svg.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',28)
+        .attr('fill',col).attr('fill-opacity',0.1)
+        .attr('stroke',col).attr('stroke-opacity',0.35).attr('stroke-width',0.8);
+      svg.append('text').attr('x',pt[0]).attr('y',pt[1]-1).attr('text-anchor','middle')
+        .attr('font-size',13).attr('fill',col).attr('fill-opacity',0.85)
+        .attr('font-family','Fraunces, serif').attr('font-weight','200').text(reg.score);
+      svg.append('text').attr('x',pt[0]).attr('y',pt[1]+11).attr('text-anchor','middle')
+        .attr('font-size',7).attr('fill',col).attr('fill-opacity',0.5)
+        .attr('font-family','DM Mono, monospace').text(reg.name);
+    });
+  }
+}
+
+// ── SIDEBAR ────────────────────────────────────────────────────────────────────
+function renderSidebar() {
+  const sb = document.getElementById('sidebar');
+
+  if (activeLayer === 'historical') {
+    sb.innerHTML = `
+      <div class="sb-section">
+        <div class="sb-tag">Megafauna</div>
+        ${SPECIES.map(sp => {
+          const op = extOpacity(sp, timelineVal);
+          const on = enabledSp.has(sp.id);
+          const roleAbbr = {apex:'Apex',meso:'Meso',grazer:'Grazer',browser:'Browser'}[sp.role]||'';
+          return `<button class="sp-btn ${on?'on':''}" onclick="toggleSp('${sp.id}')">
+            <div class="sp-dot" style="background:${on?sp.color:'rgba(244,240,232,0.1)'};opacity:${Math.max(0.15,op)}"></div>
+            <span class="sp-name" style="opacity:${op<0.1?0.25:1}">${sp.name}</span>
+            <span class="sp-role-tag">${roleAbbr}</span>
+          </button>`;
+        }).join('')}
+      </div>
+      <div class="sb-section">
+        <div class="sb-tag">Map Key</div>
+        <div style="font-size:10px;font-weight:300;color:rgba(244,240,232,0.25);line-height:2">
+          <div>● Fossil/site location — click to inspect</div>
+          <div>Shaded region = historical range</div>
+          <div style="color:${timelineVal>35?'rgba(200,132,42,0.7)':'rgba(244,240,232,0.2)'}">Species fade at their extinction date</div>
+        </div>
+      </div>`;
+
+  } else if (activeLayer === 'modern') {
+    sb.innerHTML = `
+      <div class="sb-section">
+        <div class="sb-tag">Land Ownership</div>
+        <div class="overlay-row ${showLand?'on':''}" onclick="toggleLand()">
+          <span class="overlay-label">Show Overlays</span>
+          <span class="overlay-state">${showLand?'ON':'OFF'}</span>
+        </div>
+        <div class="overlay-row ${showModern?'on':''}" onclick="toggleModern()">
+          <span class="overlay-label">Modern Analogs</span>
+          <span class="overlay-state">${showModern?'ON':'OFF'}</span>
+        </div>
+        <div class="overlay-row ${showScores?'on':''}" onclick="toggleScores()">
+          <span class="overlay-label">Region Scores</span>
+          <span class="overlay-state">${showScores?'ON':'OFF'}</span>
+        </div>
+      </div>
+      <div class="sb-section">
+        <div class="sb-tag">Rewilding Regions</div>
+        ${US_REGIONS.sort((a,b)=>b.score-a.score).map(r => {
+          const col = r.score>70?'#8FBC6A':r.score>58?'#C8842A':'#C05030';
+          return `<div class="region-card">
+            <div class="region-name">${r.name}</div>
+            <div class="region-score-num" style="color:${col}">${r.score}<span style="font-family:'DM Mono',monospace;font-size:9px;color:rgba(244,240,232,0.2);font-weight:200">/100</span></div>
+            <div class="region-land">${r.land}</div>
+          </div>`;
+        }).join('')}
+      </div>`;
+
+  } else if (activeLayer === 'scenario') {
+    const candidates = SPECIES.filter(s => s.feasibility >= 5);
+    const cascades = buildCascades();
+    sb.innerHTML = `
+      <div class="sb-section">
+        <div class="sb-tag">Select Species</div>
+        <div style="font-size:10px;font-weight:300;color:rgba(244,240,232,0.25);line-height:1.7;margin-bottom:10px">Model trophic cascade effects of reintroduction</div>
+        ${candidates.map(sp => {
+          const on = scenarioSp.has(sp.id);
+          const col = sp.feasibility>=7?'#8FBC6A':'#C8842A';
+          return `<button class="sp-btn ${on?'on':''}" onclick="toggleScenario('${sp.id}')">
+            <div class="sp-dot" style="background:${sp.color}"></div>
+            <span class="sp-name">${sp.name}</span>
+            <span style="font-family:'DM Mono',monospace;font-size:8px;color:${col}">${sp.feasibility}/10</span>
+          </button>`;
+        }).join('')}
+        ${cascades.length ? `
+          <div class="cascade-panel">
+            <div class="cascade-tag">Cascade Effects</div>
+            ${cascades.map(c=>`<div class="cascade-item"><span class="cascade-arrow">→</span><span class="cascade-text">${c}</span></div>`).join('')}
+          </div>` : ''}
+      </div>`;
+  }
+}
+
+function buildCascades() {
+  const c = [], has = id => scenarioSp.has(id);
+  if (has('direwolf')) {
+    c.push('Wolf territory formation suppresses elk congregation → riparian vegetation recovers → beaver populations increase → wetland area expands');
+    c.push('Wolf-coyote competition reduces coyote density → ground-nesting bird survival improves 20–40% across Great Plains');
+  }
+  if (has('bison')) {
+    c.push('Bison herd grazing creates grassland heterogeneity → tallgrass, mixed-grass, and shortgrass mosaics recover → 50+ grassland bird species benefit');
+    c.push('Bison wallows (10,000+ per large herd) create seasonal wetland microhabitats → amphibian diversity increases');
+  }
+  if (has('horse')) {
+    c.push('Horse grazing complements bison at different vegetation heights → grassland structural diversity increases → overall plant richness improves');
+  }
+  if (has('direwolf') && has('bison')) {
+    c.push('Wolf-bison predator-prey dynamic restores landscape of fear → prey behavioral changes restore vegetation structure at continental scale');
+  }
+  return c;
+}
+
+// ── PANEL ──────────────────────────────────────────────────────────────────────
+const PHOTOS = {
+  bison:        { src:'ancient_bison.png',         caption:'Bison antiquus — Late Pleistocene' },
+  groundsloth:  { src:'ancient_ground_sloth_.png', caption:'Megalonyx jeffersonii — Late Pleistocene' },
+  horse:        { src:'ancient_horse.png',          caption:'Equus ferus — Late Pleistocene' },
+  americanlion: { src:'CaveLion.png',               caption:'Panthera atrox — Late Pleistocene' },
+};
+
+const ILLUS = {
+  mammoth:`<svg viewBox="0 0 240 80"><path d="M35,65 Q45,22 80,26 Q105,22 118,38 L130,33 Q148,26 154,38 L148,56 L140,68 L126,68 L126,74 L114,74 L114,68 L92,68 L92,74 L80,74 L80,68 Q62,72 52,68 L46,74 L34,74 L34,68 Q25,66 35,65Z" fill="#3a2e18" stroke="#5a4a28" stroke-width="1"/><path d="M130,33 Q135,14 148,8 Q153,6 150,20 L148,33" fill="none" stroke="#7a6a40" stroke-width="2"/><path d="M120,68 L116,80 M128,68 L128,80 M94,68 L91,80 M102,68 L102,80" stroke="#5a4a28" stroke-width="3"/><circle cx="114" cy="34" r="4" fill="#1a1608"/></svg>`,
+  mastodon:`<svg viewBox="0 0 240 80"><path d="M38,65 Q50,26 84,28 Q108,24 120,40 L132,35 Q148,28 154,40 L148,58 L140,68 L126,68 L126,74 L114,74 L114,68 L90,68 L90,74 L78,74 L78,68 Q60,72 50,68 L44,74 L34,74 L34,68 Q26,66 38,65Z" fill="#4a3c20" stroke="#6a5430" stroke-width="1"/><path d="M132,35 Q136,18 148,12 Q152,10 150,24 L148,35" fill="none" stroke="#8a7048" stroke-width="2"/><circle cx="116" cy="35" r="4" fill="#1a1408"/></svg>`,
+  groundsloth:`<svg viewBox="0 0 240 80"><path d="M22,72 Q28,42 46,32 Q64,22 86,28 Q108,30 120,48 L128,44 Q148,38 152,52 L142,68 L128,72 L116,72 L116,80 L104,80 L104,72 L56,72 L56,80 L44,80 L44,72Z" fill="#5a4a30" stroke="#7a6a48" stroke-width="1"/><path d="M46,32 Q40,14 48,6 L54,14 L56,26" fill="none" stroke="#7a6a48" stroke-width="2"/><path d="M46,32 L30,26 M46,32 L34,38" stroke="#9a8a60" stroke-width="3" stroke-linecap="round"/><circle cx="84" cy="32" r="4" fill="#1a1608"/></svg>`,
+  americanlion:`<svg viewBox="0 0 240 80"><path d="M16,58 Q22,38 50,32 Q74,28 96,38 L162,38 Q188,38 192,54 L186,66 Q180,76 168,72 L162,78 L150,78 L150,72 L104,72 L104,78 L92,78 L92,72 L62,66 L56,78 L44,78 L48,62 Q30,64 22,62Z" fill="#8a5818" stroke="#b07830" stroke-width="1"/><path d="M50,32 Q46,18 56,10 Q66,8 62,22 L58,32" fill="#9a6820" stroke="#b07830" stroke-width="1"/><circle cx="100" cy="36" r="5" fill="#1a1008"/><path d="M192,54 L204,46 L200,60 Q197,68 192,62" fill="#8a5818"/></svg>`,
+  smilodon:`<svg viewBox="0 0 240 80"><path d="M22,58 Q28,38 56,32 Q80,28 102,38 L170,38 Q192,42 196,58 L188,68 L176,72 L164,78 L152,78 L152,72 L104,72 L104,78 L92,78 L92,72 L62,66 L56,78 L44,78 L48,62 Q30,64 22,58Z" fill="#703818" stroke="#9a5830" stroke-width="1"/><path d="M56,32 Q52,18 62,10 L70,18 L66,32" fill="#804028" stroke="#9a5830" stroke-width="1"/><circle cx="106" cy="36" r="5" fill="#1a0c08"/><path d="M82,38 L79,58 M90,38 L87,57" stroke="#d8c8a0" stroke-width="2.5"/></svg>`,
+  direwolf:`<svg viewBox="0 0 240 80"><path d="M16,62 Q20,38 46,30 Q70,24 92,34 L154,34 Q184,34 192,56 L184,68 L172,76 L160,76 L160,80 L148,80 L148,76 L98,76 L98,80 L86,80 L86,76 L58,71 L52,80 L40,80 L44,66 Q24,66 16,62Z" fill="#4a3860" stroke="#6a5888" stroke-width="1"/><path d="M46,30 Q40,14 52,6 Q58,4 60,18 L58,30" fill="#3a2850" stroke="#6a5888" stroke-width="1"/><path d="M92,34 Q95,20 104,18 L106,30" fill="#3a2850"/><circle cx="94" cy="32" r="4" fill="#100820"/><path d="M192,56 L202,46 L206,60" fill="#4a3860"/></svg>`,
+  cheetah:`<svg viewBox="0 0 240 80"><path d="M10,56 Q16,34 44,26 Q70,22 94,32 L180,32 Q208,34 212,56 L204,68 L192,72 L180,72 L180,78 L168,78 L168,72 L94,72 L94,78 L82,78 L82,72 L52,66 L46,78 L34,78 L38,62 Q20,62 10,56Z" fill="#586820" stroke="#789040" stroke-width="1"/><path d="M44,26 Q42,12 54,6 L60,16 L58,26" fill="#485818"/><circle cx="98" cy="30" r="4" fill="#101808"/><path d="M212,56 L224,48 L220,62" fill="#586820"/></svg>`,
+  camel:`<svg viewBox="0 0 240 80"><path d="M28,76 Q34,50 56,42 Q62,30 74,26 Q84,22 88,34 Q94,26 104,26 Q114,22 118,36 L138,32 Q168,32 178,56 L170,72 L158,76 L144,76 L144,82 L132,82 L132,76 L84,76 L84,82 L72,82 L72,76Z" fill="#806018" stroke="#a88030" stroke-width="1"/><path d="M70,32 L68,18 L74,14 L78,26" fill="#706010"/><path d="M100,28 L98,16 L106,12 L108,26" fill="#706010"/><circle cx="136" cy="32" r="4" fill="#200c08"/></svg>`,
+  horse:`<svg viewBox="0 0 240 80"><path d="M20,66 Q24,40 50,32 Q68,24 90,30 L158,30 Q186,32 192,54 L184,66 L172,72 L160,72 L160,78 L148,78 L148,72 L96,72 L96,78 L84,78 L84,72 L58,68 L52,78 L40,78 L44,66Z" fill="#6a5020" stroke="#8a7040" stroke-width="1"/><path d="M50,32 Q46,16 58,8 Q64,6 66,20 L62,32" fill="#5a4018" stroke="#8a7040" stroke-width="1"/><path d="M62,20 L58,8 M62,20 L72,12" stroke="#8a7040" stroke-width="2" stroke-linecap="round"/><circle cx="90" cy="30" r="4" fill="#100c08"/></svg>`,
+  bison:`<svg viewBox="0 0 240 80"><path d="M22,68 Q26,42 52,34 Q64,24 88,28 Q106,24 118,38 L158,38 Q188,40 192,60 L182,72 L170,78 L158,78 L158,84 L146,84 L146,78 L98,78 L98,84 L86,84 L86,78 L60,74 L54,84 L42,84 L46,70 Q28,70 22,68Z" fill="#503018" stroke="#704030" stroke-width="1"/><path d="M52,34 Q44,16 58,6 Q70,4 68,22 L64,34" fill="#402818" stroke="#704030" stroke-width="1"/><path d="M88,28 Q80,12 84,6 Q92,2 94,18" fill="#402818"/><circle cx="94" cy="30" r="5" fill="#0c0808"/></svg>`,
+};
+
+function openPanel(sp) {
+  const op = extOpacity(sp, timelineVal);
+  const isExtinct = op < 0.1;
+  const roleClass = {apex:'b-apex',meso:'b-meso',grazer:'b-grazer',browser:'b-browser'}[sp.role]||'';
+  const fScore = sp.feasibility;
+  const fCol = fScore>=7?'#8FBC6A':fScore>=4?'#C8842A':'#C05030';
+
+  document.getElementById('ph-badges').innerHTML =
+    `<span class="ph-badge ${isExtinct?'b-extinct':''}">${isExtinct?'Extinct':'Present'}</span>` +
+    `<span class="ph-badge ${roleClass}">${sp.role}</span>`;
+  document.getElementById('ph-name').textContent = sp.name;
+  document.getElementById('ph-sci').textContent = sp.sci;
+
+  const photo = PHOTOS[sp.id];
+  const illusContent = photo
+    ? `<img src="${photo.src}" alt="${sp.name}"><div class="illus-caption">${photo.caption}</div>`
+    : (ILLUS[sp.id] || '');
+
+  document.getElementById('panel-body').innerHTML = `
+    <div class="illus">${illusContent}</div>
+    <div class="ps">
+      <div class="ps-tag">Dimensions</div>
+      <div class="stat-row"><span class="stat-lbl">Body size</span><span class="stat-val">${sp.size}</span></div>
+      <div class="stat-row"><span class="stat-lbl">Extinction</span><span class="stat-val">${sp.extinct.toLocaleString()} years ago</span></div>
+    </div>
+    <div class="ps">
+      <div class="ps-tag">Ecological Role</div>
+      <div class="ps-body">${sp.desc}</div>
+    </div>
+    ${sp.niche ? `<div class="niche-box"><div class="niche-tag">Niche Gap</div><div class="niche-body">${sp.niche}</div></div>` : ''}
+    <div class="ps" style="margin-top:14px">
+      <div class="ps-tag">Modern Analog</div>
+      <div class="analog-box">
+        <div class="analog-name">${sp.analog}</div>
+        <div class="analog-desc">${sp.analogDesc}</div>
+      </div>
+    </div>
+    <div class="ps">
+      <div class="ps-tag">Rewilding Feasibility</div>
+      <div class="stat-row"><span class="stat-lbl">Score</span><span class="stat-val" style="color:${fCol}">${fScore}/10</span></div>
+      <div class="feas-bar"><div class="feas-fill" style="width:${fScore*10}%;background:${fCol}"></div></div>
+      <div class="feas-note" style="color:${fCol}">
+        ${fScore>=7?'High feasibility — ecological conditions favorable, realistic policy pathway exists.'
+         :fScore>=4?'Moderate feasibility — partial analog available; significant challenges remain.'
+         :'Low feasibility — no suitable analog or proxy species currently available for North America.'}
+      </div>
+    </div>`;
+
+  document.getElementById('panel').classList.add('open');
+}
+
+function closePanel() { document.getElementById('panel').classList.remove('open'); }
+
+// ── CONTROLS ───────────────────────────────────────────────────────────────────
+function showTip(evt, text) {
+  const t = document.getElementById('tooltip');
+  t.textContent = text; t.style.display = 'block';
+  t.style.left = (evt.clientX+14)+'px'; t.style.top = (evt.clientY-10)+'px';
+}
+function hideTip() { document.getElementById('tooltip').style.display = 'none'; }
+
+function toggleSp(id) { enabledSp.has(id)?enabledSp.delete(id):enabledSp.add(id); renderSidebar(); draw(); }
+function toggleLand()   { showLand=!showLand;    renderSidebar(); draw(); }
+function toggleModern() { showModern=!showModern; renderSidebar(); draw(); }
+function toggleScores() { showScores=!showScores; renderSidebar(); draw(); }
+function toggleScenario(id) { scenarioSp.has(id)?scenarioSp.delete(id):scenarioSp.add(id); renderSidebar(); draw(); }
+
+function setLayer(layer) {
+  activeLayer = layer;
+  document.querySelectorAll('.ltab').forEach(b => b.classList.toggle('on', b.dataset.layer===layer));
+  document.getElementById('mode-tag').textContent =
+    {historical:'Historical Layer', modern:'Modern Layer', scenario:'Scenario Mode'}[layer];
+  renderSidebar(); draw();
+}
+
+document.getElementById('tl-slider').addEventListener('input', function() {
+  timelineVal = +this.value;
+  const ep = EPOCHS.reduce((a,b)=>Math.abs(b.val-timelineVal)<Math.abs(a.val-timelineVal)?b:a);
+  document.getElementById('tl-epoch').textContent = ep.epoch;
+  document.getElementById('tl-desc').textContent = ep.desc;
+  document.getElementById('epoch-pill').textContent = `${ep.epoch} — ${ep.desc.split('—')[0].trim()}`;
+  renderSidebar(); draw();
+});
+
+window.addEventListener('resize', ()=>{ if(usFeatures) draw(); });
+
+// ── LOAD TOPOLOGY ─────────────────────────────────────────────────────────────
+d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(us => {
+  const states = topojson.feature(us, us.objects.states).features;
+  states.forEach(f => { f.properties.name = FIPS[String(f.id).padStart(2,'0')]||''; });
+  usFeatures = {
+    states,
+    borders: [topojson.mesh(us, us.objects.states, (a,b)=>a!==b)],
+  };
+  renderSidebar();
+  draw();
+}).catch(() => {
+  document.getElementById('map-wrap').insertAdjacentHTML('beforeend',
+    `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:48px">
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.3px;text-transform:uppercase;color:rgba(200,132,42,0.6);margin-bottom:12px">Map data unavailable</div>
+        <div style="font-size:13px;font-weight:300;color:rgba(244,240,232,0.3)">This tool requires an internet connection<br>to load US geographic data from CDN.</div>
+      </div>
+    </div>`);
+});
+</script>
+</body>
+</html>
