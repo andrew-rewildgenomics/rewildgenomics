@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://rewildgenomics.com/species-thylacine.html">
+<title>Thylacine — Rewild Genomics</title>
+<link rel="icon" type="image/png" href="rewild-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,200;1,9..144,300;1,9..144,400&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --void: #080C09; --deep: #0F1810; --forest: #162012;
+    --fern: #8FBC6A; --cream: #F4F0E8;
+    --species-color: #B8D4C8; /* thylacine — cool sage */
+    --species-dim: #6A9080;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Instrument Sans', sans-serif; background: var(--void); color: var(--cream); overflow-x: hidden; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; padding: 20px 56px; display: flex; align-items: center; justify-content: space-between; background: rgba(8,12,9,0.88); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(143,188,106,0.07); }
+  .nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+  
+  
+  
+  .nav-back { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(244,240,232,0.35); text-decoration: none; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; }
+  .nav-back:hover { color: var(--fern); }
+  .nav-right { display: flex; align-items: center; gap: 32px; }
+  .nav-species-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.7; }
+  .species-hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding: 120px 0 80px; position: relative; overflow: hidden; gap: 0; }
+  .hero-bg { position: absolute; inset: 0; background: var(--void); }
+  .hero-bg::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 65% 55% at 60% 40%, rgba(184,212,200,0.09) 0%, transparent 55%), radial-gradient(ellipse 35% 40% at 5% 80%, rgba(59,92,42,0.07) 0%, transparent 50%); }
+  .hero-bg::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(184,212,200,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(184,212,200,0.02) 1px, transparent 1px); background-size: 80px 80px; mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%); }
+  .hero-content { position: relative; z-index: 2; padding: 0 56px; }
+  .hero-right { position: relative; z-index: 2; padding: 0 56px 0 32px; }
+  .hero-right img { width: 100%; height: 560px; object-fit: cover; object-position: center 20%; display: block; border-radius: 3px; }
+  .hero-img-caption { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.25); letter-spacing: 0.8px; margin-top: 10px; line-height: 1.6; }
+  .hero-breadcrumb { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.3); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 32px; display: flex; align-items: center; gap: 10px; }
+  .hero-breadcrumb span { color: var(--species-color); opacity: 0.7; }
+  .extinct-badge { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 14px; border-radius: 2px; background: rgba(184,212,200,0.08); border: 1px solid rgba(184,212,200,0.18); color: var(--species-color); }
+  .extinct-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--species-color); opacity: 0.7; }
+  .hero-title { font-family: 'Fraunces', serif; font-size: clamp(56px, 8.5vw, 116px); font-weight: 200; line-height: 0.92; letter-spacing: -3.5px; color: var(--cream); margin-bottom: 12px; }
+  .hero-sci { font-family: 'DM Mono', monospace; font-size: 14px; font-style: italic; color: rgba(244,240,232,0.3); letter-spacing: 0.5px; margin-bottom: 32px; }
+  .hero-tagline { font-size: 16px; color: rgba(244,240,232,0.55); line-height: 1.7; font-weight: 300; max-width: 540px; margin-bottom: 56px; }
+  .hero-stats { display: flex; gap: 0; border-top: 1px solid rgba(244,240,232,0.07); padding-top: 36px; }
+  .h-stat { flex: 1; padding: 0 32px 0 0; border-right: 1px solid rgba(244,240,232,0.07); }
+  .h-stat:first-child { padding-left: 0; } .h-stat:last-child { border-right: none; }
+  .h-stat-val { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 200; color: var(--species-color); letter-spacing: -1px; margin-bottom: 4px; }
+  .h-stat-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.3); letter-spacing: 1px; text-transform: uppercase; }
+  .content-section { padding: 96px 56px; max-width: 1200px; margin: 0 auto; }
+  .content-section.alt { background: var(--deep); max-width: none; padding: 96px 0; }
+  .content-section.alt .inner { max-width: 1200px; margin: 0 auto; padding: 0 56px; }
+  .section-tag { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .section-tag::before { content: ''; width: 20px; height: 1px; background: var(--species-color); opacity: 0.5; }
+  .section-title { font-family: 'Fraunces', serif; font-size: clamp(32px, 4vw, 52px); font-weight: 200; color: var(--cream); letter-spacing: -1.5px; line-height: 1.05; margin-bottom: 40px; }
+  .section-title em { font-style: italic; color: var(--species-color); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  .body-text { font-size: 15px; color: rgba(244,240,232,0.6); line-height: 1.85; font-weight: 300; }
+  .body-text p + p { margin-top: 20px; }
+  .body-text strong { color: var(--cream); font-weight: 400; }
+  .pullquote { border-left: 2px solid var(--species-color); padding-left: 28px; margin: 40px 0; font-family: 'Fraunces', serif; font-size: 22px; font-weight: 200; font-style: italic; color: rgba(244,240,232,0.75); line-height: 1.5; }
+  .timeline { position: relative; padding-left: 32px; margin-top: 48px; }
+  .timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 1px; background: linear-gradient(180deg, var(--species-color), transparent); opacity: 0.3; }
+  .t-event { position: relative; margin-bottom: 40px; }
+  .t-event::before { content: ''; position: absolute; left: -36px; top: 6px; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--species-color); background: var(--void); }
+  .t-date { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .t-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 300; color: var(--cream); margin-bottom: 8px; }
+  .t-desc { font-size: 13px; color: rgba(244,240,232,0.45); line-height: 1.7; font-weight: 300; }
+  .genomics-box { background: rgba(184,212,200,0.05); border: 1px solid rgba(184,212,200,0.15); border-radius: 4px; padding: 40px; }
+  .genomics-box h3 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 300; color: var(--cream); margin-bottom: 16px; }
+  .genomics-box p { font-size: 14px; color: rgba(244,240,232,0.55); line-height: 1.8; font-weight: 300; }
+  .genomics-box p + p { margin-top: 14px; }
+  .data-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .data-tag { font-family: 'DM Mono', monospace; font-size: 10px; padding: 5px 12px; border-radius: 2px; background: rgba(184,212,200,0.08); border: 1px solid rgba(184,212,200,0.15); color: var(--species-color); letter-spacing: 0.8px; }
+  .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px; }
+  .impact-card { background: rgba(15,24,16,0.6); border: 1px solid rgba(244,240,232,0.05); padding: 32px 28px; transition: background 0.25s; }
+  .impact-card:hover { background: rgba(184,212,200,0.05); border-color: rgba(184,212,200,0.12); }
+  .impact-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1.5px; margin-bottom: 14px; opacity: 0.6; }
+  .impact-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 300; color: var(--cream); margin-bottom: 10px; }
+  .impact-desc { font-size: 13px; color: rgba(244,240,232,0.45); line-height: 1.7; font-weight: 300; }
+  /* Colossal callout */
+  .colossal-callout { background: rgba(184,212,200,0.05); border: 1px solid rgba(184,212,200,0.2); border-radius: 4px; padding: 32px 36px; margin-top: 48px; display: flex; gap: 24px; align-items: flex-start; }
+  .colossal-callout-icon { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--species-color); letter-spacing: 1.5px; text-transform: uppercase; white-space: nowrap; opacity: 0.7; padding-top: 3px; }
+  .colossal-callout p { font-size: 14px; color: rgba(244,240,232,0.55); line-height: 1.75; font-weight: 300; }
+  .back-strip { background: var(--forest); border-top: 1px solid rgba(244,240,232,0.06); padding: 56px; display: flex; align-items: center; justify-content: space-between; }
+  .back-strip h3 { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 300; color: var(--cream); }
+  .back-strip p { font-size: 13px; color: rgba(244,240,232,0.4); margin-top: 4px; }
+  .btn-species { display: inline-block; border: 1px solid rgba(143,188,106,0.3); color: var(--fern); background: transparent; padding: 12px 28px; border-radius: 2px; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
+  .btn-species:hover { background: rgba(143,188,106,0.08); }
+  footer { background: var(--void); border-top: 1px solid rgba(244,240,232,0.06); padding: 40px 56px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+  .footer-links { display: flex; gap: 24px; list-style: none; }
+  .footer-links a { font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase; color: rgba(244,240,232,0.2); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--fern); }
+  .footer-note { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.15); }
+  .species-portrait { width: 100%; border-radius: 4px; overflow: hidden; border: 1px solid rgba(184,212,200,0.12); }
+  .species-portrait img { width: 100%; height: auto; display: block; }
+  .portrait-caption { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.25); letter-spacing: 0.8px; margin-top: 12px; }
+  @media (max-width: 900px) { nav { padding: 18px 24px; } .species-hero { grid-template-columns: 1fr; padding: 100px 0 56px; } .hero-content { padding: 0 24px; } .hero-right { padding: 24px 24px 0; } .hero-right img { height: 300px; } .hero-title { font-size: clamp(44px, 13vw, 80px); letter-spacing: -2px; } .hero-stats { flex-wrap: wrap; gap: 24px; } .h-stat { border-right: none; padding: 0; flex: 0 0 45%; } .content-section { padding: 64px 24px; } .content-section.alt .inner { padding: 0 24px; } .two-col { grid-template-columns: 1fr; gap: 40px; } .impact-grid { grid-template-columns: 1fr; } .colossal-callout { flex-direction: column; } .back-strip { flex-direction: column; align-items: flex-start; gap: 20px; padding: 40px 24px; } footer { padding: 32px 24px; flex-direction: column; } }
+
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.nav-logo-anim{
+  overflow:hidden;
+  clip-path:inset(0 0 100% 0);
+  animation:rw-revealDown 900ms cubic-bezier(.2,.8,.2,1) forwards;
+}
+.nav-logo-img{
+  display:block;
+  height:36px;
+  width:auto;
+  transform:translateY(12px);
+  animation:rw-iconSettle 900ms cubic-bezier(.2,.8,.2,1) forwards,rw-float 7s ease-in-out 900ms infinite;
+  filter:brightness(1.1) saturate(1.1);
+}
+@keyframes rw-revealDown{to{clip-path:inset(0 0 0% 0)}}
+@keyframes rw-iconSettle{to{transform:translateY(0)}}
+@keyframes rw-float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-3px)}}
+@media(prefers-reduced-motion:reduce){
+  .nav-logo-anim{clip-path:inset(0 0 0 0);animation:none}
+  .nav-logo-img{transform:none;animation:none;filter:none}
+}
+
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-anim">
+      <img class="nav-logo-img" src="rewild-logo.png" alt="Rewild Genomics">
+    </div>
+  </a>
+  <div class="nav-right"><a href="megafauna-atlas.html" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:rgba(244,240,232,0.25);text-decoration:none;transition:color 0.18s;margin-right:20px;" onmouseover="this.style.color='#8FBC6A'" onmouseout="this.style.color='rgba(244,240,232,0.25)'">Atlas</a><span class="nav-species-label">Species Program</span><a href="platform.html" class="nav-back" style="opacity:0.5">Platform</a><a href="index.html#deextinction" class="nav-back">← All Species</a></div>
+</nav>
+
+<section class="species-hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-breadcrumb">Rewild Genomics <span>/</span> De-extinction Programs <span>/</span> Thylacine</div>
+    <div class="extinct-badge">Extinct · September 7, 1936</div>
+    <h1 class="hero-title">Thylacine</h1>
+    <div class="hero-sci">Thylacinus cynocephalus · Tasmanian Tiger</div>
+    <p class="hero-tagline">A marsupial that evolved to look and hunt like a wolf, the thylacine was one of nature's most remarkable experiments in convergent evolution. The last known individual died alone in a Hobart zoo on September 7, 1936, a death the zoo's keepers did not notice until the following morning.</p>
+    <div class="hero-stats">
+      <div class="h-stat"><div class="h-stat-val">1936</div><div class="h-stat-label">Year of extinction</div></div>
+      <div class="h-stat"><div class="h-stat-val">~58cm</div><div class="h-stat-label">Shoulder height</div></div>
+      <div class="h-stat"><div class="h-stat-val">~30 kg</div><div class="h-stat-label">Body mass</div></div>
+      <div class="h-stat"><div class="h-stat-val">Dasyuromorphia</div><div class="h-stat-label">Order</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img src="species-thylacine-hero.png" alt="Reconstruction of a thylacine in Tasmanian forest">
+    <p class="hero-img-caption">Artist's reconstruction · <em>Thylacinus cynocephalus</em> in Tasmanian temperate rainforest</p>
+  </div>
+</section>
+
+<section class="content-section">
+  <div class="two-col">
+    <div>
+      <div class="section-tag">Natural history</div>
+      <h2 class="section-title">A wolf built<br>from <em>marsupial parts</em></h2>
+      <div class="body-text">
+        <p>The thylacine is one of evolution's most extraordinary achievements. A marsupial, related to kangaroos, wombats, and Tasmanian devils. It evolved to occupy the apex predator niche in Australia and Tasmania independently from placental mammals. The result was an animal that looked, moved, and hunted like a wolf or dog despite sharing no close ancestry with them: a textbook example of convergent evolution.</p>
+        <p>The thylacine's distinctive features included a stiff, kangaroo-like tail, a set of dark stripes across its hindquarters (giving rise to the name "Tasmanian tiger"), and a jaw that could open to an astonishing 120 degrees, far wider than any living canid. It was a solitary, nocturnal hunter, ambushing prey rather than pursuing it, and likely preyed on wallabies, wombats, small birds, and reptiles.</p>
+        <p>Thylacines survived on mainland Australia until approximately 2,000 years ago, where they were outcompeted and likely prey-depleted by Aboriginal Australians and their dingo companions. They persisted in Tasmania, which has no native dingos, until European colonization brought a new wave of persecution.</p>
+      </div>
+    </div>
+    <div>
+      <div class="pullquote">"The last known thylacine died on September 7, 1936, a date now observed as National Threatened Species Day in Australia."</div>
+      <div class="body-text">
+        <p>Video footage of living thylacines exists: brief, haunting black-and-white clips filmed at Hobart Zoo in the 1930s showing the animal pacing its enclosure, yawning to display its extraordinary jaw, and moving with a gait unlike any living predator. These images have become icons of extinction grief.</p>
+        <p>The thylacine is also a reminder that extinction is not always ancient history. People alive in 1936 saw this animal breathe. Museum specimens preserve not just bone but hair, dried tissue, and preserved pouch young, a biological archive that has made the thylacine one of the most genomically characterized extinct animals in history.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="content-section alt">
+  <div class="inner">
+    <div class="section-tag">Extinction</div>
+    <h2 class="section-title">Bounty-hunted<br><em>to oblivion</em></h2>
+    <div class="two-col">
+      <div class="body-text">
+        <p>The Tasmanian thylacine's extinction was entirely and unambiguously caused by humans. When European settlers arrived in Tasmania in the early 19th century, thylacines were relatively common. Within a century, they were gone, driven to extinction by a government-sponsored bounty system, habitat destruction, and introduced disease.</p>
+        <p>The Van Diemen's Land Company began paying bounties for thylacine scalps in the 1830s, and the Tasmanian government formalized this in 1888, paying £1 per adult and 10 shillings per juvenile. Between 1888 and 1909, when the bounty scheme ended: at least <strong>2,184 bounties were paid</strong>. The actual kill toll was likely far higher, as many animals were killed without claiming bounties.</p>
+        <p>The rationale was economic: thylacines were blamed for killing sheep, though the evidence for this was largely anecdotal and the animals' jaws were likely too weak to take adult sheep. Farmers killed them on sight. Trappers killed them for sport. The government paid for their deaths. No one considered the consequences until there were essentially no thylacines left to consider.</p>
+        <p>The final survivor, caught in the wild in 1933 and sold to Hobart Zoo, was kept in inadequate outdoor conditions and died of exposure on the night of September 7, 1936, locked out of his enclosure shelter during an unusually cold night. He had no name. His death was not noticed until morning.</p>
+      </div>
+      <div>
+        <div class="timeline">
+          <div class="t-event"><div class="t-date">~2,000 BP</div><div class="t-title">Mainland extinction</div><div class="t-desc">Thylacines disappear from mainland Australia, likely due to competition from dingos introduced by Aboriginal Australians and increased human hunting pressure. A viable population persists only in Tasmania, which has no native dingo.</div></div>
+          <div class="t-event"><div class="t-date">1803</div><div class="t-title">European colonization of Tasmania</div><div class="t-desc">British settlement begins. Thylacines are initially common enough to be a regular nuisance around livestock. Early accounts describe them as fearless around humans. That fearlessness was their undoing.</div></div>
+          <div class="t-event"><div class="t-date">1830s</div><div class="t-title">Bounty system begins</div><div class="t-desc">The Van Diemen's Land Company begins private bounty payments. Thylacine populations begin a steep decline as systematic killing begins across Tasmania.</div></div>
+          <div class="t-event"><div class="t-date">1888</div><div class="t-title">Government bounty established</div><div class="t-desc">The Tasmanian government formally establishes a bounty scheme. Over 2,184 verified kills follow in the next 21 years, the documented minimum of a much larger actual toll.</div></div>
+          <div class="t-event"><div class="t-date">1930</div><div class="t-title">Last wild thylacine photographed</div><div class="t-desc">Wilf Batty shoots the last known wild thylacine on his farm at Mawbanna. The animal is photographed beside its body. Three years later, a thylacine is caught alive and sold to Hobart Zoo.</div></div>
+          <div class="t-event"><div class="t-date">September 7, 1936</div><div class="t-title">Benjamin dies</div><div class="t-desc">The last known thylacine, later named Benjamin, dies of exposure at Hobart Zoo, locked outside his shelter during a cold night. The species is extinct. Protection legislation had been passed 59 days earlier.</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:56px;">
+      <img src="Thylacine-Bounty.png" alt="A bounty hunter poses with a dead thylacine, c. 1930" style="width:100%;display:block;border-radius:3px;">
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(244,240,232,0.25);letter-spacing:0.8px;margin-top:10px;line-height:1.6;">A thylacine killed for the government bounty, c. 1930. At least 2,184 verified bounties were paid between 1888 and 1909.</p>
+    </div>
+    <div class="impact-grid" style="margin-top:48px;">
+      <div class="impact-card"><div class="impact-num">Factor 01</div><div class="impact-title">Government Bounty System</div><div class="impact-desc">The Tasmanian government paid direct financial incentives to kill thylacines from 1888 to 1909. This transformed casual persecution into systematic industrial-scale extermination, the state as a machine for extinction.</div></div>
+      <div class="impact-card"><div class="impact-num">Factor 02</div><div class="impact-title">Agricultural Persecution</div><div class="impact-desc">Blamed, largely unfairly, for sheep predation, thylacines were killed by farmers throughout the 19th and early 20th centuries. Their fearlessness around humans made them easy targets. No population could sustain these kill rates.</div></div>
+      <div class="impact-card"><div class="impact-num">Factor 03</div><div class="impact-title">Too Little, Too Late</div><div class="impact-desc">Legal protection was finally granted on July 10, 1936, exactly 59 days before the last known individual died. The species had been reduced to a single zoo animal before anyone acted. This is the defining failure of early 20th-century conservation.</div></div>
+    </div>
+  </div>
+</div>
+
+<section class="content-section">
+  <div class="section-tag">Genomics research</div>
+  <h2 class="section-title">The highest-profile<br><em>de-extinction target</em></h2>
+  <div class="two-col">
+    <div class="body-text">
+      <p>The thylacine has the most advanced de-extinction program of any species. Colossal Biosciences partnered with the Andrew Pask lab at the University of Melbourne in 2022 with a stated goal of revival by 2027. The full nuclear genome was published in 2017, and in 2023, ancient RNA was successfully extracted from a 130-year-old museum specimen, an extraordinary first for any extinct species.</p>
+      <p>The fat-tailed dunnart, a small marsupial weighing about 25 grams, has been identified as the proxy species. Despite looking nothing like a thylacine, it is the thylacine's closest living relative at the genomic level, and its genome has been fully sequenced and annotated specifically to support de-extinction work.</p>
+      <p>The challenge is scale: the thylacine and fat-tailed dunnart diverged approximately <strong>40–50 million years ago</strong>, meaning thousands of genetic differences separate them. Any CRISPR-based approach would require editing a very large number of sites, far more than the mammoth project, which works with an Asian elephant proxy that diverged only ~6 million years ago.</p>
+      <p>This is where open-source contributions matter. Rewild Genomics is building computational tools for systematic identification and prioritization of the highest-impact genetic variants: the relatively small subset of genomic differences that drove the thylacine's most distinctive phenotypic traits.</p>
+    </div>
+    <div>
+      <div class="genomics-box">
+        <h3>Research program: Thylacine</h3>
+        <p>Rewild Genomics is developing comparative genomic analysis tools for thylacine vs. fat-tailed dunnart, focused on identifying and prioritizing the regulatory and coding variants that drove convergent carnivore evolution in the thylacine lineage. Our work is designed to complement and extend the open-science foundation of the Pask lab's research.</p>
+        <p>The availability of ancient RNA data for the thylacine, a world first, opens entirely new research directions in gene expression analysis for extinct species, and our pipelines are being designed to incorporate RNA-seq data alongside DNA-based comparative genomics.</p>
+        <div class="data-row">
+          <span class="data-tag">Full nuclear genome</span>
+          <span class="data-tag">Ancient RNA available</span>
+          <span class="data-tag">Fat-tailed dunnart proxy</span>
+          <span class="data-tag">NCBI / GenBank</span>
+          <span class="data-tag">Convergent evolution loci</span>
+        </div>
+      </div>
+      <div class="colossal-callout">
+        <span class="colossal-callout-icon">Context</span>
+        <p>Colossal Biosciences has invested significantly in thylacine de-extinction. Rewild Genomics approaches this species from a complementary angle: our open-source computational tools and pipelines are publicly available, peer-reviewable, and designed to advance the science regardless of which organization ultimately succeeds in revival.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="back-strip">
+  <div><h3>Continue exploring species programs</h3><p>Six de-extinction research programs, all built on publicly available genomic data.</p></div>
+  <a href="index.html#deextinction" class="btn-species">← Back to all species</a>
+</div>
+<footer>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-anim">
+      <img class="nav-logo-img" src="rewild-logo.png" alt="Rewild Genomics">
+    </div>
+  </a>
+  <ul class="footer-links"><li><a href="index.html#deextinction">De-extinction</a></li><li><a href="index.html#tools">Tools</a></li><li><a href="index.html#mission">Mission</a></li><li><a href="platform.html">Platform</a></li><li><a href="https://rewildutah.com">RewildUtah.com</a></li></ul>
+  <span class="footer-note">UVU Biotechnology · Utah · 2025</span>
+</footer>
+</body>
+</html>
