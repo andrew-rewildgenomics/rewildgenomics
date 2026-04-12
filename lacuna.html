@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lacuna — Ancient DNA Pipeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,200;1,9..144,300;1,9..144,400&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+:root {
+  --cream:       #f7f5ef;
+  --parchment:   #eae6db;
+  --ink:         #1a1612;
+  --ink-soft:    #2c2620;
+  --bark:        #3d2f1e;
+
+  --amber:       #c8842a;
+  --amber-light: #d99840;
+  --amber-dim:   rgba(200,132,42,0.10);
+  --amber-border:rgba(200,132,42,0.22);
+  --amber-glow:  rgba(200,132,42,0.07);
+
+  --moss:        #3b5c2a;
+  --moss-dim:    rgba(59,92,42,0.08);
+
+  --teal-dark:   #1d5a4a;
+
+  --gray-25:     #fafaf8;
+  --gray-50:     #f5f3ee;
+  --gray-100:    #e8e4db;
+  --gray-200:    #d0cabf;
+  --gray-300:    #b0a898;
+  --gray-400:    #887e70;
+  --gray-500:    #5e5648;
+  --gray-700:    #352d22;
+  --white:       #ffffff;
+
+  --success:        #2d6e3e;
+  --success-bg:     rgba(45,110,62,0.07);
+  --success-border: rgba(45,110,62,0.18);
+  --warn:           #a05c10;
+  --warn-bg:        rgba(160,92,16,0.07);
+  --warn-border:    rgba(160,92,16,0.18);
+  --danger:         #b83030;
+  --danger-bg:      rgba(184,48,48,0.06);
+  --danger-border:  rgba(184,48,48,0.18);
+  --info:           #2d5a8e;
+  --info-bg:        rgba(45,90,142,0.07);
+  --info-border:    rgba(45,90,142,0.18);
+
+  --display: 'Fraunces', Georgia, serif;
+  --sans:    'Instrument Sans', system-ui, sans-serif;
+  --mono:    'DM Mono', 'Fira Code', monospace;
+
+  --shadow-sm: 0 1px 3px rgba(26,22,18,0.06), 0 1px 2px rgba(26,22,18,0.04);
+  --shadow-md: 0 4px 16px rgba(26,22,18,0.08), 0 2px 4px rgba(26,22,18,0.04);
+
+  --r-sm: 5px;
+  --r-md: 9px;
+  --r-lg: 13px;
+  --r-xl: 18px;
+  --sidebar-w: 242px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased}
+body{background:var(--cream);color:var(--ink);font-family:var(--sans);font-size:13.5px;font-weight:400;line-height:1.5;min-height:100vh}
+
+.app{display:flex;height:100vh;overflow:hidden}
+
+.sidebar{
+  width:var(--sidebar-w);min-width:var(--sidebar-w);
+  background:var(--ink);
+  display:flex;flex-direction:column;height:100vh;position:relative;z-index:20;
+}
+.sidebar::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(160deg,rgba(200,132,42,0.04) 0%,transparent 45%),linear-gradient(to bottom,transparent 60%,rgba(26,22,18,0.4) 100%);
+  pointer-events:none;
+}
+
+.sidebar-logo-area{
+  padding:26px 22px 18px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  position:relative;z-index:1;
+}
+
+.lacuna-wordmark{display:flex;align-items:baseline;gap:0;margin-bottom:4px}
+.lacuna-l{font-family:var(--display);font-style:italic;font-size:27px;color:var(--amber-light);line-height:1;margin-right:1px;font-weight:300}
+.lacuna-acuna{font-family:var(--sans);font-size:19px;font-weight:300;color:rgba(255,255,255,0.90);letter-spacing:-0.3px;line-height:1}
+.lacuna-tagline{font-family:var(--mono);font-size:9px;font-weight:300;color:rgba(255,255,255,0.22);letter-spacing:2px;text-transform:uppercase;margin-top:6px}
+
+.sidebar-nav{flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:1px;position:relative;z-index:1;overflow-y:auto}
+.nav-section-label{font-family:var(--mono);font-size:8.5px;font-weight:400;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.18);padding:14px 12px 5px}
+
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:8.5px 12px;
+  border-radius:var(--r-sm);cursor:pointer;
+  color:rgba(255,255,255,0.42);font-size:12.5px;font-weight:400;letter-spacing:-0.1px;
+  transition:all 0.16s ease;border:none;background:none;width:100%;text-align:left;
+}
+.nav-item:hover{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.75)}
+.nav-item.active{background:rgba(200,132,42,0.12);color:var(--amber-light)}
+
+.nav-icon{width:15px;height:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:0.65}
+.nav-item.active .nav-icon{opacity:1}
+
+.nav-badge{
+  margin-left:auto;font-family:var(--mono);font-size:9.5px;font-weight:500;
+  color:var(--amber-light);background:rgba(200,132,42,0.12);border:1px solid var(--amber-border);
+  padding:1px 7px;border-radius:20px;min-width:20px;text-align:center;
+}
+
+.sidebar-bottom{padding:14px 22px;border-top:1px solid rgba(255,255,255,0.05);position:relative;z-index:1}
+.sidebar-org{font-size:11px;font-weight:500;color:rgba(255,255,255,0.3);margin-bottom:2px;letter-spacing:0.2px}
+.sidebar-version{font-family:var(--mono);font-size:9.5px;color:rgba(255,255,255,0.14);letter-spacing:0.5px;line-height:1.7}
+
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--cream)}
+
+.topbar{
+  background:var(--parchment);
+  border-bottom:1px solid var(--gray-100);
+  padding:0 34px;height:58px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;position:relative;z-index:10;
+  box-shadow:var(--shadow-sm);
+}
+.topbar-crumb{font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);font-weight:400;margin-bottom:2px}
+.topbar-title{font-family:var(--display);font-size:18px;font-weight:300;font-style:italic;color:var(--ink);letter-spacing:-0.2px;line-height:1}
+.topbar-actions{display:flex;align-items:center;gap:10px}
+
+.content{flex:1;overflow-y:auto;padding:30px 34px}
+.content::-webkit-scrollbar{width:4px}
+.content::-webkit-scrollbar-track{background:transparent}
+.content::-webkit-scrollbar-thumb{background:var(--gray-200);border-radius:4px}
+.sidebar-nav::-webkit-scrollbar{width:3px}
+.sidebar-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:3px}
+
+.btn{display:inline-flex;align-items:center;gap:7px;border:none;cursor:pointer;font-family:var(--sans);font-size:12.5px;font-weight:500;letter-spacing:-0.1px;border-radius:var(--r-sm);transition:all 0.15s ease;white-space:nowrap;outline:none}
+.btn:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-md{padding:9px 18px}
+
+.btn-primary{background:var(--ink);color:var(--cream)}
+.btn-primary:hover{background:var(--bark)}
+.btn-primary:disabled{opacity:0.35;cursor:not-allowed}
+
+.btn-amber{background:var(--amber);color:#fff}
+.btn-amber:hover{background:var(--amber-light)}
+.btn-amber:disabled{opacity:0.35;cursor:not-allowed}
+
+.btn-ghost{background:transparent;color:var(--gray-500);border:1px solid var(--gray-200)}
+.btn-ghost:hover{background:var(--gray-50);color:var(--gray-700);border-color:var(--gray-300)}
+
+.btn-danger{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border)}
+.btn-danger:hover{background:rgba(184,48,48,0.10)}
+
+.card{background:var(--parchment);border:1px solid var(--gray-100);border-radius:var(--r-lg);box-shadow:var(--shadow-sm);margin-bottom:16px;overflow:hidden}
+.card-header{padding:18px 22px 0}
+.card-body{padding:18px 22px}
+.card-label{font-family:var(--mono);font-size:9.5px;font-weight:400;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:4px}
+.card-title{font-family:var(--display);font-size:16px;font-style:italic;color:var(--ink);margin-bottom:14px;letter-spacing:-0.2px;font-weight:300}
+.section-divider{height:1px;background:var(--gray-100);margin:0 22px}
+
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.stat-card{background:var(--parchment);border:1px solid var(--gray-100);border-radius:var(--r-lg);padding:18px 20px;box-shadow:var(--shadow-sm);transition:box-shadow 0.2s}
+.stat-card:hover{box-shadow:var(--shadow-md)}
+.stat-label{font-family:var(--mono);font-size:9px;font-weight:400;letter-spacing:1.8px;text-transform:uppercase;color:var(--gray-400);margin-bottom:10px}
+.stat-value{font-family:var(--display);font-size:36px;font-weight:300;line-height:1;color:var(--ink);letter-spacing:-1px}
+.stat-value.success{color:var(--success)}
+.stat-value.warn{color:var(--warn)}
+.stat-value.danger{color:var(--danger)}
+.stat-value.amber{color:var(--amber)}
+.stat-delta{margin-top:7px;font-size:11px;color:var(--gray-400);font-weight:300}
+
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px 3px 7px;border-radius:20px;font-family:var(--mono);font-size:9.5px;font-weight:400;letter-spacing:0.5px;white-space:nowrap}
+.badge-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.badge-dot.pulse{animation:dot-pulse 1.8s ease-in-out infinite}
+@keyframes dot-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.35;transform:scale(0.7)}}
+.badge-queued{background:var(--gray-50);color:var(--gray-400);border:1px solid var(--gray-200)}
+.badge-running{background:var(--info-bg);color:var(--info);border:1px solid var(--info-border)}
+.badge-success{background:var(--success-bg);color:var(--success);border:1px solid var(--success-border)}
+.badge-failed{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border)}
+.badge-cancelled{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-border)}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field-label{font-size:12px;font-weight:500;color:var(--gray-700);letter-spacing:-0.1px}
+.field-required{color:var(--danger);margin-left:2px}
+.field-input{background:var(--cream);border:1px solid var(--gray-200);border-radius:var(--r-sm);padding:8px 12px;color:var(--ink);font-family:var(--mono);font-size:11.5px;font-weight:300;outline:none;transition:border-color 0.14s,box-shadow 0.14s;width:100%;letter-spacing:0.2px}
+.field-input:hover{border-color:var(--gray-300)}
+.field-input:focus{border-color:var(--amber);box-shadow:0 0 0 3px var(--amber-dim)}
+.field-input::placeholder{color:var(--gray-300)}
+
+.steps-row{display:flex;flex-wrap:wrap;gap:7px}
+.step-pill{display:flex;align-items:center;gap:6px;padding:6px 13px;border-radius:20px;border:1px solid var(--gray-200);cursor:pointer;font-family:var(--mono);font-size:10.5px;font-weight:400;letter-spacing:0.5px;color:var(--gray-500);background:var(--cream);transition:all 0.14s;user-select:none}
+.step-pill:hover{border-color:var(--gray-300);color:var(--gray-700)}
+.step-pill.on{border-color:var(--amber-border);color:var(--amber);background:var(--amber-dim)}
+.step-num{width:15px;height:15px;border-radius:50%;background:var(--gray-100);color:var(--gray-500);font-size:8.5px;display:flex;align-items:center;justify-content:center;font-weight:500;flex-shrink:0;transition:all 0.14s}
+.step-pill.on .step-num{background:rgba(200,132,42,0.18);color:var(--amber)}
+
+.pipeline-track{display:flex;align-items:center;gap:0;margin:4px 0 14px;overflow-x:auto;padding-bottom:2px}
+.pipeline-node{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0}
+.pipeline-node-circle{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--gray-200);background:var(--cream);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9.5px;font-weight:400;color:var(--gray-400);transition:all 0.22s;position:relative;z-index:1}
+.pipeline-node.done .pipeline-node-circle{border-color:var(--success);background:var(--success-bg);color:var(--success)}
+.pipeline-node.active .pipeline-node-circle{border-color:var(--amber);background:var(--amber-dim);color:var(--amber);animation:dot-pulse 1.8s ease-in-out infinite;box-shadow:0 0 0 4px rgba(200,132,42,0.08)}
+.pipeline-node-label{font-family:var(--mono);font-size:8.5px;letter-spacing:1px;text-transform:uppercase;color:var(--gray-300);text-align:center}
+.pipeline-node.done .pipeline-node-label{color:var(--success)}
+.pipeline-node.active .pipeline-node-label{color:var(--amber)}
+.pipeline-edge{flex:1;height:1.5px;background:var(--gray-200);margin-bottom:22px;transition:background 0.3s;min-width:18px}
+.pipeline-edge.done{background:var(--success)}
+
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{text-align:left;font-family:var(--mono);font-size:9px;font-weight:400;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-400);padding:0 18px 11px;border-bottom:1px solid var(--gray-100)}
+.data-table td{padding:12px 18px;border-bottom:1px solid rgba(232,228,219,0.5);font-size:12.5px;vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tbody tr{cursor:pointer;transition:background 0.11s}
+.data-table tbody tr:hover td{background:rgba(200,132,42,0.04)}
+.cell-mono{font-family:var(--mono);font-size:11px;color:var(--gray-500);letter-spacing:0.3px}
+
+.log-viewer{background:#120e09;border-radius:var(--r-md);border:1px solid rgba(255,255,255,0.05);height:340px;overflow-y:auto;padding:16px 18px;font-family:var(--mono);font-size:11px;line-height:1.8;letter-spacing:0.2px}
+.log-viewer::-webkit-scrollbar{width:3px}
+.log-viewer::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:3px}
+.log-line{color:rgba(255,255,255,0.38);white-space:pre-wrap;word-break:break-all}
+.log-line.err{color:#e07070}
+.log-line.warn{color:#d4a055}
+.log-line.ok{color:#7ab870}
+.log-line.info{color:#7ea8c4}
+.log-empty{height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.18);font-size:11px;letter-spacing:1px}
+
+.report-pre{background:var(--cream);border:1px solid var(--gray-100);border-radius:var(--r-md);padding:20px;font-family:var(--mono);font-size:11.5px;line-height:1.85;white-space:pre-wrap;max-height:460px;overflow-y:auto;color:var(--gray-500)}
+
+.output-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:var(--r-sm);border:1px solid var(--gray-100);margin-bottom:5px;background:var(--cream);font-family:var(--mono);font-size:11px;color:var(--gray-500);transition:border-color 0.14s}
+.output-row:hover{border-color:var(--gray-200)}
+.output-ext{background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);font-size:8.5px;letter-spacing:1px;text-transform:uppercase;padding:2px 6px;border-radius:3px;flex-shrink:0}
+
+.tabs-row{display:flex;gap:0;border-bottom:1px solid var(--gray-100);margin-bottom:18px}
+.tab-btn{padding:9px 16px;font-family:var(--mono);font-size:10px;font-weight:400;letter-spacing:1px;text-transform:uppercase;border:none;background:none;cursor:pointer;color:var(--gray-400);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.14s}
+.tab-btn:hover{color:var(--gray-600)}
+.tab-btn.active{color:var(--amber);border-bottom-color:var(--amber)}
+
+.hero{
+  background:var(--ink);
+  border-radius:var(--r-xl);padding:34px 38px;margin-bottom:18px;position:relative;overflow:hidden;
+  border:1px solid rgba(200,132,42,0.10);
+}
+.hero::before{content:'';position:absolute;right:-50px;top:-50px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle at center,rgba(200,132,42,0.09) 0%,transparent 65%)}
+.hero::after{content:'';position:absolute;right:110px;bottom:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle at center,rgba(59,92,42,0.07) 0%,transparent 65%)}
+.hero-eyebrow{font-family:var(--mono);font-size:9.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--amber);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.hero-eyebrow::before{content:'';width:18px;height:1px;background:var(--amber);display:inline-block}
+.hero-headline{font-family:var(--display);font-size:30px;font-weight:300;font-style:italic;color:rgba(247,245,239,0.95);letter-spacing:-0.5px;line-height:1.15;margin-bottom:10px}
+.hero-headline strong{font-style:normal;color:var(--amber-light);font-weight:300}
+.hero-sub{font-size:13px;color:rgba(247,245,239,0.38);font-weight:300;max-width:460px;line-height:1.7;margin-bottom:22px}
+.hero-pills{display:flex;flex-wrap:wrap;gap:7px}
+.hero-pill{font-family:var(--mono);font-size:9.5px;letter-spacing:0.5px;color:rgba(247,245,239,0.28);border:1px solid rgba(247,245,239,0.09);border-radius:20px;padding:3px 11px;font-style:italic}
+
+.status-inline{display:flex;align-items:center;justify-content:space-between;padding:15px 22px}
+.status-endpoint{font-family:var(--mono);font-size:11.5px;color:var(--gray-600);letter-spacing:0.3px}
+.status-hint{font-size:11.5px;color:var(--gray-400);margin-top:3px;font-weight:300}
+
+.ref-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.ref-card{border:1px solid var(--gray-100);border-radius:var(--r-md);padding:14px 16px;background:var(--cream);transition:all 0.16s;cursor:default}
+.ref-card:hover{border-color:var(--amber-border);box-shadow:0 0 0 3px rgba(200,132,42,0.04)}
+.ref-step-id{font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);margin-bottom:5px;font-weight:400}
+.ref-step-name{font-family:var(--display);font-style:italic;font-size:14px;color:var(--gray-700);margin-bottom:4px;font-weight:300}
+.ref-step-desc{font-size:11.5px;color:var(--gray-400);font-weight:300;line-height:1.5}
+
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 24px;gap:8px}
+.empty-icon{width:40px;height:40px;background:var(--gray-50);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:5px}
+.empty-title{font-family:var(--display);font-style:italic;font-size:16px;color:var(--gray-700);font-weight:300}
+.empty-sub{font-size:12px;color:var(--gray-400);font-weight:300}
+
+.error-box{display:flex;align-items:flex-start;gap:9px;padding:11px 14px;background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:var(--r-sm);color:var(--danger);font-size:12px;margin-bottom:14px}
+
+.flex{display:flex}.flex-center{display:flex;align-items:center}.flex-between{display:flex;align-items:center;justify-content:space-between}.flex-end{display:flex;justify-content:flex-end;align-items:center}
+.gap-2{gap:8px}.gap-3{gap:12px}.mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}.mt-4{margin-top:16px}
+.text-sm{font-size:12px}.text-xs{font-size:11px}.text-muted{color:var(--gray-400)}.text-mono{font-family:var(--mono)}.text-amber{color:var(--amber)}
+.scroll-anchor{height:1px}
+.step-tag{display:inline-flex;align-items:center;font-family:var(--mono);font-size:9.5px;letter-spacing:0.5px;padding:2px 7px;border-radius:3px;background:var(--gray-50);color:var(--gray-500);border:1px solid var(--gray-100);margin:2px}
+
+@keyframes fade-up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.content>*{animation:fade-up 0.28s ease both}
+.content>*:nth-child(1){animation-delay:0s}
+.content>*:nth-child(2){animation-delay:.05s}
+.content>*:nth-child(3){animation-delay:.09s}
+.content>*:nth-child(4){animation-delay:.13s}
+.content>*:nth-child(5){animation-delay:.16s}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+const API = 'http://localhost:8000/api';
+const ALL_STEPS = ['qc','align','damage','genotype','haplotype','annotate'];
+const STEP_META = {
+  qc:        { label:'Quality Control',   tool:'AdapterRemoval2 + FastQC', abbr:'QC'  },
+  align:     { label:'Alignment',         tool:'BWA-MEM / Bowtie2',        abbr:'ALN' },
+  damage:    { label:'Damage Estimation', tool:'mapDamage2 / built-in',    abbr:'DMG' },
+  genotype:  { label:'Genotyping',        tool:'ANGSD',                    abbr:'GNT' },
+  haplotype: { label:'Haplotype Phasing', tool:'Damage-aware (novel)',      abbr:'HAP' },
+  annotate:  { label:'Annotation',        tool:'SnpEff',                   abbr:'ANN' },
+};
+
+function timeSince(iso) {
+  if (!iso) return '—';
+  const d = (Date.now() - new Date(iso+'Z').getTime())/1000;
+  if (d < 60)   return `${Math.round(d)}s ago`;
+  if (d < 3600) return `${Math.round(d/60)}m ago`;
+  return `${Math.round(d/3600)}h ago`;
+}
+function fmtDuration(start, end) {
+  if (!start) return '—';
+  const s = (new Date((end||new Date().toISOString())+(end?'Z':'')).getTime()-new Date(start+'Z').getTime())/1000;
+  if (s < 60) return `${Math.round(s)}s`;
+  return `${Math.round(s/60)}m ${Math.round(s%60)}s`;
+}
+function extOf(p){const parts=p.split('.');return parts.length>1?parts.pop().toLowerCase():'file'}
+function classify(line){const l=line.toLowerCase();if(l.includes('error')||l.includes('failed')||l.includes('exception'))return 'err';if(l.includes('warn'))return 'warn';if(l.includes('✓')||l.includes('complete')||l.includes('success'))return 'ok';if(l.includes('info')||l.includes('running')||l.includes('step'))return 'info';return ''}
+async function apiFetch(method,path,body){const r=await fetch(API+path,{method,headers:{'Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{})});if(!r.ok){const e=await r.json().catch(()=>({detail:r.statusText}));throw new Error(e.detail||`HTTP ${r.status}`)}return r.json()}
+
+function StatusBadge({status}){
+  const map={queued:{cls:'badge-queued',label:'Queued',pulse:false},running:{cls:'badge-running',label:'Running',pulse:true},success:{cls:'badge-success',label:'Complete',pulse:false},failed:{cls:'badge-failed',label:'Failed',pulse:false},cancelled:{cls:'badge-cancelled',label:'Cancelled',pulse:false}};
+  const m=map[status]||map.queued;
+  return <span className={`badge ${m.cls}`}><span className={`badge-dot${m.pulse?' pulse':''}`}/>{m.label}</span>;
+}
+
+function PipelineTrack({steps,currentStep,status}){
+  const getState=(s,i)=>{const ci=steps.indexOf(currentStep);if(status==='success')return 'done';if(s===currentStep)return 'active';if(ci>=0&&i<ci)return 'done';return 'pending'};
+  return <div className="pipeline-track">{steps.map((s,i)=><React.Fragment key={s}><div className={`pipeline-node ${getState(s,i)}`}><div className="pipeline-node-circle">{STEP_META[s]?.abbr||s.slice(0,3).toUpperCase()}</div><div className="pipeline-node-label">{s}</div></div>{i<steps.length-1&&<div className={`pipeline-edge ${getState(s,i)==='done'?'done':''}`}/>}</React.Fragment>)}</div>;
+}
+
+function LogViewer({jobId,live}){
+  const [lines,setLines]=useState([]);
+  const anchorRef=useRef(null);
+  useEffect(()=>{if(!jobId)return;const tick=async()=>{try{const{logs}=await apiFetch('GET',`/jobs/${jobId}/logs`);setLines(logs||[])}catch{}};tick();const iv=setInterval(tick,live?1200:8000);return()=>clearInterval(iv)},[jobId,live]);
+  useEffect(()=>{anchorRef.current?.scrollIntoView({behavior:'smooth'})},[lines]);
+  return <div className="log-viewer">{lines.length===0?<div className="log-empty">awaiting output…</div>:lines.map((l,i)=><div key={i} className={`log-line ${classify(l)}`}>{l||'\u00a0'}</div>)}<div ref={anchorRef} className="scroll-anchor"/></div>;
+}
+
+function Sidebar({page,setPage,jobCount}){
+  const nav=[{id:'dashboard',label:'Dashboard',icon:<DashIcon/>},{id:'submit',label:'New Run',icon:<PlusIcon/>},{id:'jobs',label:'Job Queue',icon:<QueueIcon/>,count:jobCount}];
+  return <aside className="sidebar">
+    <div className="sidebar-logo-area">
+      <div className="lacuna-wordmark"><span className="lacuna-l">L</span><span className="lacuna-acuna">acuna</span></div>
+      <div className="lacuna-tagline">Ancient DNA Pipeline</div>
+    </div>
+    <nav className="sidebar-nav">
+      <div className="nav-section-label">Workspace</div>
+      {nav.map(item=><button key={item.id} className={`nav-item${page===item.id?' active':''}`} onClick={()=>setPage(item.id)}><span className="nav-icon">{item.icon}</span>{item.label}{item.count>0&&<span className="nav-badge">{item.count}</span>}</button>)}
+    </nav>
+    <div className="sidebar-bottom">
+      <div className="sidebar-org">Rewild Genomics</div>
+      <div className="sidebar-version">lacuna v0.1.0<br/>rewildgenomics.com</div>
+    </div>
+  </aside>;
+}
+
+function SubmitPage({onJobCreated}){
+  const [form,setForm]=useState({input_path:'',output_dir:'',reference:'',config_path:'',threads:'',steps:[...ALL_STEPS]});
+  const [loading,setLoading]=useState(false);
+  const [error,setError]=useState('');
+  const set=(k,v)=>setForm(f=>({...f,[k]:v}));
+  const toggleStep=s=>set('steps',form.steps.includes(s)?form.steps.filter(x=>x!==s):ALL_STEPS.filter(x=>[...form.steps,s].includes(x)));
+  const submit=async()=>{if(!form.input_path||!form.output_dir){setError('Input path and output directory are required.');return}setError('');setLoading(true);try{const body={input_path:form.input_path,output_dir:form.output_dir,steps:form.steps,...(form.reference&&{reference:form.reference}),...(form.config_path&&{config_path:form.config_path}),...(form.threads&&{threads:parseInt(form.threads)})};const{job_id}=await apiFetch('POST','/jobs/run',body);onJobCreated(job_id)}catch(e){setError(e.message)}finally{setLoading(false)}};
+  return <>
+    <div className="card">
+      <div className="card-header"><div className="card-label">Step 1</div><div className="card-title">Input &amp; Output Paths</div></div>
+      <div className="section-divider"/>
+      <div className="card-body">
+        <div className="form-grid">
+          <div className="field"><label className="field-label">Input path<span className="field-required">*</span></label><input className="field-input" placeholder="/data/sample.fastq.gz" value={form.input_path} onChange={e=>set('input_path',e.target.value)}/></div>
+          <div className="field"><label className="field-label">Output directory<span className="field-required">*</span></label><input className="field-input" placeholder="/results/sample_01" value={form.output_dir} onChange={e=>set('output_dir',e.target.value)}/></div>
+          <div className="field"><label className="field-label">Reference FASTA</label><input className="field-input" placeholder="/ref/genome.fa" value={form.reference} onChange={e=>set('reference',e.target.value)}/></div>
+          <div className="field"><label className="field-label">Config YAML</label><input className="field-input" placeholder="/config/custom.yaml" value={form.config_path} onChange={e=>set('config_path',e.target.value)}/></div>
+          <div className="field"><label className="field-label">Threads</label><input className="field-input" type="number" placeholder="4" value={form.threads} onChange={e=>set('threads',e.target.value)}/></div>
+        </div>
+      </div>
+    </div>
+    <div className="card">
+      <div className="card-header"><div className="card-label">Step 2</div><div className="card-title">Pipeline Configuration</div></div>
+      <div className="section-divider"/>
+      <div className="card-body">
+        <div className="steps-row">{ALL_STEPS.map((s,i)=><div key={s} className={`step-pill${form.steps.includes(s)?' on':''}`} onClick={()=>toggleStep(s)}><span className="step-num">{i+1}</span>{s}</div>)}</div>
+        <div style={{marginTop:12,fontSize:11.5,color:'var(--gray-400)',fontWeight:300}}>{form.steps.length} of {ALL_STEPS.length} steps selected — executed in canonical order</div>
+      </div>
+    </div>
+    {error&&<div className="error-box"><span>⚠</span> {error}</div>}
+    <div className="flex-end gap-3"><button className="btn btn-ghost btn-md">Save draft</button><button className="btn btn-amber btn-md" onClick={submit} disabled={loading||form.steps.length===0}>{loading?'Submitting…':'Launch Pipeline →'}</button></div>
+  </>;
+}
+
+function JobDetail({jobId}){
+  const [job,setJob]=useState(null);
+  const [report,setReport]=useState('');
+  const [tab,setTab]=useState('logs');
+  useEffect(()=>{if(!jobId)return;const poll=setInterval(async()=>{try{const j=await apiFetch('GET',`/jobs/${jobId}`);setJob(j);if(j.status==='success'&&!report){try{const r=await apiFetch('GET',`/jobs/${jobId}/report`);setReport(r.content)}catch{}}}catch{}},[1500]);return()=>clearInterval(poll)},[jobId]);
+  const cancel=async()=>{try{await apiFetch('DELETE',`/jobs/${jobId}`)}catch{}};
+  if(!job)return <div className="card"><div className="empty-state"><div className="empty-icon">⏳</div><div className="empty-title">Loading job</div><div className="empty-sub">Fetching run details…</div></div></div>;
+  const hasTabs={logs:true,report:!!report,outputs:!!(job.outputs&&Object.keys(job.outputs).length)};
+  return <>
+    <div className="card">
+      <div className="card-body">
+        <div className="flex-between mb-4">
+          <div>
+            <div className="card-label">Run ID</div>
+            <div style={{fontFamily:'var(--mono)',fontSize:13.5,color:'var(--ink)',letterSpacing:'0.4px',marginBottom:3}}>{job.job_id}</div>
+            <div className="text-sm text-muted" style={{fontWeight:300}}>{job.type==='run'?'Full pipeline':'Single step'}&nbsp;·&nbsp;submitted {timeSince(job.submitted_at)}&nbsp;·&nbsp;{fmtDuration(job.started_at,job.finished_at)}</div>
+          </div>
+          <div className="flex-center gap-2"><StatusBadge status={job.status}/>{(job.status==='running'||job.status==='queued')&&<button className="btn btn-danger btn-sm" onClick={cancel}>Cancel</button>}</div>
+        </div>
+        <PipelineTrack steps={job.steps} currentStep={null} status={job.status}/>
+      </div>
+    </div>
+    <div className="tabs-row">{Object.entries(hasTabs).filter(([,v])=>v).map(([t])=><button key={t} className={`tab-btn${tab===t?' active':''}`} onClick={()=>setTab(t)}>{t}</button>)}</div>
+    {tab==='logs'&&<LogViewer jobId={jobId} live={job.status==='running'||job.status==='queued'}/>}
+    {tab==='report'&&report&&<pre className="report-pre">{report}</pre>}
+    {tab==='outputs'&&<div className="card"><div className="card-body"><div className="card-label" style={{marginBottom:12}}>Output files</div>{Object.entries(job.outputs||{}).map(([step,files])=><div key={step} style={{marginBottom:16}}><div style={{fontFamily:'var(--mono)',fontSize:9,letterSpacing:2,textTransform:'uppercase',color:'var(--amber)',marginBottom:7}}>{step}</div>{files.map(f=><div key={f} className="output-row"><span className="output-ext">{extOf(f)}</span><span style={{flex:1,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{f}</span></div>)}</div>)}</div></div>}
+  </>;
+}
+
+function JobsPage({selectedJobId,setSelectedJobId}){
+  const [jobs,setJobs]=useState([]);
+  useEffect(()=>{const iv=setInterval(async()=>{try{const{jobs:j}=await apiFetch('GET','/jobs');setJobs(j)}catch{}},[2500]);return()=>clearInterval(iv)},[]);
+  if(selectedJobId)return <><button className="btn btn-ghost btn-sm mb-4" onClick={()=>setSelectedJobId(null)}>← All jobs</button><JobDetail jobId={selectedJobId}/></>;
+  return <div className="card" style={{padding:0}}>{jobs.length===0?<div className="empty-state"><div className="empty-icon">🔬</div><div className="empty-title">No runs yet</div><div className="empty-sub">Submit a pipeline run to get started.</div></div>:<table className="data-table"><thead><tr><th>Run ID</th><th>Type</th><th>Steps</th><th>Status</th><th>Submitted</th><th>Duration</th></tr></thead><tbody>{jobs.map(j=><tr key={j.job_id} onClick={()=>setSelectedJobId(j.job_id)}><td className="cell-mono">{j.job_id.slice(0,12)}…</td><td style={{fontFamily:'var(--mono)',fontSize:10.5,color:'var(--gray-500)'}}>{j.type}</td><td><div className="flex" style={{flexWrap:'wrap',gap:3}}>{j.steps.map(s=><span key={s} className="step-tag">{s}</span>)}</div></td><td><StatusBadge status={j.status}/></td><td className="cell-mono text-xs">{timeSince(j.submitted_at)}</td><td className="cell-mono text-xs">{fmtDuration(j.started_at,j.finished_at)}</td></tr>)}</tbody></table>}</div>;
+}
+
+function DashboardPage({setPage,setSelectedJobId}){
+  const [jobs,setJobs]=useState([]);
+  const [healthy,setHealthy]=useState(null);
+  useEffect(()=>{const iv=setInterval(async()=>{try{const{jobs:j}=await apiFetch('GET','/jobs');setJobs(j)}catch{}},[3000]);apiFetch('GET','/health').then(()=>setHealthy(true)).catch(()=>setHealthy(false));return()=>clearInterval(iv)},[]);
+  const counts={total:jobs.length,running:jobs.filter(j=>j.status==='running').length,success:jobs.filter(j=>j.status==='success').length,failed:jobs.filter(j=>j.status==='failed').length};
+  const recent=jobs.slice(0,5);
+  return <>
+    <div className="hero">
+      <div className="hero-eyebrow">Rewild Genomics Platform</div>
+      <div className="hero-headline"><em>Lacuna</em> — Ancient DNA<br/><strong>Pipeline Interface</strong></div>
+      <div className="hero-sub">End-to-end processing of degraded paleogenomic specimens. Damage-aware alignment, sub-1× genotyping, and novel haplotype phasing for de-extinction and conservation genomics.</div>
+      <div className="hero-pills">{['Panthera atrox','Mammut americanum','Coelodonta antiquitatis','Thylacinus cynocephalus','Arctodus simus'].map(s=><span key={s} className="hero-pill">{s}</span>)}</div>
+    </div>
+    <div className="stats-grid">
+      <div className="stat-card"><div className="stat-label">Total Runs</div><div className="stat-value">{counts.total}</div><div className="stat-delta">All time</div></div>
+      <div className="stat-card"><div className="stat-label">Running</div><div className={`stat-value${counts.running>0?' amber':''}`}>{counts.running}</div><div className="stat-delta">Active jobs</div></div>
+      <div className="stat-card"><div className="stat-label">Completed</div><div className={`stat-value${counts.success>0?' success':''}`}>{counts.success}</div><div className="stat-delta">Successful</div></div>
+      <div className="stat-card"><div className="stat-label">Failed</div><div className={`stat-value${counts.failed>0?' danger':''}`}>{counts.failed}</div><div className="stat-delta">Require review</div></div>
+    </div>
+    <div className="card">
+      <div className="status-inline">
+        <div>
+          <div className="card-label" style={{marginBottom:4}}>Backend API</div>
+          <div className="status-endpoint">FastAPI · <span style={{color:'var(--amber)'}}>localhost:8000</span></div>
+          {!healthy&&healthy!==null&&<div className="status-hint">Start with <code style={{fontFamily:'var(--mono)',fontSize:10.5,background:'var(--cream)',padding:'1px 5px',borderRadius:3}}>uvicorn server:app --reload</code></div>}
+        </div>
+        <StatusBadge status={healthy===null?'queued':healthy?'success':'failed'}/>
+      </div>
+    </div>
+    {recent.length>0&&<div className="card" style={{padding:0}}><div style={{padding:'18px 22px 0'}}><div className="card-label" style={{marginBottom:4}}>Recent Activity</div></div><div style={{height:6}}/><table className="data-table"><thead><tr><th>Run ID</th><th>Status</th><th>Steps</th><th>Submitted</th></tr></thead><tbody>{recent.map(j=><tr key={j.job_id} onClick={()=>{setSelectedJobId(j.job_id);setPage('jobs')}}><td className="cell-mono">{j.job_id.slice(0,12)}…</td><td><StatusBadge status={j.status}/></td><td><span style={{fontFamily:'var(--mono)',fontSize:10.5,color:'var(--gray-400)'}}>{j.steps.join(' → ')}</span></td><td className="cell-mono text-xs">{timeSince(j.submitted_at)}</td></tr>)}</tbody></table></div>}
+    <div className="card">
+      <div className="card-body">
+        <div className="card-label" style={{marginBottom:4}}>Pipeline Reference</div>
+        <div style={{fontFamily:'var(--display)',fontStyle:'italic',fontWeight:300,fontSize:15,color:'var(--gray-700)',marginBottom:14}}>Six-stage processing workflow</div>
+        <div className="ref-grid">{ALL_STEPS.map((s,i)=><div key={s} className="ref-card"><div className="ref-step-id">0{i+1} / {STEP_META[s]?.abbr}</div><div className="ref-step-name">{STEP_META[s]?.label}</div><div className="ref-step-desc">{STEP_META[s]?.tool}</div></div>)}</div>
+      </div>
+    </div>
+  </>;
+}
+
+const DashIcon=()=><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3"/><rect x="8" y="1" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3"/><rect x="1" y="8" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3"/><rect x="8" y="8" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3"/></svg>;
+const PlusIcon=()=><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>;
+const QueueIcon=()=><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 3h12M1 7h9M1 11h6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>;
+
+function App(){
+  const [page,setPage]=useState('dashboard');
+  const [selectedJobId,setSelectedJobId]=useState(null);
+  const [jobCount,setJobCount]=useState(0);
+  useEffect(()=>{const iv=setInterval(async()=>{try{const{jobs}=await apiFetch('GET','/jobs');setJobCount(jobs.length)}catch{}},[6000]);return()=>clearInterval(iv)},[]);
+  const handleJobCreated=jobId=>{setSelectedJobId(jobId);setPage('jobs')};
+  const navigate=p=>{setPage(p);if(p!=='jobs')setSelectedJobId(null)};
+  const topbarMeta={dashboard:{crumb:'Overview',title:'Dashboard'},submit:{crumb:'Configure',title:'New pipeline run'},jobs:{crumb:'Job queue',title:'Run history'}};
+  const m=topbarMeta[page];
+  return <div className="app">
+    <Sidebar page={page} setPage={navigate} jobCount={jobCount}/>
+    <div className="main">
+      <header className="topbar">
+        <div className="topbar-left"><div className="topbar-crumb">{m.crumb}</div><div className="topbar-title">{m.title}</div></div>
+        <div className="topbar-actions">{page!=='submit'&&<button className="btn btn-amber btn-sm" onClick={()=>navigate('submit')}>New run →</button>}</div>
+      </header>
+      <div className="content">
+        {page==='dashboard'&&<DashboardPage setPage={navigate} setSelectedJobId={setSelectedJobId}/>}
+        {page==='submit'&&<SubmitPage onJobCreated={handleJobCreated}/>}
+        {page==='jobs'&&<JobsPage selectedJobId={selectedJobId} setSelectedJobId={setSelectedJobId}/>}
+      </div>
+    </div>
+  </div>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
