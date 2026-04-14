@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://rewildgenomics.com/species-cave-lion.html">
+<title>Cave Lion — Rewild Genomics</title>
+<link rel="icon" type="image/png" href="rewild-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,200;1,9..144,300;1,9..144,400&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --void: #080C09; --deep: #0F1810; --forest: #162012;
+    --fern: #8FBC6A; --cream: #F4F0E8;
+    --species-color: #E8C472; /* cave lion — gold */
+    --species-dim: #9A7E3A;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Instrument Sans', sans-serif; background: var(--void); color: var(--cream); overflow-x: hidden; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; padding: 20px 56px; display: flex; align-items: center; justify-content: space-between; background: rgba(8,12,9,0.88); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(143,188,106,0.07); }
+  .nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+  
+  
+  
+  .nav-back { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(244,240,232,0.35); text-decoration: none; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; }
+  .nav-back:hover { color: var(--fern); }
+  .nav-right { display: flex; align-items: center; gap: 32px; }
+  .nav-species-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.7; }
+  .species-hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 0 80px; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: var(--void); }
+  .hero-bg::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 65% 60% at 65% 45%, rgba(232,196,114,0.10) 0%, transparent 55%), radial-gradient(ellipse 35% 40% at 5% 80%, rgba(59,92,42,0.07) 0%, transparent 50%); }
+  .hero-bg::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(232,196,114,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(232,196,114,0.025) 1px, transparent 1px); background-size: 80px 80px; mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%); }
+  .hero-content { position: relative; z-index: 2; padding: 0 56px; max-width: 860px; }
+  .hero-breadcrumb { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.3); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 32px; display: flex; align-items: center; gap: 10px; }
+  .hero-breadcrumb span { color: var(--species-color); opacity: 0.7; }
+  .extinct-badge { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 14px; border-radius: 2px; background: rgba(232,196,114,0.08); border: 1px solid rgba(232,196,114,0.18); color: var(--species-color); }
+  .extinct-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--species-color); opacity: 0.7; }
+  .hero-title { font-family: 'Fraunces', serif; font-size: clamp(60px, 9vw, 120px); font-weight: 200; line-height: 0.92; letter-spacing: -3px; color: var(--cream); margin-bottom: 12px; }
+  .hero-sci { font-family: 'DM Mono', monospace; font-size: 14px; font-style: italic; color: rgba(244,240,232,0.3); letter-spacing: 0.5px; margin-bottom: 32px; }
+  .hero-tagline { font-size: 16px; color: rgba(244,240,232,0.55); line-height: 1.7; font-weight: 300; max-width: 540px; margin-bottom: 56px; }
+  .hero-stats { display: flex; gap: 0; border-top: 1px solid rgba(244,240,232,0.07); padding-top: 36px; }
+  .h-stat { flex: 1; padding: 0 32px 0 0; border-right: 1px solid rgba(244,240,232,0.07); }
+  .h-stat:first-child { padding-left: 0; } .h-stat:last-child { border-right: none; }
+  .h-stat-val { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 200; color: var(--species-color); letter-spacing: -1px; margin-bottom: 4px; }
+  .h-stat-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.3); letter-spacing: 1px; text-transform: uppercase; }
+  .content-section { padding: 96px 56px; max-width: 1200px; margin: 0 auto; }
+  .content-section.alt { background: var(--deep); max-width: none; padding: 96px 0; }
+  .content-section.alt .inner { max-width: 1200px; margin: 0 auto; padding: 0 56px; }
+  .section-tag { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .section-tag::before { content: ''; width: 20px; height: 1px; background: var(--species-color); opacity: 0.5; }
+  .section-title { font-family: 'Fraunces', serif; font-size: clamp(32px, 4vw, 52px); font-weight: 200; color: var(--cream); letter-spacing: -1.5px; line-height: 1.05; margin-bottom: 40px; }
+  .section-title em { font-style: italic; color: var(--species-color); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  .body-text { font-size: 15px; color: rgba(244,240,232,0.6); line-height: 1.85; font-weight: 300; }
+  .body-text p + p { margin-top: 20px; }
+  .body-text strong { color: var(--cream); font-weight: 400; }
+  .pullquote { border-left: 2px solid var(--species-color); padding-left: 28px; margin: 40px 0; font-family: 'Fraunces', serif; font-size: 22px; font-weight: 200; font-style: italic; color: rgba(244,240,232,0.75); line-height: 1.5; }
+  .timeline { position: relative; padding-left: 32px; margin-top: 48px; }
+  .timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 1px; background: linear-gradient(180deg, var(--species-color), transparent); opacity: 0.3; }
+  .t-event { position: relative; margin-bottom: 40px; }
+  .t-event::before { content: ''; position: absolute; left: -36px; top: 6px; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--species-color); background: var(--void); }
+  .t-date { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .t-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 300; color: var(--cream); margin-bottom: 8px; }
+  .t-desc { font-size: 13px; color: rgba(244,240,232,0.45); line-height: 1.7; font-weight: 300; }
+  .genomics-box { background: rgba(232,196,114,0.05); border: 1px solid rgba(232,196,114,0.15); border-radius: 4px; padding: 40px; }
+  .genomics-box h3 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 300; color: var(--cream); margin-bottom: 16px; }
+  .genomics-box p { font-size: 14px; color: rgba(244,240,232,0.55); line-height: 1.8; font-weight: 300; }
+  .genomics-box p + p { margin-top: 14px; }
+  .data-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .data-tag { font-family: 'DM Mono', monospace; font-size: 10px; padding: 5px 12px; border-radius: 2px; background: rgba(232,196,114,0.08); border: 1px solid rgba(232,196,114,0.15); color: var(--species-color); letter-spacing: 0.8px; }
+  .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px; }
+  .impact-card { background: rgba(15,24,16,0.6); border: 1px solid rgba(244,240,232,0.05); padding: 32px 28px; transition: background 0.25s; }
+  .impact-card:hover { background: rgba(232,196,114,0.05); border-color: rgba(232,196,114,0.12); }
+  .impact-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1.5px; margin-bottom: 14px; opacity: 0.6; }
+  .impact-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 300; color: var(--cream); margin-bottom: 10px; }
+  .impact-desc { font-size: 13px; color: rgba(244,240,232,0.45); line-height: 1.7; font-weight: 300; }
+  .back-strip { background: var(--forest); border-top: 1px solid rgba(244,240,232,0.06); padding: 56px; display: flex; align-items: center; justify-content: space-between; }
+  .back-strip h3 { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 300; color: var(--cream); }
+  .back-strip p { font-size: 13px; color: rgba(244,240,232,0.4); margin-top: 4px; }
+  .btn-species { display: inline-block; border: 1px solid rgba(143,188,106,0.3); color: var(--fern); background: transparent; padding: 12px 28px; border-radius: 2px; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
+  .btn-species:hover { background: rgba(143,188,106,0.08); }
+  footer { background: var(--void); border-top: 1px solid rgba(244,240,232,0.06); padding: 40px 56px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+  .footer-links { display: flex; gap: 24px; list-style: none; }
+  .footer-links a { font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase; color: rgba(244,240,232,0.2); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--fern); }
+  .footer-note { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.15); }
+  .hero-image-card { position: absolute; right: 56px; bottom: 80px; width: 380px; z-index: 2; }
+  .hero-image-card img { display: block; width: 100%; height: 480px; object-fit: cover; border-radius: 2px; }
+  .hero-image-card figcaption { font-family: 'DM Mono', monospace; font-size: 9px; color: rgba(244,240,232,0.25); letter-spacing: 0.8px; text-transform: uppercase; margin-top: 10px; line-height: 1.5; }
+  .species-hero { position: relative; }
+  .photo-card { border-radius: 2px; overflow: hidden; }
+  .photo-card img { display: block; width: 100%; height: 320px; object-fit: cover; }
+  .photo-card figcaption { font-family: 'DM Mono', monospace; font-size: 9px; color: rgba(244,240,232,0.25); letter-spacing: 0.8px; text-transform: uppercase; padding: 12px 0 0; line-height: 1.5; }
+  @media (max-width: 900px) { nav { padding: 18px 24px; } .hero-content { padding: 0 24px; } .hero-title { font-size: clamp(48px, 15vw, 90px); letter-spacing: -2px; } .hero-stats { flex-wrap: wrap; gap: 24px; } .h-stat { border-right: none; padding: 0; flex: 0 0 45%; } .content-section { padding: 64px 24px; } .content-section.alt .inner { padding: 0 24px; } .two-col { grid-template-columns: 1fr; gap: 40px; } .impact-grid { grid-template-columns: 1fr; } .back-strip { flex-direction: column; align-items: flex-start; gap: 20px; padding: 40px 24px; } footer { padding: 32px 24px; flex-direction: column; } .hero-image-card { display: none; } }
+
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.nav-logo-anim{
+  overflow:hidden;
+  clip-path:inset(0 0 100% 0);
+  animation:rw-revealDown 900ms cubic-bezier(.2,.8,.2,1) forwards;
+}
+.nav-logo-img{
+  display:block;
+  height:36px;
+  width:auto;
+  transform:translateY(12px);
+  animation:rw-iconSettle 900ms cubic-bezier(.2,.8,.2,1) forwards,rw-float 7s ease-in-out 900ms infinite;
+  filter:brightness(1.1) saturate(1.1);
+}
+@keyframes rw-revealDown{to{clip-path:inset(0 0 0% 0)}}
+@keyframes rw-iconSettle{to{transform:translateY(0)}}
+@keyframes rw-float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-3px)}}
+@media(prefers-reduced-motion:reduce){
+  .nav-logo-anim{clip-path:inset(0 0 0 0);animation:none}
+  .nav-logo-img{transform:none;animation:none;filter:none}
+}
+
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-anim">
+      <img class="nav-logo-img" src="rewild-logo.png" alt="Rewild Genomics">
+    </div>
+  </a>
+  <div class="nav-right"><a href="megafauna-atlas.html" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:rgba(244,240,232,0.25);text-decoration:none;transition:color 0.18s;margin-right:20px;" onmouseover="this.style.color='#8FBC6A'" onmouseout="this.style.color='rgba(244,240,232,0.25)'">Atlas</a><span class="nav-species-label">Species Program</span><a href="platform.html" class="nav-back" style="opacity:0.5">Platform</a><a href="index.html#deextinction" class="nav-back">← All Species</a></div>
+</nav>
+
+<section class="species-hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-breadcrumb">Rewild Genomics <span>/</span> De-extinction Programs <span>/</span> Cave Lion</div>
+    <div class="extinct-badge">Extinct · ~13,000 BP</div>
+    <h1 class="hero-title">Cave<br>Lion</h1>
+    <div class="hero-sci">Panthera spelaea</div>
+    <p class="hero-tagline">The largest lion to ever live, depicted with reverence in the oldest cave paintings humanity has ever made. It hunted mammoths and rhinos across a range that stretched from Britain to Alaska, and it was painted out of existence by the artists who most admired it.</p>
+    <div class="hero-stats">
+      <div class="h-stat"><div class="h-stat-val">~700K</div><div class="h-stat-label">Years on Earth</div></div>
+      <div class="h-stat"><div class="h-stat-val">~1.25m</div><div class="h-stat-label">Shoulder height</div></div>
+      <div class="h-stat"><div class="h-stat-val">~350 kg</div><div class="h-stat-label">Body mass</div></div>
+      <div class="h-stat"><div class="h-stat-val">Carnivora</div><div class="h-stat-label">Order</div></div>
+    </div>
+  </div>
+  <figure class="hero-image-card">
+    <img src="Cavelion.png" alt="Lion in winter steppe landscape">
+    <figcaption>Cave lion habitat reconstruction · Utah high desert in winter</figcaption>
+  </figure>
+</section>
+
+<section class="content-section">
+  <div class="two-col">
+    <div>
+      <div class="section-tag">Natural history</div>
+      <h2 class="section-title">The lion that<br><em>hunted mammoths</em></h2>
+      <div class="body-text">
+        <p>Panthera spelaea was approximately 10% larger than the modern African lion, the biggest felid of its era, and possibly the largest true lion that ever lived. Fossil evidence and cave art suggest it may have been paler in coloration than modern lions, possibly with faint rosette markings, and males likely had only a rudimentary mane or none at all.</p>
+        <p>Its range was extraordinary. The cave lion occupied territory across all of Eurasia, from Spain to Siberia, and crossed the Bering land bridge into North America, where it persisted into the terminal Pleistocene. Some researchers consider the North American specimens a distinct species or subspecies (<em>Panthera atrox</em>), the American lion, though genomic data suggests a close relationship.</p>
+        <p>As an apex predator in the mammoth steppe ecosystem, the cave lion would have hunted reindeer, horses, cave bears, and possibly young woolly mammoths in cooperative hunts and rhinoceroses. Permafrost-preserved specimens show they were powerfully built, with limb proportions similar to modern lions but heavier overall.</p>
+      </div>
+    </div>
+    <div>
+      <figure class="photo-card">
+        <img src="Caveart.png" alt="Cave lion engravings from Chauvet Cave, France, c. 36,000 BP">
+        <figcaption>Chauvet Cave, Ardèche, France · c. 36,000 BP · Engraved cave lions</figcaption>
+      </figure>
+      <div class="pullquote" style="margin-top:32px;">"The oldest animal paintings ever discovered by humans are cave lions, drawn by people who shared the landscape with them."</div>
+      <div class="body-text">
+        <p>The cave lion holds a singular place in human artistic history. The Chauvet Cave paintings in France, dated to approximately 36,000 years ago, contain the earliest known figurative art, and lions are among its most prominent subjects. Paleolithic artists depicted them in motion, hunting in coordinated groups, with a naturalism that can only come from firsthand observation.</p>
+        <p>Two cubs, discovered frozen in Siberian permafrost in 2015 and named Uyan and Dina, represent the best-preserved large Pleistocene predator specimens ever found, with fur, claws, and whisker follicles intact. These specimens have yielded extraordinary genomic data and dramatically advanced our understanding of the species.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="content-section alt">
+  <div class="inner">
+    <div class="section-tag">Extinction</div>
+    <h2 class="section-title">When the prey<br><em>disappeared</em></h2>
+    <div class="two-col">
+      <div class="body-text">
+        <p>The cave lion's extinction is inseparable from the broader collapse of the mammoth steppe megafauna. As an apex predator, it was locked into a trophic cascade: when the large prey species it depended on began to vanish: mammoths, woolly rhinos, giant deer. The cave lion followed them into extinction.</p>
+        <p>This makes the cave lion both a victim of its own extinction event and a marker of it. Its disappearance around 13,000 BP coincides with the final phases of Pleistocene megafauna collapse, a period when human hunting pressure, climate change, and ecosystem unraveling converged to eliminate North America's and Eurasia's largest animals in rapid succession.</p>
+        <p>Direct evidence of human impact on cave lions is limited but suggestive. Cave lion bones in human sites are rare. It is difficult to hunt a 350-kilogram apex predator, but the animals are depicted frequently in ritual contexts, suggesting they held cultural significance. More likely, humans eliminated the cave lion primarily through <strong>prey depletion</strong>: by hunting the same large ungulates that the lions depended on, they removed the base of the food chain that supported these predators.</p>
+        <p>The exceptional preservation of the Siberian permafrost cubs, aged just weeks at death, raises one of paleontology's most poignant questions: what killed them? Genomic analysis of the specimens is ongoing, but no definitive cause of death has been determined.</p>
+      </div>
+      <div>
+        <div class="timeline">
+          <div class="t-event"><div class="t-date">~700,000 BP</div><div class="t-title">Species emerges</div><div class="t-desc">Panthera spelaea diverges from the African lion lineage in Europe. It rapidly adapts to cold steppe environments and expands across Eurasia.</div></div>
+          <div class="t-event"><div class="t-date">~36,000 BP</div><div class="t-title">Depicted in Chauvet Cave</div><div class="t-desc">Paleolithic humans paint cave lions on the walls of Chauvet Cave in France, the oldest figurative art ever discovered. Lions appear in more than 70 individual panels.</div></div>
+          <div class="t-event"><div class="t-date">~30,000 BP</div><div class="t-title">Siberian cubs preserved</div><div class="t-desc">A litter of cave lion cubs in Siberia, named Uyan and Dina, discovered in 2015, die and are preserved in permafrost, yielding the best-preserved large Pleistocene predator specimens in history.</div></div>
+          <div class="t-event"><div class="t-date">~20,000–13,000 BP</div><div class="t-title">Prey collapse</div><div class="t-desc">The mammoth steppe ecosystem begins to unravel. Woolly mammoths, woolly rhinos, and giant deer populations fragment and decline under combined climate and human hunting pressure.</div></div>
+          <div class="t-event"><div class="t-date">~13,000 BP</div><div class="t-title">Extinction</div><div class="t-desc">The last cave lions disappear from the fossil record. Their extinction marks the end of an unbroken felid lineage that had dominated Eurasian ecosystems for 700,000 years.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="impact-grid" style="margin-top:64px;">
+      <div class="impact-card"><div class="impact-num">Factor 01</div><div class="impact-title">Prey Depletion</div><div class="impact-desc">Human hunters competed directly with cave lions for the same large prey: horses, reindeer, bison, and young megafauna. Systematic reduction of prey populations removed the ecological foundation supporting large predators.</div></div>
+      <div class="impact-card"><div class="impact-num">Factor 02</div><div class="impact-title">Ecosystem Collapse</div><div class="impact-desc">The cave lion was embedded in a trophic web that no longer exists. As woolly mammoths and rhinoceroses vanished, the prey base that could support a predator of this size contracted beyond recovery.</div></div>
+      <div class="impact-card"><div class="impact-num">Factor 03</div><div class="impact-title">Climate Restructuring</div><div class="impact-desc">End-Pleistocene warming converted the open mammoth steppe into forest and tundra, habitats less suitable for a cursorial predator adapted for open-terrain pursuit hunting across vast territories.</div></div>
+    </div>
+  </div>
+</div>
+
+<section class="content-section">
+  <div class="section-tag">Genomics research</div>
+  <h2 class="section-title">Frozen cubs,<br><em>living genome</em></h2>
+  <div class="two-col">
+    <div class="body-text">
+      <p>The permafrost-preserved cave lion cubs Uyan and Dina, discovered in Yakutia in 2015 and 2017, have transformed cave lion genomics. Their extraordinary preservation, with intact fur, soft tissue, and even milk in their stomachs, has yielded high-quality nuclear genomic data that would be impossible to obtain from dry bone specimens.</p>
+      <p>Genomic analysis has definitively confirmed the cave lion as a distinct species from the modern African lion, with divergence estimated at approximately 500,000–700,000 years ago. Interestingly, the cave lion appears to have been more closely related to the modern lion than to any other big cat, placing it within <em>Panthera leo</em> as an extinct subspecies, or as a closely related sister species depending on the analytical framework used.</p>
+      <p>This close relationship makes the modern African lion a strong candidate proxy species. The genomic distance between cave lion and African lion is small enough that targeted CRISPR editing of a limited number of high-impact loci could theoretically reconstitute key cave lion phenotypic traits in a living animal.</p>
+    </div>
+    <div class="genomics-box">
+      <h3>Research program: Cave Lion</h3>
+      <p>Rewild Genomics is developing a comparative genomic pipeline for cave lion vs. African lion analysis, targeting the genetic loci associated with cold-adaptation, coat coloration, and body size increase. The frozen cub specimens represent the highest-quality source material of any species in our program.</p>
+      <p>Our research focuses specifically on building the computational infrastructure to identify which variants in the cave lion genome explain its divergence from modern lions in phenotypically meaningful ways, laying the groundwork for CRISPR introgression design.</p>
+      <div class="data-row">
+        <span class="data-tag">Permafrost specimen DNA</span>
+        <span class="data-tag">High-quality nuclear genome</span>
+        <span class="data-tag">African lion proxy</span>
+        <span class="data-tag">Size & cold-adaptation loci</span>
+        <span class="data-tag">NCBI / GenBank</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="back-strip">
+  <div><h3>Continue exploring species programs</h3><p>Six de-extinction research programs, all built on publicly available genomic data.</p></div>
+  <a href="index.html#deextinction" class="btn-species">← Back to all species</a>
+</div>
+<footer>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-anim">
+      <img class="nav-logo-img" src="rewild-logo.png" alt="Rewild Genomics">
+    </div>
+  </a>
+  <ul class="footer-links"><li><a href="index.html#deextinction">De-extinction</a></li><li><a href="index.html#tools">Tools</a></li><li><a href="index.html#mission">Mission</a></li><li><a href="platform.html">Platform</a></li><li><a href="https://rewildutah.com">RewildUtah.com</a></li></ul>
+  <span class="footer-note">Rewild Genomics · Utah · 2025</span>
+</footer>
+</body>
+</html>

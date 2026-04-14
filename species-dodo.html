@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://rewildgenomics.com/species-dodo.html">
+<title>Dodo — Rewild Genomics</title>
+<link rel="icon" type="image/png" href="rewild-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,200;1,9..144,300;1,9..144,400&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --void: #080C09; --deep: #0F1810; --forest: #162012;
+    --fern: #8FBC6A; --cream: #F4F0E8;
+    --species-color: #C8A87A; /* dodo — warm sand */
+    --species-dim: #8A6E44;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Instrument Sans', sans-serif; background: var(--void); color: var(--cream); overflow-x: hidden; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; padding: 20px 56px; display: flex; align-items: center; justify-content: space-between; background: rgba(8,12,9,0.88); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(143,188,106,0.07); }
+  .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .nav-back { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(244,240,232,0.35); text-decoration: none; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; }
+  .nav-back:hover { color: var(--fern); }
+  .nav-right { display: flex; align-items: center; gap: 32px; }
+  .nav-species-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.7; }
+  .species-hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 0 80px; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: var(--void); }
+  .hero-bg::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 65% 55% at 60% 40%, rgba(200,168,122,0.09) 0%, transparent 55%), radial-gradient(ellipse 35% 40% at 5% 80%, rgba(59,92,42,0.07) 0%, transparent 50%); }
+  .hero-bg::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(200,168,122,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(200,168,122,0.02) 1px, transparent 1px); background-size: 80px 80px; mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%); }
+  .hero-content { position: relative; z-index: 2; padding: 0 56px; max-width: 860px; }
+  .hero-breadcrumb { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.3); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 32px; display: flex; align-items: center; gap: 10px; }
+  .hero-breadcrumb span { color: var(--species-color); opacity: 0.7; }
+  .extinct-badge { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 14px; border-radius: 2px; background: rgba(200,168,122,0.08); border: 1px solid rgba(200,168,122,0.18); color: var(--species-color); }
+  .extinct-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--species-color); opacity: 0.7; }
+  .hero-title { font-family: 'Fraunces', serif; font-size: clamp(56px, 8.5vw, 116px); font-weight: 200; line-height: 0.92; letter-spacing: -3.5px; color: var(--cream); margin-bottom: 12px; }
+  .hero-sci { font-family: 'DM Mono', monospace; font-size: 14px; font-style: italic; color: rgba(244,240,232,0.3); letter-spacing: 0.5px; margin-bottom: 32px; }
+  .hero-tagline { font-size: 16px; color: rgba(244,240,232,0.55); line-height: 1.7; font-weight: 300; max-width: 540px; margin-bottom: 56px; }
+  .hero-stats { display: flex; gap: 0; border-top: 1px solid rgba(244,240,232,0.07); padding-top: 36px; }
+  .h-stat { flex: 1; padding: 0 32px 0 0; border-right: 1px solid rgba(244,240,232,0.07); }
+  .h-stat:first-child { padding-left: 0; } .h-stat:last-child { border-right: none; }
+  .h-stat-val { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 200; color: var(--species-color); letter-spacing: -1px; margin-bottom: 4px; }
+  .h-stat-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.3); letter-spacing: 1px; text-transform: uppercase; }
+  .content-section { padding: 96px 56px; max-width: 1200px; margin: 0 auto; }
+  .content-section.alt { background: var(--deep); max-width: none; padding: 96px 0; }
+  .content-section.alt .inner { max-width: 1200px; margin: 0 auto; padding: 0 56px; }
+  .section-tag { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .section-tag::before { content: ''; width: 20px; height: 1px; background: var(--species-color); opacity: 0.5; }
+  .section-title { font-family: 'Fraunces', serif; font-size: clamp(32px, 4vw, 52px); font-weight: 200; color: var(--cream); letter-spacing: -1.5px; line-height: 1.05; margin-bottom: 40px; }
+  .section-title em { font-style: italic; color: var(--species-color); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  .body-text { font-size: 15px; color: rgba(244,240,232,0.6); line-height: 1.85; font-weight: 300; }
+  .body-text p + p { margin-top: 20px; }
+  .body-text strong { color: var(--cream); font-weight: 400; }
+  .pullquote { border-left: 2px solid var(--species-color); padding-left: 28px; margin: 40px 0; font-family: 'Fraunces', serif; font-size: 22px; font-weight: 200; font-style: italic; color: rgba(244,240,232,0.75); line-height: 1.5; }
+  .timeline { position: relative; padding-left: 32px; margin-top: 48px; }
+  .timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 1px; background: linear-gradient(180deg, var(--species-color), transparent); opacity: 0.3; }
+  .t-event { position: relative; margin-bottom: 40px; }
+  .t-event::before { content: ''; position: absolute; left: -36px; top: 6px; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--species-color); background: var(--void); }
+  .t-date { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .t-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 300; color: var(--cream); margin-bottom: 8px; }
+  .t-desc { font-size: 13px; color: rgba(244,240,232,0.45); line-height: 1.7; font-weight: 300; }
+  .genomics-box { background: rgba(200,168,122,0.05); border: 1px solid rgba(200,168,122,0.15); border-radius: 4px; padding: 40px; }
+  .genomics-box h3 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 300; color: var(--cream); margin-bottom: 16px; }
+  .genomics-box p { font-size: 14px; color: rgba(244,240,232,0.55); line-height: 1.8; font-weight: 300; }
+  .genomics-box p + p { margin-top: 14px; }
+  .data-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .data-tag { font-family: 'DM Mono', monospace; font-size: 10px; padding: 5px 12px; border-radius: 2px; background: rgba(200,168,122,0.08); border: 1px solid rgba(200,168,122,0.15); color: var(--species-color); letter-spacing: 0.8px; }
+  .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px; }
+  .impact-card { background: rgba(15,24,16,0.6); border: 1px solid rgba(244,240,232,0.05); padding: 32px 28px; transition: background 0.25s; }
+  .impact-card:hover { background: rgba(200,168,122,0.05); border-color: rgba(200,168,122,0.12); }
+  .impact-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1.5px; margin-bottom: 14px; opacity: 0.6; }
+  .impact-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 300; color: var(--cream); margin-bottom: 10px; }
+  .impact-desc { font-size: 13px; color: rgba(244,240,232,0.45); line-height: 1.7; font-weight: 300; }
+  .colossal-callout { background: rgba(200,168,122,0.05); border: 1px solid rgba(200,168,122,0.2); border-radius: 4px; padding: 32px 36px; margin-top: 48px; display: flex; gap: 24px; align-items: flex-start; }
+  .colossal-callout-icon { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--species-color); letter-spacing: 1.5px; text-transform: uppercase; white-space: nowrap; opacity: 0.7; padding-top: 3px; }
+  .colossal-callout p { font-size: 14px; color: rgba(244,240,232,0.55); line-height: 1.75; font-weight: 300; }
+  .back-strip { background: var(--forest); border-top: 1px solid rgba(244,240,232,0.06); padding: 56px; display: flex; align-items: center; justify-content: space-between; }
+  .back-strip h3 { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 300; color: var(--cream); }
+  .back-strip p { font-size: 13px; color: rgba(244,240,232,0.4); margin-top: 4px; }
+  .btn-species { display: inline-block; border: 1px solid rgba(143,188,106,0.3); color: var(--fern); background: transparent; padding: 12px 28px; border-radius: 2px; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
+  .btn-species:hover { background: rgba(143,188,106,0.08); }
+  footer { background: var(--void); border-top: 1px solid rgba(244,240,232,0.06); padding: 40px 56px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+  .footer-links { display: flex; gap: 24px; list-style: none; }
+  .footer-links a { font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase; color: rgba(244,240,232,0.2); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--fern); }
+  .footer-note { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.15); }
+  .species-portrait { width: 100%; border-radius: 4px; overflow: hidden; border: 1px solid rgba(200,168,122,0.12); }
+  .species-portrait img { width: 100%; height: auto; display: block; }
+  .portrait-caption { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.25); letter-spacing: 0.8px; margin-top: 12px; }
+  .nav-logo-anim { overflow: hidden; clip-path: inset(0 0 100% 0); animation: rw-revealDown 900ms cubic-bezier(.2,.8,.2,1) forwards; }
+  .nav-logo-img { display: block; height: 36px; width: auto; transform: translateY(12px); animation: rw-iconSettle 900ms cubic-bezier(.2,.8,.2,1) forwards, rw-float 7s ease-in-out 900ms infinite; filter: brightness(1.1) saturate(1.1); }
+  @keyframes rw-revealDown { to { clip-path: inset(0 0 0% 0) } }
+  @keyframes rw-iconSettle { to { transform: translateY(0) } }
+  @keyframes rw-float { 0%,100% { transform: translateY(0px) } 50% { transform: translateY(-3px) } }
+  @media (prefers-reduced-motion: reduce) { .nav-logo-anim { clip-path: inset(0 0 0 0); animation: none } .nav-logo-img { transform: none; animation: none; filter: none } }
+  @media (max-width: 900px) { nav { padding: 18px 24px; } .hero-content { padding: 0 24px; } .hero-title { font-size: clamp(44px, 13vw, 80px); letter-spacing: -2px; } .hero-stats { flex-wrap: wrap; gap: 24px; } .h-stat { border-right: none; padding: 0; flex: 0 0 45%; } .content-section { padding: 64px 24px; } .content-section.alt .inner { padding: 0 24px; } .two-col { grid-template-columns: 1fr; gap: 40px; } .impact-grid { grid-template-columns: 1fr; } .colossal-callout { flex-direction: column; } .back-strip { flex-direction: column; align-items: flex-start; gap: 20px; padding: 40px 24px; } footer { padding: 32px 24px; flex-direction: column; } }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-anim">
+      <img class="nav-logo-img" src="rewild-logo.png" alt="Rewild Genomics">
+    </div>
+  </a>
+  <div class="nav-right">
+    <a href="megafauna-atlas.html" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:rgba(244,240,232,0.25);text-decoration:none;transition:color 0.18s;margin-right:20px;" onmouseover="this.style.color='#8FBC6A'" onmouseout="this.style.color='rgba(244,240,232,0.25)'">Atlas</a>
+    <span class="nav-species-label">Species Program</span>
+    <a href="platform.html" class="nav-back" style="opacity:0.5">Platform</a>
+    <a href="index.html#deextinction" class="nav-back">← All Species</a>
+  </div>
+</nav>
+
+<section class="species-hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-breadcrumb">Rewild Genomics <span>/</span> De-extinction Programs <span>/</span> Dodo</div>
+    <div class="extinct-badge">Extinct · c. 1681</div>
+    <h1 class="hero-title">Dodo</h1>
+    <div class="hero-sci">Raphus cucullatus · Mauritius</div>
+    <p class="hero-tagline">The dodo became a symbol of human-caused extinction before the concept even existed. A flightless pigeon that evolved on an island with no predators, it had no fear of humans and paid for that trust within a century of first contact.</p>
+    <div class="hero-stats">
+      <div class="h-stat"><div class="h-stat-val">c. 1681</div><div class="h-stat-label">Year of extinction</div></div>
+      <div class="h-stat"><div class="h-stat-val">~1 m</div><div class="h-stat-label">Standing height</div></div>
+      <div class="h-stat"><div class="h-stat-val">~10–18 kg</div><div class="h-stat-label">Body mass</div></div>
+      <div class="h-stat"><div class="h-stat-val">Columbiformes</div><div class="h-stat-label">Order</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="content-section">
+  <div class="two-col">
+    <div>
+      <div class="section-tag">Natural history</div>
+      <h2 class="section-title">An island's<br><em>perfect bird</em></h2>
+      <div class="body-text">
+        <p>The dodo was a pigeon. Not a distant cousin of one, not a bird that superficially resembles one: a true pigeon in the order Columbiformes, descended from ancestors that flew to the island of Mauritius millions of years ago and gradually lost flight as generations passed in a place that had no reason to fear anything from the ground.</p>
+        <p>On Mauritius, the dodo occupied a niche no other large animal filled. It ate fallen fruit, seeds, and nuts, processing the seeds of native trees that depended on the dodo's gut to germinate. The tambalacoque tree, sometimes called the dodo tree, has been implicated as one possible example of this relationship, though the evidence remains debated. What is not debated is that the dodo was an ecologically central species on its island.</p>
+        <p>It was a large bird, roughly the size of a turkey, with a <strong>distinctive hooked beak</strong> adapted for cracking hard fruits and nuts. Contemporary accounts describe it as curious and unafraid around humans, behaviors that evolved over millions of years without land predators and served it no purpose when sailors arrived.</p>
+      </div>
+    </div>
+    <div>
+      <div class="pullquote">"Within less than a century of human arrival on Mauritius, the dodo was gone. The last confirmed sighting was in 1681."</div>
+      <div class="body-text">
+        <p>The dodo's reputation as a stupid or clumsy animal comes from early European accounts that were almost certainly shaped by cultural bias. The bird simply had no experience with predators and no instinct to flee. Calling it dumb for not running from sailors is like calling a domestic dog dumb for approaching strangers. It was an animal behaving exactly as its evolutionary history prepared it to behave.</p>
+        <p>Recent work has substantially revised the popular image of the dodo. CT scans of skull specimens show a brain-to-body ratio and olfactory bulb development consistent with other pigeons, which are reasonably intelligent birds. The dodo was probably no less capable than its living relatives. It was simply unprepared for humans.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="content-section alt">
+  <div class="inner">
+    <div class="section-tag">Extinction</div>
+    <h2 class="section-title">Gone in<br><em>less than a century</em></h2>
+    <div class="two-col">
+      <div class="body-text">
+        <p>Dutch sailors reached Mauritius in 1598. By the last confirmed dodo sighting in 1681, the species was gone. The entire extinction played out in roughly 80 years, an almost incomprehensibly rapid collapse for a species that had been stable for millions of years.</p>
+        <p>Direct hunting was one factor. Sailors killed dodos for food, and while accounts suggest the meat was not particularly prized, it was easy to obtain. Far more destructive were the animals that arrived with the ships: rats, pigs, cats, and monkeys that ate dodo eggs and competed for food. The dodo nested on the ground and laid a single egg per clutch, a reproductive strategy completely vulnerable to introduced predators.</p>
+        <p>Habitat destruction compounded the pressure. Dutch settlers cleared forest for agriculture, eliminating the fruit trees the dodo depended on. The combination of hunting, introduced predators, and habitat loss was not unusual for island extinctions. What made the dodo unusual was how quickly it became a cultural reference point for extinction itself.</p>
+        <p>The phrase "dead as a dodo" entered the English language as a synonym for irreversible loss. The dodo became the shorthand for what happens when a naive island species meets the modern world unprepared.</p>
+      </div>
+      <div>
+        <div class="timeline">
+          <div class="t-event"><div class="t-date">Millions of years ago</div><div class="t-title">Ancestral colonization</div><div class="t-desc">Pigeon ancestors from the Columbiformes lineage reach Mauritius, likely from Southeast Asia. Without ground predators, flight becomes metabolically costly and is gradually lost across generations.</div></div>
+          <div class="t-event"><div class="t-date">1598</div><div class="t-title">Dutch arrival</div><div class="t-desc">Dutch ships under Admiral Wybrand van Warwijck land on Mauritius. The dodo is described in ship logs as abundant and completely unafraid of humans. Sailors kill them for fresh meat on the voyage.</div></div>
+          <div class="t-event"><div class="t-date">Early 1600s</div><div class="t-title">Permanent settlement and introduced species</div><div class="t-desc">Dutch colonization brings pigs, rats, cats, and later monkeys to the island. These animals raid ground nests and consume eggs systematically. The dodo's single-egg reproductive strategy cannot absorb these losses.</div></div>
+          <div class="t-event"><div class="t-date">1662</div><div class="t-title">Last widely accepted sighting</div><div class="t-desc">Dutch mariner Volkert Evertsz describes encountering dodos on a small islet off Mauritius. Contemporary analysis suggests this may have been a remnant population driven to offshore refugia by mainland pressure.</div></div>
+          <div class="t-event"><div class="t-date">c. 1681</div><div class="t-title">Extinction</div><div class="t-desc">The last confirmed dodo sighting. Within 80 years of first human contact, a species millions of years in the making had been reduced to nothing. No breeding population was ever maintained in captivity.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="impact-grid">
+      <div class="impact-card"><div class="impact-num">Factor 01</div><div class="impact-title">Introduced Predators</div><div class="impact-desc">Rats, pigs, and cats arrived with Dutch colonists and destroyed dodo nests systematically. An animal that laid one egg per clutch on the ground could not sustain these losses. Predation by introduced species was almost certainly the primary driver of collapse.</div></div>
+      <div class="impact-card"><div class="impact-num">Factor 02</div><div class="impact-title">Direct Hunting</div><div class="impact-desc">Sailors killed dodos for fresh food during provisioning stops. The birds had no fear response around humans and were easy to approach and kill. Hunting alone might not have been sufficient, but in combination with nest predation it accelerated the decline.</div></div>
+      <div class="impact-card"><div class="impact-num">Factor 03</div><div class="impact-title">Habitat Loss</div><div class="impact-desc">Dutch agricultural clearing eliminated the lowland forests the dodo depended on for food and nesting. The loss of fruiting trees removed both the dodo's diet and the ecological relationship between the bird and the native plant community it helped sustain.</div></div>
+    </div>
+  </div>
+</div>
+
+<section class="content-section">
+  <div class="section-tag">Genomics research</div>
+  <h2 class="section-title">A pigeon genome<br><em>within reach</em></h2>
+  <div class="two-col">
+    <div class="body-text">
+      <p>The dodo's genomic story is more complete than most extinct species. A high-quality nuclear genome was assembled from museum specimens and published in 2022 by a team led by Beth Shapiro at UC Santa Cruz, the same researcher whose lab produced key early work in ancient DNA. The genome was assembled from subfossil bone material, and its quality is sufficient for serious comparative genomic analysis.</p>
+      <p>The closest living relative of the dodo is the Nicobar pigeon, a striking iridescent bird found across the Malay Archipelago and Pacific islands. The two species diverged roughly <strong>30 million years ago</strong>, which places the dodo in a more tractable genomic distance range than some other de-extinction targets. The Nicobar pigeon has a sequenced genome, giving researchers a working reference for comparison.</p>
+      <p>The practical and ethical questions around dodo de-extinction center on habitat. Mauritius today is heavily modified from the island that the dodo knew. The forests it depended on are largely gone. Any meaningful revival would require parallel ecological restoration work, not just genomic reconstruction.</p>
+      <p>For Rewild Genomics, the dodo represents a valuable model system for island extinction genomics. The dataset is clean, the proxy species is identified, and the genomic questions around flight loss, morphological change, and island adaptation are scientifically interesting independent of any de-extinction goal.</p>
+    </div>
+    <div>
+      <div class="genomics-box">
+        <h3>Research program: Dodo</h3>
+        <p>Rewild Genomics is developing comparative genomic pipelines for dodo vs. Nicobar pigeon, with a focus on the genetic basis of flightlessness, island morphological adaptation, and the regulatory changes associated with the dodo's distinctive cranial and skeletal anatomy.</p>
+        <p>The 2022 genome assembly provides a strong foundation. Our work builds on this with open-source tools for variant prioritization, functional annotation, and CRISPR target identification, with all outputs peer-reviewable and publicly available.</p>
+        <div class="data-row">
+          <span class="data-tag">Nuclear genome (2022)</span>
+          <span class="data-tag">Nicobar pigeon proxy</span>
+          <span class="data-tag">NCBI / GenBank</span>
+          <span class="data-tag">Flight-loss loci</span>
+          <span class="data-tag">Island adaptation</span>
+        </div>
+      </div>
+      <div class="colossal-callout">
+        <span class="colossal-callout-icon">Context</span>
+        <p>Colossal Biosciences announced a dodo de-extinction program in 2023, partnering with Beth Shapiro's lab at UC Santa Cruz. Rewild Genomics approaches this species from the computational side: open-source pipelines for comparative genomics, variant prioritization, and CRISPR target identification, building the shared scientific foundation regardless of which organization drives the revival effort.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="back-strip">
+  <div><h3>Continue exploring species programs</h3><p>Ten de-extinction research programs, all built on publicly available genomic data.</p></div>
+  <a href="index.html#deextinction" class="btn-species">← Back to all species</a>
+</div>
+<footer>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-anim">
+      <img class="nav-logo-img" src="rewild-logo.png" alt="Rewild Genomics">
+    </div>
+  </a>
+  <ul class="footer-links"><li><a href="index.html#deextinction">De-extinction</a></li><li><a href="index.html#tools">Tools</a></li><li><a href="index.html#mission">Mission</a></li><li><a href="platform.html">Platform</a></li><li><a href="https://rewildutah.com">RewildUtah.com</a></li></ul>
+  <span class="footer-note">Rewild Genomics · Utah · 2025</span>
+</footer>
+</body>
+</html>
