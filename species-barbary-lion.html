@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://rewildgenomics.com/species-barbary-lion.html">
+<title>Barbary Lion — Rewild Genomics</title>
+<link rel="icon" type="image/png" href="rewild-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,200;1,9..144,300;1,9..144,400&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --void: #080C09; --deep: #0F1810; --forest: #162012;
+    --fern: #8FBC6A; --cream: #F4F0E8;
+    --species-color: #D4A862; /* barbary lion -- deep gold */
+    --species-dim: #9A6A28;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Instrument Sans', sans-serif; background: var(--void); color: var(--cream); overflow-x: hidden; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; padding: 20px 56px; display: flex; align-items: center; justify-content: space-between; background: rgba(8,12,9,0.88); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(143,188,106,0.07); }
+  .nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+  .nav-back { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(244,240,232,0.35); text-decoration: none; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; }
+  .nav-back:hover { color: var(--fern); }
+  .nav-right { display: flex; align-items: center; gap: 32px; }
+  .nav-species-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.7; }
+  .species-hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 0 80px; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: var(--void); }
+  .hero-bg::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 65% 55% at 60% 40%, rgba(212,168,98,0.09) 0%, transparent 55%), radial-gradient(ellipse 35% 40% at 5% 80%, rgba(59,92,42,0.07) 0%, transparent 50%); }
+  .hero-bg::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(212,168,98,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(212,168,98,0.02) 1px, transparent 1px); background-size: 80px 80px; mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%); }
+  .hero-content { position: relative; z-index: 2; padding: 0 56px; max-width: 860px; }
+  .hero-breadcrumb { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.3); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 32px; display: flex; align-items: center; gap: 10px; }
+  .hero-breadcrumb span { color: var(--species-color); opacity: 0.7; }
+  .extinct-badge { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 14px; border-radius: 2px; background: rgba(212,168,98,0.08); border: 1px solid rgba(212,168,98,0.18); color: var(--species-color); }
+  .extinct-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--species-color); opacity: 0.7; }
+  .hero-title { font-family: 'Fraunces', serif; font-size: clamp(56px, 8.5vw, 116px); font-weight: 200; line-height: 0.92; letter-spacing: -3.5px; color: var(--cream); margin-bottom: 12px; }
+  .hero-sci { font-family: 'DM Mono', monospace; font-size: 14px; font-style: italic; color: rgba(244,240,232,0.3); letter-spacing: 0.5px; margin-bottom: 32px; }
+  .hero-tagline { font-size: 16px; color: rgba(244,240,232,0.55); line-height: 1.7; font-weight: 300; max-width: 540px; margin-bottom: 56px; }
+  .hero-stats { display: flex; gap: 0; border-top: 1px solid rgba(244,240,232,0.07); padding-top: 36px; }
+  .h-stat { flex: 1; padding: 0 32px 0 0; border-right: 1px solid rgba(244,240,232,0.07); }
+  .h-stat:first-child { padding-left: 0; } .h-stat:last-child { border-right: none; }
+  .h-stat-val { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 200; color: var(--species-color); letter-spacing: -1px; margin-bottom: 4px; }
+  .h-stat-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.3); letter-spacing: 1px; text-transform: uppercase; }
+  .content-section { padding: 96px 56px; max-width: 1200px; margin: 0 auto; }
+  .content-section.alt { background: var(--deep); max-width: none; padding: 96px 0; }
+  .content-section.alt .inner { max-width: 1200px; margin: 0 auto; padding: 0 56px; }
+  .section-tag { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .section-tag::before { content: ''; width: 20px; height: 1px; background: var(--species-color); opacity: 0.5; }
+  .section-title { font-family: 'Fraunces', serif; font-size: clamp(32px, 4vw, 52px); font-weight: 200; color: var(--cream); letter-spacing: -1.5px; line-height: 1.05; margin-bottom: 40px; }
+  .section-title em { font-style: italic; color: var(--species-color); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  .body-text { font-size: 15px; color: rgba(244,240,232,0.6); line-height: 1.85; font-weight: 300; }
+  .body-text p + p { margin-top: 20px; }
+  .body-text strong { color: var(--cream); font-weight: 400; }
+  .pullquote { border-left: 2px solid var(--species-color); padding-left: 28px; margin: 40px 0; font-family: 'Fraunces', serif; font-size: 22px; font-weight: 200; font-style: italic; color: rgba(244,240,232,0.75); line-height: 1.5; }
+  .timeline { position: relative; padding-left: 32px; margin-top: 48px; }
+  .timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 1px; background: linear-gradient(180deg, var(--species-color), transparent); opacity: 0.3; }
+  .t-event { position: relative; margin-bottom: 40px; }
+  .t-event::before { content: ''; position: absolute; left: -36px; top: 6px; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--species-color); background: var(--void); }
+  .t-date { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .t-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 300; color: var(--cream); margin-bottom: 8px; }
+  .t-desc { font-size: 13px; color: rgba(244,240,232,0.45); line-height: 1.7; font-weight: 300; }
+  .genomics-box { background: rgba(212,168,98,0.05); border: 1px solid rgba(212,168,98,0.15); border-radius: 4px; padding: 40px; }
+  .genomics-box h3 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 300; color: var(--cream); margin-bottom: 16px; }
+  .genomics-box p { font-size: 14px; color: rgba(244,240,232,0.55); line-height: 1.8; font-weight: 300; }
+  .genomics-box p + p { margin-top: 14px; }
+  .data-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .data-tag { font-family: 'DM Mono', monospace; font-size: 10px; padding: 5px 12px; border-radius: 2px; background: rgba(212,168,98,0.08); border: 1px solid rgba(212,168,98,0.15); color: var(--species-color); letter-spacing: 0.8px; }
+  .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px; }
+  .impact-card { background: rgba(15,24,16,0.6); border: 1px solid rgba(244,240,232,0.05); padding: 32px 28px; transition: background 0.25s; }
+  .impact-card:hover { background: rgba(212,168,98,0.05); border-color: rgba(212,168,98,0.12); }
+  .impact-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1.5px; margin-bottom: 14px; opacity: 0.6; }
+  .impact-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 300; color: var(--cream); margin-bottom: 10px; }
+  .impact-desc { font-size: 13px; color: rgba(244,240,232,0.45); line-height: 1.7; font-weight: 300; }
+  .colossal-callout { background: rgba(212,168,98,0.05); border: 1px solid rgba(212,168,98,0.2); border-radius: 4px; padding: 32px 36px; margin-top: 48px; display: flex; gap: 24px; align-items: flex-start; }
+  .colossal-callout-icon { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--species-color); letter-spacing: 1.5px; text-transform: uppercase; white-space: nowrap; opacity: 0.7; padding-top: 3px; }
+  .colossal-callout p { font-size: 14px; color: rgba(244,240,232,0.55); line-height: 1.75; font-weight: 300; }
+  .photo-archive { padding: 96px 56px; max-width: 1200px; margin: 0 auto; }
+  .archive-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-top: 48px; }
+  .archive-item { position: relative; overflow: hidden; background: var(--deep); }
+  .archive-item img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(10%) sepia(10%); transition: filter 0.4s, transform 0.5s; }
+  .archive-item:hover img { filter: grayscale(0%) sepia(0%); transform: scale(1.02); }
+  .archive-item.tall { grid-row: span 2; }
+  .archive-item.short { aspect-ratio: 4/3; }
+  .archive-caption { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 20px; background: linear-gradient(transparent, rgba(8,12,9,0.88)); font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.45); letter-spacing: 0.8px; line-height: 1.5; opacity: 0; transition: opacity 0.3s; }
+  .archive-item:hover .archive-caption { opacity: 1; }
+  .archive-label { display: block; font-size: 9px; color: var(--species-color); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; opacity: 0.7; }
+  .back-strip { background: var(--forest); border-top: 1px solid rgba(244,240,232,0.06); padding: 56px; display: flex; align-items: center; justify-content: space-between; }
+  .back-strip h3 { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 300; color: var(--cream); }
+  .back-strip p { font-size: 13px; color: rgba(244,240,232,0.4); margin-top: 4px; }
+  .btn-species { display: inline-block; border: 1px solid rgba(143,188,106,0.3); color: var(--fern); background: transparent; padding: 12px 28px; border-radius: 2px; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
+  .btn-species:hover { background: rgba(143,188,106,0.08); }
+  footer { background: var(--void); border-top: 1px solid rgba(244,240,232,0.06); padding: 40px 56px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+  .footer-links { display: flex; gap: 24px; list-style: none; }
+  .footer-links a { font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase; color: rgba(244,240,232,0.2); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--fern); }
+  .footer-note { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.15); }
+  .species-portrait { width: 100%; border-radius: 4px; overflow: hidden; border: 1px solid rgba(212,168,98,0.12); }
+  .species-portrait img { width: 100%; height: auto; display: block; }
+  .portrait-caption { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.25); letter-spacing: 0.8px; margin-top: 12px; }
+  .nav-logo-anim{overflow:hidden;clip-path:inset(0 0 100% 0);animation:rw-revealDown 900ms cubic-bezier(.2,.8,.2,1) forwards;}
+  .nav-logo-img{display:block;height:36px;width:auto;transform:translateY(12px);animation:rw-iconSettle 900ms cubic-bezier(.2,.8,.2,1) forwards,rw-float 7s ease-in-out 900ms infinite;filter:brightness(1.1) saturate(1.1);}
+  @keyframes rw-revealDown{to{clip-path:inset(0 0 0% 0)}}
+  @keyframes rw-iconSettle{to{transform:translateY(0)}}
+  @keyframes rw-float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-3px)}}
+  @media(prefers-reduced-motion:reduce){.nav-logo-anim{clip-path:inset(0 0 0 0);animation:none}.nav-logo-img{transform:none;animation:none;filter:none}}
+  @media (max-width: 900px) { nav { padding: 18px 24px; } .hero-content { padding: 0 24px; } .hero-title { font-size: clamp(44px, 13vw, 80px); letter-spacing: -2px; } .hero-stats { flex-wrap: wrap; gap: 24px; } .h-stat { border-right: none; padding: 0; flex: 0 0 45%; } .content-section { padding: 64px 24px; } .content-section.alt .inner { padding: 0 24px; } .two-col { grid-template-columns: 1fr; gap: 40px; } .impact-grid { grid-template-columns: 1fr; } .colossal-callout { flex-direction: column; } .photo-archive { padding: 64px 24px; } .archive-grid { grid-template-columns: 1fr; } .archive-item.tall { grid-row: span 1; } .archive-item.short { aspect-ratio: 4/3; } .back-strip { flex-direction: column; align-items: flex-start; gap: 20px; padding: 40px 24px; } footer { padding: 32px 24px; flex-direction: column; } }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-anim">
+      <img class="nav-logo-img" src="rewild-logo.png" alt="Rewild Genomics">
+    </div>
+  </a>
+  <div class="nav-right"><a href="megafauna-atlas.html" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:rgba(244,240,232,0.25);text-decoration:none;transition:color 0.18s;margin-right:20px;" onmouseover="this.style.color='#8FBC6A'" onmouseout="this.style.color='rgba(244,240,232,0.25)'">Atlas</a><span class="nav-species-label">Species Program</span><a href="platform.html" class="nav-back" style="opacity:0.5">Platform</a><a href="index.html#deextinction" class="nav-back">← All Species</a></div>
+</nav>
+
+<section class="species-hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-breadcrumb">Rewild Genomics <span>/</span> De-extinction Programs <span>/</span> Barbary Lion</div>
+    <div class="extinct-badge">Extinct in the wild · c. 1942</div>
+    <h1 class="hero-title">Barbary<br>Lion</h1>
+    <div class="hero-sci">Panthera leo leo · North Africa</div>
+    <p class="hero-tagline">The Barbary lion was the largest lion subspecies, the animal that Romans drove into the Colosseum by the thousands and that medieval sultans kept as symbols of dynastic power. It survived everything antiquity and the Middle Ages could throw at it, then went extinct in the Atlas Mountains within two generations of modern rifle use.</p>
+    <div class="hero-stats">
+      <div class="h-stat"><div class="h-stat-val">c. 1942</div><div class="h-stat-label">Last wild record</div></div>
+      <div class="h-stat"><div class="h-stat-val">~270 kg</div><div class="h-stat-label">Male body mass</div></div>
+      <div class="h-stat"><div class="h-stat-val">Atlas Mtns.</div><div class="h-stat-label">Final range</div></div>
+      <div class="h-stat"><div class="h-stat-val">Panthera leo</div><div class="h-stat-label">Species</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="content-section">
+  <div class="two-col">
+    <div>
+      <div class="section-tag">Natural history</div>
+      <h2 class="section-title">The lion of<br><em>the ancient world</em></h2>
+      <div class="body-text">
+        <p>The Barbary lion ranged across the entire North African coast from Egypt to Morocco, through the Atlas Mountain forests of Algeria, Tunisia, and Morocco. It was a large, heavily built lion with a distinctively full mane that extended back along the belly and under the body. Males were substantially larger than any living African lion population, with some historical records suggesting individuals exceeding 270 kilograms.</p>
+        <p>Unlike savanna lions, Barbary lions inhabited a Mediterranean and montane environment: dense cedar and oak forests, rocky slopes, seasonal river valleys. They hunted Barbary deer, wild boar, and Atlas bear. They had to be adapted to cold winters, snow at altitude, and a prey base very different from the open-grassland ungulates that East African lions are associated with today.</p>
+        <p>The Barbary lion's cultural history is extraordinary. It was the lion of the Roman games, imported by the thousands from North Africa for arena spectacles. It was kept in the menageries of Moroccan sultans at the royal palace in Fez for centuries, which may have preserved captive animals long after wild extinction. It appears in ancient Egyptian art, Phoenician carvings, and medieval Moroccan manuscripts. No other large carnivore has such a well-documented human cultural relationship.</p>
+        <p>Whether any Barbary lion descendants survive in captivity is an active scientific question. A group of lions held at Rabat Zoo in Morocco are believed by some researchers to be descended from the royal Moroccan collection. Genetic studies have produced mixed results, with some analysis supporting Barbary ancestry and other studies finding no clear signal. This population is being carefully assessed as a potential source for future restoration work.</p>
+      </div>
+    </div>
+    <div>
+      <div class="species-portrait">
+        <img src="species-barbary-lion-hero.png" alt="Reconstruction of a Barbary lion in Atlas Mountain cedar forest">
+      </div>
+      <p class="portrait-caption">Artist's reconstruction, Panthera leo leo in Atlas Mountain cedar forest, Morocco</p>
+      <div class="pullquote" style="margin-top:32px;">"The last confirmed wild Barbary lion was shot in the Atlas Mountains of Morocco in 1942. The species that outlasted the Roman Empire fell to a century of colonial hunting."</div>
+      <div class="body-text">
+        <p>The geographic isolation of North Africa meant Barbary lions evolved distinctly from sub-Saharan populations. Genomic data confirms that the Barbary lion represents a genetically distinct lineage within Panthera leo, not simply a regional variant of the African lion. This distinction matters for any future restoration program: reconstructing the correct genetic background, not just lion-shaped phenotype, is the scientific target.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="content-section alt">
+  <div class="inner">
+    <div class="section-tag">Extinction</div>
+    <h2 class="section-title">Hunted out of<br><em>the last mountains</em></h2>
+    <div class="two-col">
+      <div class="body-text">
+        <p>The Barbary lion's decline maps almost precisely onto the expansion of French and Spanish colonial administration across North Africa in the 19th and early 20th centuries. Colonial settlers viewed lions as threats to livestock and as trophy animals, and they had access to modern rifles for the first time. Local authorities actively organized lion hunts and paid bounties. The Atlas Mountain populations, already isolated and fragmented, could not withstand sustained pressure from hunters who could now reliably kill from a distance.</p>
+        <p>The last confirmed wild Barbary lion was shot in Morocco in 1942. Algeria had lost its population decades earlier; Tunisia's last documented record was 1891. The species that had survived the extraction of thousands of individuals for Roman arenas over several centuries could not survive 80 years of rifle hunting in a colonized landscape.</p>
+        <p>The complexity of the extinction is that captive animals may have preserved some genetic continuity. The royal collection at the Fez palace held Barbary lions for centuries, and some of these were transferred to the Rabat Zoo in the 20th century. Whether these animals represent true Barbary lion lineage or admixed captive stock is still being resolved through ongoing genomic analysis. The answer has real implications for whether a genetically authentic restoration is possible from living animals rather than from museum specimens.</p>
+      </div>
+      <div>
+        <div class="timeline">
+          <div class="t-event"><div class="t-date">Roman period</div><div class="t-title">Mass extraction for arenas</div><div class="t-desc">Roman administrators export Barbary lions in large numbers for arena spectacles across the empire. This represents significant pressure on coastal populations but does not appear to have caused widespread collapse; lions persist across North Africa for another 1,800 years.</div></div>
+          <div class="t-event"><div class="t-date">16th–18th century</div><div class="t-title">Royal Moroccan collection</div><div class="t-desc">The Moroccan royal family maintains a collection of Barbary lions at the palace in Fez. This practice continues for centuries and may have inadvertently preserved animals long after wild populations were critically reduced.</div></div>
+          <div class="t-event"><div class="t-date">1830–1900</div><div class="t-title">Colonial hunting pressure</div><div class="t-desc">French colonization of Algeria and Tunisia brings European settlers and modern rifles. Colonial administrations organize lion hunts, pay bounties, and treat large predators as enemies of agricultural expansion. Tunisia's last lion is recorded in 1891.</div></div>
+          <div class="t-event"><div class="t-date">Early 1900s</div><div class="t-title">Algeria extirpated</div><div class="t-desc">The Algerian Barbary lion population is eliminated. Only the Atlas Mountain populations in Morocco remain. These animals are increasingly isolated in high-altitude cedar forests, cut off from each other by agricultural lowlands.</div></div>
+          <div class="t-event"><div class="t-date">1942</div><div class="t-title">Last wild individual</div><div class="t-desc">The last confirmed wild Barbary lion is shot in the Atlas Mountains of Morocco. Some researchers believe small groups may have persisted into the 1950s or 1960s, but no credible documented sightings exist after 1942.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="impact-grid" style="margin-top:64px;">
+      <div class="impact-card"><div class="impact-num">Factor 01</div><div class="impact-title">Colonial Hunting Programs</div><div class="impact-desc">French and Spanish colonial administrations in North Africa actively organized lion eradication campaigns, paid bounties, and provided military support for hunts. Modern rifle technology made individual lions easy to kill at distances that eliminated the lions' own threat. This was systematic, state-organized removal.</div></div>
+      <div class="impact-card"><div class="impact-num">Factor 02</div><div class="impact-title">Habitat Fragmentation</div><div class="impact-desc">Colonial agriculture transformed the North African lowlands, eliminating the prey base and movement corridors that connected Atlas Mountain lion populations. Lions were pushed into increasingly isolated upland refugia where small populations were more vulnerable to chance events and hunting pressure.</div></div>
+      <div class="impact-card"><div class="impact-num">Factor 03</div><div class="impact-title">Prey Depletion</div><div class="impact-desc">The same hunting culture that targeted lions also reduced Barbary deer, wild boar, and other ungulate prey species. Lions competing with humans for a shrinking prey base faced starvation pressure on top of direct persecution. The two factors compounded each other across the 19th century.</div></div>
+    </div>
+  </div>
+</div>
+
+<section class="photo-archive">
+  <div class="section-tag">Historical archive</div>
+  <h2 class="section-title">Through the<br><em>photographic record</em></h2>
+  <p class="body-text" style="max-width:600px;margin-bottom:0;">The Barbary lion is among the few recently extinct megafauna documented across multiple visual media — from ancient Roman illustration to 19th-century wet plate photography. These records are primary evidence for morphology, range, and the forces that drove extinction.</p>
+  <div class="archive-grid">
+    <div class="archive-item tall">
+      <img src="colonial-hunt.png" alt="Colonial-era trophy hunter with Barbary lion, North Africa">
+      <div class="archive-caption"><span class="archive-label">c. 1890s · Colonial North Africa</span>A colonial hunter with a Barbary lion in rocky scrubland. The dense, dark mane extending well behind the shoulders is characteristic of the subspecies. French and Spanish colonial administrations organized systematic hunts across Algeria, Tunisia, and Morocco throughout this period.</div>
+    </div>
+    <div class="archive-item short">
+      <img src="1916-French-Expidition.png" alt="1916 French expedition photograph, Atlas Mountains">
+      <div class="archive-caption"><span class="archive-label">1916 · Atlas Mountains, Morocco</span>A Barbary lion on rocky montane terrain during a French expedition. The cedar and scrub forest habitat visible here is the final Atlas Mountain refuge where the subspecies persisted until 1942. The environment is strikingly different from the open savanna associated with East African lions.</div>
+    </div>
+    <div class="archive-item short">
+      <img src="moccoran-royal-lion.png" alt="Moroccan royal collection lion, Rabat Zoo descendant">
+      <div class="archive-caption"><span class="archive-label">Contemporary · Rabat Zoo, Morocco</span>A lion from the Moroccan royal collection, the population believed by some researchers to carry Barbary ancestry. The Moroccan royal family maintained Barbary lions at the Fez palace for centuries; these animals were later transferred to Rabat Zoo. Ongoing genomic analysis is assessing whether true Barbary lineage persists.</div>
+    </div>
+    <div class="archive-item short" style="grid-column: 1 / -1; aspect-ratio: 16/7;">
+      <img src="Roman-Lion.png" alt="Historical illustration of Barbary lion in Roman arena" style="object-position: center 30%;">
+      <div class="archive-caption"><span class="archive-label">Historical illustration · Roman arena context</span>A detailed rendering of a Barbary lion in a Roman arena setting. Roman administrators extracted lions from North Africa by the thousands for gladiatorial spectacle — historical records document shipments running into the hundreds per event. The subspecies survived this extraction pressure for centuries before falling to 80 years of colonial rifle hunting.</div>
+    </div>
+  </div>
+</section>
+
+<section class="content-section">
+  <div class="section-tag">Genomics research</div>
+  <h2 class="section-title">A distinct lineage<br><em>in museum specimens</em></h2>
+  <div class="two-col">
+    <div class="body-text">
+      <p>The Barbary lion's genomic characterization is more advanced than many recently extinct subspecies. Museum specimens exist in good numbers, and several institutions hold historical skins, skulls, and mounted specimens collected in the 19th and early 20th centuries. Mitochondrial and nuclear genomic data have been extracted from multiple specimens, confirming that the Barbary lion represents a genetically distinct North African lineage of Panthera leo.</p>
+      <p>The primary scientific question is the relationship between Barbary lions and the broader Panthera leo species complex. Modern lion taxonomy recognizes two main subspecies: Panthera leo leo (including North and West African and historical Asian lions) and Panthera leo melanochaita (eastern and southern African lions). This means the Barbary lion's closest living relatives include the West African lion and the Asiatic lion, both critically endangered, rather than the East African lions most people picture when they think of lions.</p>
+      <p>The Rabat Zoo population is genomically interesting regardless of its Barbary ancestry status. If any Barbary genetic lineage persists in these animals, they are a living tissue source for reference genomics. If they are admixed or not Barbary at all, characterizing this precisely is still valuable for understanding what has been conserved in captivity versus what must be reconstructed from museum specimens.</p>
+      <p>Rewild Genomics is developing comparative genomic pipelines for the Barbary lion using museum specimen data and publicly available Panthera leo reference genomes. Our focus is on characterizing the genetic distinctiveness of the Barbary lineage, identifying the variants responsible for its distinctive morphology, and building the analytical foundation for any future restoration effort.</p>
+    </div>
+    <div>
+      <div class="genomics-box">
+        <h3>Research program: Barbary Lion</h3>
+        <p>Rewild Genomics is building comparative pipelines for Barbary lion museum specimens against published Panthera leo reference genomes, with the goal of precisely characterizing the genetic distinctiveness of the North African lineage. We are also tracking the ongoing analysis of the Rabat Zoo population to assess whether any living Barbary ancestry persists in captivity.</p>
+        <p>The Barbary lion occupies an unusual position among de-extinction targets: it is a subspecies of a living species, which means the genetic gap between the extinct form and its closest living relatives is smaller than for most targets. This makes the Barbary lion a more tractable restoration project from a genomic standpoint, though the ecological and political challenges of restoring a large predator to North Africa are substantial.</p>
+        <div class="data-row">
+          <span class="data-tag">Museum specimen DNA</span>
+          <span class="data-tag">Panthera leo reference genome</span>
+          <span class="data-tag">Rabat Zoo population</span>
+          <span class="data-tag">NCBI / GenBank</span>
+          <span class="data-tag">North African lineage</span>
+        </div>
+      </div>
+      <div class="colossal-callout">
+        <span class="colossal-callout-icon">Context</span>
+        <p>No active large-scale de-extinction program is currently focused on the Barbary lion, though conservation researchers at Oxford, Durham, and several North African institutions have published genomic analyses of museum specimens and potential captive descendants. Rewild Genomics builds open-source tools to support and extend this work as the field develops.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="back-strip">
+  <div><h3>Continue exploring species programs</h3><p>De-extinction research programs built on publicly available genomic data.</p></div>
+  <a href="index.html#deextinction" class="btn-species">← Back to all species</a>
+</div>
+<footer>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-anim">
+      <img class="nav-logo-img" src="rewild-logo.png" alt="Rewild Genomics">
+    </div>
+  </a>
+  <ul class="footer-links"><li><a href="index.html#deextinction">De-extinction</a></li><li><a href="index.html#tools">Tools</a></li><li><a href="index.html#mission">Mission</a></li><li><a href="platform.html">Platform</a></li><li><a href="https://rewildutah.com">RewildUtah.com</a></li></ul>
+  <span class="footer-note">Rewild Genomics · Utah · 2025</span>
+</footer>
+</body>
+</html>

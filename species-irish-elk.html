@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://rewildgenomics.com/species-irish-elk.html">
+<title>Irish Elk — Rewild Genomics</title>
+<link rel="icon" type="image/png" href="rewild-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,200;1,9..144,300;1,9..144,400&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --void: #080C09; --deep: #0F1810; --forest: #162012;
+    --moss: #3B5C2A; --moss-light: #5A7F43; --fern: #8FBC6A;
+    --pale-fern: #C4DFB0; --cream: #F4F0E8; --sand: #E2D9C4;
+    --amber: #D4922A; --amber-dim: #8A5E18; --bone: #EDE8DC;
+    --ink: #1A1C18; --muted: #6B6E65; --bark: #5C3D1E;
+    --species-color: #C8A030; /* irish elk — golden ochre */
+    --species-dim: #7A6018;
+    --species-glow: rgba(200,160,48,0.12);
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Instrument Sans', sans-serif; background: var(--void); color: var(--cream); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    padding: 20px 56px; display: flex; align-items: center; justify-content: space-between;
+    background: rgba(8,12,9,0.88); backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(143,188,106,0.07);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .nav-back { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(244,240,232,0.35); text-decoration: none; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; display: flex; align-items: center; gap: 8px; }
+  .nav-back:hover { color: var(--fern); }
+  .nav-right { display: flex; align-items: center; gap: 32px; }
+  .nav-species-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.7; }
+
+  /* HERO */
+  .species-hero {
+    min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
+    position: relative; overflow: hidden;
+  }
+
+  /* LEFT PANEL */
+  .hero-left {
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 120px 56px 80px; position: relative; z-index: 2; background: var(--void);
+  }
+  .hero-left::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 90% 60% at -10% 60%, rgba(200,160,48,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 110% 30%, rgba(59,92,42,0.06) 0%, transparent 55%);
+  }
+  .hero-left::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background-image: linear-gradient(rgba(200,160,48,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(200,160,48,0.02) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 80% 70% at 20% 50%, black 0%, transparent 100%);
+  }
+
+  /* RIGHT PANEL */
+  .hero-right { position: relative; overflow: hidden; }
+  .hero-right img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: center 20%;
+    filter: brightness(0.82) contrast(1.05) saturate(0.9);
+  }
+  .hero-right::before {
+    content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(to right, var(--void) 0%, rgba(8,12,9,0.55) 20%, rgba(8,12,9,0.1) 50%, transparent 100%);
+  }
+  .hero-right::after {
+    content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(to top, var(--void) 0%, rgba(8,12,9,0.4) 18%, transparent 40%);
+  }
+  .hero-img-caption {
+    position: absolute; bottom: 24px; right: 24px; z-index: 2;
+    font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1.2px;
+    text-transform: uppercase; color: rgba(200,160,48,0.45);
+  }
+
+  .hero-bg { display: none; }
+  .hero-content { position: relative; z-index: 2; }
+  .hero-breadcrumb { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.3); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 32px; display: flex; align-items: center; gap: 10px; }
+  .hero-breadcrumb span { color: var(--species-color); opacity: 0.7; }
+  .extinct-badge {
+    display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px;
+    font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 2px; background: rgba(200,160,48,0.1); border: 1px solid rgba(200,160,48,0.2); color: var(--species-color);
+  }
+  .extinct-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--species-color); opacity: 0.7; }
+  .hero-title {
+    font-family: 'Fraunces', serif; font-size: clamp(56px, 8vw, 112px);
+    font-weight: 200; line-height: 0.92; letter-spacing: -3px; color: var(--cream); margin-bottom: 12px;
+  }
+  .hero-sci {
+    font-family: 'DM Mono', monospace; font-size: 14px; font-style: italic;
+    color: rgba(244,240,232,0.3); letter-spacing: 0.5px; margin-bottom: 32px;
+  }
+  .hero-tagline { font-size: 16px; color: rgba(244,240,232,0.55); line-height: 1.7; font-weight: 300; max-width: 540px; margin-bottom: 56px; }
+  .hero-stats { display: flex; gap: 0; border-top: 1px solid rgba(244,240,232,0.07); padding-top: 36px; }
+  .h-stat { flex: 1; padding: 0 32px 0 0; border-right: 1px solid rgba(244,240,232,0.07); }
+  .h-stat:first-child { padding-left: 0; }
+  .h-stat:last-child { border-right: none; }
+  .h-stat-val { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 200; color: var(--species-color); letter-spacing: -1px; margin-bottom: 4px; }
+  .h-stat-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.3); letter-spacing: 1px; text-transform: uppercase; }
+
+  /* CONTENT */
+  .content-section { padding: 96px 56px; max-width: 1200px; margin: 0 auto; }
+  .content-section.alt { background: var(--deep); max-width: none; padding: 96px 0; }
+  .content-section.alt .inner { max-width: 1200px; margin: 0 auto; padding: 0 56px; }
+
+  .section-tag { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .section-tag::before { content: ''; width: 20px; height: 1px; background: var(--species-color); opacity: 0.5; }
+  .section-title { font-family: 'Fraunces', serif; font-size: clamp(32px, 4vw, 52px); font-weight: 200; color: var(--cream); letter-spacing: -1.5px; line-height: 1.05; margin-bottom: 40px; }
+  .section-title em { font-style: italic; color: var(--species-color); }
+
+  /* TEXT LAYOUT */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  .body-text { font-size: 15px; color: rgba(244,240,232,0.6); line-height: 1.85; font-weight: 300; }
+  .body-text p + p { margin-top: 20px; }
+  .body-text strong { color: var(--cream); font-weight: 400; }
+  .pullquote {
+    border-left: 2px solid var(--species-color); padding-left: 28px; margin: 40px 0;
+    font-family: 'Fraunces', serif; font-size: 22px; font-weight: 200; font-style: italic;
+    color: rgba(244,240,232,0.75); line-height: 1.5; letter-spacing: -0.3px;
+  }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 32px; margin-top: 48px; }
+  .timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 1px; background: linear-gradient(180deg, var(--species-color), transparent); opacity: 0.3; }
+  .t-event { position: relative; margin-bottom: 40px; }
+  .t-event::before { content: ''; position: absolute; left: -36px; top: 6px; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--species-color); background: var(--void); }
+  .t-date { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .t-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 300; color: var(--cream); margin-bottom: 8px; letter-spacing: -0.3px; }
+  .t-desc { font-size: 13px; color: rgba(244,240,232,0.45); line-height: 1.7; font-weight: 300; }
+
+  /* GENOMICS BOX */
+  .genomics-box {
+    background: rgba(200,160,48,0.05); border: 1px solid rgba(200,160,48,0.15);
+    border-radius: 4px; padding: 40px;
+  }
+  .genomics-box h3 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 300; color: var(--cream); margin-bottom: 16px; letter-spacing: -0.5px; }
+  .genomics-box p { font-size: 14px; color: rgba(244,240,232,0.55); line-height: 1.8; font-weight: 300; }
+  .genomics-box p + p { margin-top: 14px; }
+  .data-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .data-tag { font-family: 'DM Mono', monospace; font-size: 10px; padding: 5px 12px; border-radius: 2px; background: rgba(200,160,48,0.08); border: 1px solid rgba(200,160,48,0.15); color: var(--species-color); letter-spacing: 0.8px; }
+
+  /* IMPACT GRID */
+  .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px; }
+  .impact-card { background: rgba(15,24,16,0.6); border: 1px solid rgba(244,240,232,0.05); padding: 32px 28px; transition: background 0.25s; }
+  .impact-card:hover { background: rgba(200,160,48,0.05); border-color: rgba(200,160,48,0.12); }
+  .impact-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--species-color); letter-spacing: 1.5px; margin-bottom: 14px; opacity: 0.6; }
+  .impact-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 300; color: var(--cream); margin-bottom: 10px; letter-spacing: -0.3px; }
+  .impact-desc { font-size: 13px; color: rgba(244,240,232,0.45); line-height: 1.7; font-weight: 300; }
+
+  /* BACK STRIP */
+  .back-strip {
+    background: var(--forest); border-top: 1px solid rgba(244,240,232,0.06);
+    padding: 56px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .back-strip h3 { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 300; color: var(--cream); }
+  .back-strip p { font-size: 13px; color: rgba(244,240,232,0.4); margin-top: 4px; }
+  .btn-species { display: inline-block; border: 1px solid rgba(143,188,106,0.3); color: var(--fern); background: transparent; padding: 12px 28px; border-radius: 2px; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
+  .btn-species:hover { background: rgba(143,188,106,0.08); }
+
+  /* FOOTER */
+  footer { background: var(--void); border-top: 1px solid rgba(244,240,232,0.06); padding: 40px 56px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+  .footer-links { display: flex; gap: 24px; list-style: none; }
+  .footer-links a { font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase; color: rgba(244,240,232,0.2); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--fern); }
+  .footer-note { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(244,240,232,0.15); }
+
+  @media (max-width: 900px) {
+    nav { padding: 18px 24px; }
+    .species-hero { grid-template-columns: 1fr; }
+    .hero-left { padding: 100px 24px 60px; }
+    .hero-right { height: 340px; }
+    .hero-title { font-size: clamp(44px, 14vw, 80px); letter-spacing: -2px; }
+    .hero-stats { flex-wrap: wrap; gap: 24px; }
+    .h-stat { border-right: none; padding: 0; flex: 0 0 45%; }
+    .content-section { padding: 64px 24px; }
+    .content-section.alt .inner { padding: 0 24px; }
+    .two-col { grid-template-columns: 1fr; gap: 40px; }
+    .impact-grid { grid-template-columns: 1fr; }
+    .back-strip { flex-direction: column; align-items: flex-start; gap: 20px; padding: 40px 24px; }
+    footer { padding: 32px 24px; flex-direction: column; }
+  }
+
+  .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .nav-logo-anim {
+    overflow: hidden;
+    clip-path: inset(0 0 100% 0);
+    animation: rw-revealDown 900ms cubic-bezier(.2,.8,.2,1) forwards;
+  }
+  .nav-logo-img {
+    display: block; height: 36px; width: auto;
+    transform: translateY(12px);
+    animation: rw-iconSettle 900ms cubic-bezier(.2,.8,.2,1) forwards, rw-float 7s ease-in-out 900ms infinite;
+    filter: brightness(1.1) saturate(1.1);
+  }
+  @keyframes rw-revealDown { to { clip-path: inset(0 0 0% 0); } }
+  @keyframes rw-iconSettle { to { transform: translateY(0); } }
+  @keyframes rw-float { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-3px); } }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-logo-anim { clip-path: inset(0 0 0 0); animation: none; }
+    .nav-logo-img { transform: none; animation: none; filter: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-anim">
+      <img class="nav-logo-img" src="rewild-logo.png" alt="Rewild Genomics">
+    </div>
+  </a>
+  <div class="nav-right">
+    <a href="megafauna-atlas.html" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:rgba(244,240,232,0.25);text-decoration:none;transition:color 0.18s;margin-right:20px;" onmouseover="this.style.color='#8FBC6A'" onmouseout="this.style.color='rgba(244,240,232,0.25)'">Atlas</a>
+    <span class="nav-species-label">Species Program</span>
+    <a href="platform.html" class="nav-back" style="opacity:0.5">Platform</a>
+    <a href="index.html#deextinction" class="nav-back">← All Species</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="species-hero">
+  <div class="hero-bg"></div>
+
+  <div class="hero-left">
+    <div class="hero-content">
+      <div class="hero-breadcrumb">Rewild Genomics <span>/</span> De-extinction Programs <span>/</span> Irish Elk</div>
+      <div class="extinct-badge">Extinct · ~7,700 BP</div>
+      <h1 class="hero-title">Irish<br>Elk</h1>
+      <div class="hero-sci">Megaloceros giganteus</div>
+      <p class="hero-tagline">The largest deer that ever lived, carrying antlers spanning up to 3.7 meters — a structure so extreme it became a textbook example of evolutionary excess, and almost certainly a factor in its own undoing.</p>
+      <div class="hero-stats">
+        <div class="h-stat">
+          <div class="h-stat-val">~400K</div>
+          <div class="h-stat-label">Years on Earth</div>
+        </div>
+        <div class="h-stat">
+          <div class="h-stat-val">~2.1m</div>
+          <div class="h-stat-label">Shoulder height</div>
+        </div>
+        <div class="h-stat">
+          <div class="h-stat-val">~700 kg</div>
+          <div class="h-stat-label">Body mass</div>
+        </div>
+        <div class="h-stat">
+          <div class="h-stat-val">Cervidae</div>
+          <div class="h-stat-label">Family</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <img src="irishelk.png" alt="Bull elk with massive palmate antlers bugling before a herd in a misty mountain meadow" style="object-position: center 30%;" />
+    <div class="hero-img-caption">Megaloceros giganteus · Cervidae</div>
+  </div>
+
+</section>
+
+<!-- BACKGROUND -->
+<section class="content-section">
+  <div class="two-col">
+    <div>
+      <div class="section-tag">Natural history</div>
+      <h2 class="section-title">The deer that <em>outgrew</em> the world</h2>
+      <div class="body-text">
+        <p>Despite the name, the Irish Elk was neither exclusively Irish nor strictly an elk. Megaloceros giganteus ranged from Ireland to China, across the Eurasian steppe and into North Africa, wherever open grassland and shrubland could support an animal of its size. The name comes from the remarkable density of specimens preserved in Irish peat bogs.</p>
+        <p>It was a cervid — part of the same family as modern red deer and moose — but it dwarfed them. Stags stood over two meters at the shoulder and carried antlers that could weigh 40 kilograms on their own, with a span wider than a car is long. Those antlers were shed and regrown every year, requiring calcium and phosphorus at rates that strained the animal's skeletal reserves.</p>
+        <p>Isotopic studies of bone collagen suggest Irish Elk were highly sensitive to plant quality. They thrived on the mineral-rich vegetation of open steppe and parkland. When that vegetation changed, they struggled.</p>
+      </div>
+    </div>
+    <div>
+      <div class="pullquote">"Forty kilograms of antler, shed and rebuilt every year. No other deer ever attempted anything close."</div>
+      <div class="body-text">
+        <p>Cave paintings at Lascaux and Cougnac preserve some of the clearest evidence of what these animals looked like in life — a distinctive shoulder hump and dark dorsal stripe appear consistently across multiple sites, suggesting artists were working from direct observation.</p>
+        <p>Their social behavior was almost certainly comparable to modern large deer: dominant stags using antler display and combat to compete for females during the rut. The antlers' enormous size likely functioned primarily as a visual signal of male fitness, with actual combat a secondary use.</p>
+        <p>Some populations survived well into the Holocene. The last known individuals, in western Siberia and possibly the Ural Mountains, disappeared around 7,700 years ago — thousands of years after most megafauna extinctions, and long after humans had been present across their range.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXTINCTION -->
+<div class="content-section alt">
+  <div class="inner">
+    <div class="section-tag">Extinction</div>
+    <h2 class="section-title">Too large,<br>too <em>specialized</em></h2>
+    <div class="two-col">
+      <div class="body-text">
+        <p>The Irish Elk was caught between two forces: climate change reshaping their habitat, and a body plan that had become increasingly difficult to sustain. The end of the last glacial maximum brought forest expansion across Eurasia, replacing the open steppe the species depended on with denser woodland it was poorly equipped to navigate.</p>
+        <p>Antlers spanning 3.7 meters are not well suited to moving through trees. But the deeper problem may have been nutritional. The annual antler cycle demanded extraordinary mineral input, and as steppe vegetation gave way to lower-quality forest forage, stags may have struggled to build viable antlers at all. Evidence from bone chemistry shows declining nutritional status in late Irish Elk populations.</p>
+        <p>Human hunting likely compounded the pressure. Irish Elk appear in archaeological butchering sites, and by the time their last habitats were shrinking, even modest hunting pressure on a slow-reproducing megafaunal deer could accelerate the collapse.</p>
+      </div>
+      <div>
+        <div class="timeline">
+          <div class="t-event">
+            <div class="t-date">~400,000 BP</div>
+            <div class="t-title">Species emerges</div>
+            <div class="t-desc">Megaloceros giganteus evolves across Eurasia, occupying open grassland and steppe environments from the British Isles to central Asia and the Levant.</div>
+          </div>
+          <div class="t-event">
+            <div class="t-date">~20,000–14,000 BP</div>
+            <div class="t-title">Peak abundance</div>
+            <div class="t-desc">Irish Elk reach their widest range during the Late Pleistocene. Cave art at Lascaux captures stags with their characteristic shoulder hump and massive palmate antlers.</div>
+          </div>
+          <div class="t-event">
+            <div class="t-date">~12,000–10,000 BP</div>
+            <div class="t-title">Western range collapse</div>
+            <div class="t-desc">As the last glacial maximum ends, forests spread across western Europe. Irish Elk populations in Ireland and western Europe disappear rapidly as open habitat fragments.</div>
+          </div>
+          <div class="t-event">
+            <div class="t-date">~7,700 BP</div>
+            <div class="t-title">Final extinction</div>
+            <div class="t-desc">The last known populations, persisting in western Siberia, disappear. Radiocarbon dates from Ural and Siberian specimens mark the end of the species.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="impact-grid" style="margin-top:64px;">
+      <div class="impact-card">
+        <div class="impact-num">Factor 01</div>
+        <div class="impact-title">Habitat Loss</div>
+        <div class="impact-desc">Post-glacial forest expansion eliminated the open steppe and parkland Irish Elk required. Their body plan — both in terms of antler span and mineral demands — was built for open environments, not dense woodland.</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-num">Factor 02</div>
+        <div class="impact-title">Nutritional Stress</div>
+        <div class="impact-desc">Annual antler regeneration at this scale required exceptional mineral intake. As vegetation quality declined with habitat change, bone chemistry from late specimens shows clear evidence of nutritional stress and reduced body condition.</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-num">Factor 03</div>
+        <div class="impact-title">Human Hunting</div>
+        <div class="impact-desc">Irish Elk remain in archaeological contexts across their late range, and human hunting pressure on a nutritionally stressed, slow-reproducing population would have accelerated collapse even if it was not the primary driver.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GENOMICS -->
+<section class="content-section">
+  <div class="section-tag">Genomics research</div>
+  <h2 class="section-title">What the genome<br><em>tells us</em></h2>
+  <div class="two-col">
+    <div class="body-text">
+      <p>Ancient DNA from Irish Elk specimens has been successfully extracted and analyzed, largely from the well-preserved bog specimens in Ireland and permafrost deposits further east. Mitochondrial genome sequences are available in NCBI, and nuclear genomic data is accumulating from ongoing paleogenomics work.</p>
+      <p>Phylogenetically, Megaloceros sits within the Cervidae and is most closely related to the fallow deer (<em>Dama dama</em>), with a divergence time estimated at roughly <strong>3 to 4 million years ago</strong>. This is a closer relationship than many extinct megafauna share with their living analogs, which has implications for any future de-extinction pathway.</p>
+      <p>The most genomically interesting question is the genetic architecture of the antler growth program — the loci controlling rate, size, mineralization, and annual cycling of the most elaborate antler structure in cervid evolutionary history. Identifying those variants in the Megaloceros genome is a tractable comparative genomics problem.</p>
+    </div>
+    <div class="genomics-box">
+      <h3>Research program: Irish Elk</h3>
+      <p>Rewild Genomics is developing comparative genomic pipelines for Megaloceros giganteus, focusing on the divergent loci controlling antler development, body size, and mineral metabolism relative to fallow deer and other extant cervid outgroups. The antler growth program is among the most extreme morphological specializations in mammalian evolutionary history, and understanding its genetic basis has implications for bone biology well beyond de-extinction.</p>
+      <p>Our approach draws on publicly available mitochondrial and nuclear sequence data, with a focus on building open-source pipelines for aDNA analysis of cervid specimens from Holocene and late Pleistocene deposits.</p>
+      <div class="data-row">
+        <span class="data-tag">mtDNA available</span>
+        <span class="data-tag">NCBI / GenBank</span>
+        <span class="data-tag">Megaloceros giganteus</span>
+        <span class="data-tag">Fallow deer proxy</span>
+        <span class="data-tag">Antler development loci</span>
+        <span class="data-tag">In development</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BACK / NAV -->
+<div class="back-strip">
+  <div>
+    <h3>Continue exploring species programs</h3>
+    <p>Six de-extinction research programs, all built on publicly available genomic data.</p>
+  </div>
+  <a href="index.html#deextinction" class="btn-species">← Back to all species</a>
+</div>
+
+<footer>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-anim">
+      <img class="nav-logo-img" src="rewild-logo.png" alt="Rewild Genomics">
+    </div>
+  </a>
+  <ul class="footer-links">
+    <li><a href="index.html#deextinction">De-extinction</a></li>
+    <li><a href="index.html#tools">Tools</a></li>
+    <li><a href="index.html#mission">Mission</a></li>
+    <li><a href="platform.html">Platform</a></li>
+    <li><a href="https://rewildutah.com">RewildUtah.com</a></li>
+  </ul>
+  <span class="footer-note">UVU Biotechnology · Utah · 2025</span>
+</footer>
+
+</body>
+</html>
