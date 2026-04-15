@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://rewildgenomics.com/">
+<title>Rewild Genomics — Open Conservation Genomics</title>
+<link rel="icon" type="image/png" href="rewild-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,200;1,9..144,300;1,9..144,400&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--moss:#3B5C2A;--moss-light:#5A7F43;--moss-pale:#EAF2E3;--bark:#6B4C2A;--bark-pale:#F5EDE3;--sage:#7A9E6B;--fern:#B5CF9C;--cream:#F7F3EC;--ink:#1A1610;--muted:#6B6355;--accent:#2E7D5E;--void:#080A07;--amber:#C8842A;--fossil:#A08060}
+html{scroll-behavior:smooth}
+body{font-family:'Instrument Sans',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 56px;display:flex;align-items:center;justify-content:space-between;background:rgba(247,243,236,0.93);backdrop-filter:blur(14px);border-bottom:1px solid rgba(59,92,42,0.10)}
+.nav-logo{display:flex;align-items:center;gap:0;text-decoration:none;cursor:pointer}
+.nav-logo-anim{
+  overflow:hidden;
+  clip-path:inset(0 0 100% 0);
+  animation:rw-revealDown 900ms cubic-bezier(.2,.8,.2,1) forwards;
+}
+.nav-logo-img{
+  display:block;
+  height:80px;
+  width:auto;
+  transform:translateY(12px);
+  animation:rw-iconSettle 900ms cubic-bezier(.2,.8,.2,1) forwards,rw-float 7s ease-in-out 900ms infinite;
+  image-rendering:crisp-edges;
+}
+@keyframes rw-revealDown{to{clip-path:inset(0 0 0% 0)}}
+@keyframes rw-iconSettle{to{transform:translateY(0)}}
+@keyframes rw-float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-3px)}}
+@media(prefers-reduced-motion:reduce){
+  .nav-logo-anim{clip-path:inset(0 0 0 0);animation:none}
+  .nav-logo-img{transform:none;animation:none}
+}
+.logo-text{font-family:'Fraunces',serif;font-size:16px;font-weight:400;color:var(--moss);letter-spacing:-0.3px}
+.nav-links{display:flex;gap:36px;list-style:none;align-items:center}
+.nav-links a{font-size:13px;font-weight:400;color:var(--muted);text-decoration:none;letter-spacing:0.2px;transition:color 0.2s}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{display:inline-flex!important;align-items:center;gap:5px;padding:7px 14px;border-radius:4px;font-size:12px!important;font-weight:500!important;letter-spacing:0.3px;transition:all 0.18s}
+.nav-cta-arrow{font-size:11px;opacity:0.75;transition:transform 0.18s}
+.nav-cta:hover .nav-cta-arrow{transform:translate(1px,-1px);opacity:1}
+.nav-cta-refugia{background:var(--moss)!important;color:#fff!important}
+.nav-cta-refugia:hover{background:var(--moss-light)!important}
+.nav-cta-lacuna{background:#2E1F0E!important;color:#C8842A!important;border:1px solid rgba(200,132,42,0.22)!important}
+.nav-cta-lacuna:hover{background:#3D2810!important;color:#DFA045!important}
+.hero{min-height:100vh;padding:130px 56px 80px;display:grid;grid-template-columns:1.1fr 0.9fr;gap:48px;align-items:center;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 55% 55% at 75% 45%,rgba(59,92,42,0.07) 0%,transparent 65%),radial-gradient(ellipse 35% 50% at 8% 75%,rgba(107,76,42,0.05) 0%,transparent 60%)}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:32px}
+.eyebrow-tag{font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);background:rgba(46,125,94,0.09);border:1px solid rgba(46,125,94,0.18);padding:5px 12px;border-radius:3px;letter-spacing:1.2px;text-transform:uppercase}
+.eyebrow-div{width:1px;height:14px;background:rgba(59,92,42,0.25)}
+.eyebrow-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.8px}
+.hero h1{font-family:'Fraunces',serif;font-size:clamp(44px,5.2vw,72px);font-weight:200;line-height:1.08;letter-spacing:-2px;color:var(--ink);margin-bottom:28px}
+.hero h1 em{font-style:italic;color:var(--moss);font-weight:300}
+.hero-sub{font-size:15px;line-height:1.75;color:var(--muted);max-width:460px;margin-bottom:44px;font-weight:300}
+.hero-actions{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.btn-primary{background:var(--ink);color:#fff;padding:13px 26px;border-radius:4px;font-size:13px;font-weight:500;text-decoration:none;transition:all 0.2s;display:inline-block}
+.btn-primary:hover{background:var(--moss);transform:translateY(-1px)}
+.btn-outline{border:1px solid rgba(59,92,42,0.3);color:var(--moss);padding:12px 24px;border-radius:4px;font-size:13px;font-weight:400;text-decoration:none;transition:all 0.2s;display:inline-block}
+.btn-outline:hover{border-color:var(--moss);background:rgba(59,92,42,0.05)}
+.hero-visual{display:flex;align-items:center;justify-content:center}
+.stat-row{display:flex;gap:40px;margin-top:52px;padding-top:40px;border-top:1px solid rgba(59,92,42,0.1)}
+.stat-num{font-family:'Fraunces',serif;font-size:26px;font-weight:300;color:var(--ink);letter-spacing:-0.8px}
+.stat-label{font-size:11px;color:var(--muted);margin-top:3px;letter-spacing:0.4px;font-family:'DM Mono',monospace}
+.ticker-band{background:var(--void);border-top:1px solid rgba(59,92,42,0.2);padding:14px 0;overflow:hidden}
+.ticker-inner{display:flex;gap:56px;align-items:center;animation:ticker 32s linear infinite;white-space:nowrap;width:max-content}
+.t-item{font-family:'DM Mono',monospace;font-size:10px;color:rgba(181,207,156,0.45);letter-spacing:1.2px;text-transform:uppercase;flex-shrink:0;display:flex;align-items:center;gap:16px}
+.t-item::before{content:'◆';font-size:5px;color:var(--amber);opacity:0.6}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.deext-wrapper{background:var(--void);position:relative;overflow:hidden}
+.deext-wrapper::before{content:'';position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 80% 60% at 15% 20%,rgba(59,92,42,0.08) 0%,transparent 55%),radial-gradient(ellipse 60% 70% at 85% 80%,rgba(200,132,42,0.05) 0%,transparent 55%)}
+.deext-manifesto{position:relative;z-index:1;padding:96px 56px 72px;border-bottom:1px solid rgba(255,255,255,0.05);display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end}
+.m-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:28px;display:flex;align-items:center;gap:12px}
+.m-label::before{content:'';width:24px;height:1px;background:var(--amber);opacity:0.5;display:block}
+.m-title{font-family:'Fraunces',serif;font-size:clamp(40px,5vw,68px);font-weight:200;line-height:1.07;letter-spacing:-2px;color:#fff}
+.m-title em{font-style:italic;color:var(--amber);font-weight:300}
+.m-statement{font-family:'Fraunces',serif;font-size:19px;font-weight:300;font-style:italic;color:rgba(255,255,255,0.55);line-height:1.6;letter-spacing:-0.2px;margin-bottom:32px;max-width:420px}
+.m-pillars{display:flex;flex-direction:column;gap:14px}
+.m-pill{display:flex;align-items:center;gap:14px;font-size:13px;color:rgba(255,255,255,0.38);font-weight:300}
+.pill-dot{width:5px;height:5px;border-radius:50%;background:var(--amber);opacity:0.5;flex-shrink:0}
+.species-section{position:relative;z-index:1;padding:0 56px 80px}
+.sg-label{padding:40px 0 20px;display:flex;align-items:center;gap:16px;border-bottom:1px solid rgba(255,255,255,0.05)}
+.sg-text{font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,0.18);letter-spacing:1.5px;text-transform:uppercase}
+.sg-line{flex:1;height:1px;background:rgba(255,255,255,0.04)}
+.species-grid{display:grid;grid-template-columns:repeat(2,1fr);border-left:1px solid rgba(255,255,255,0.05)}
+.sp-cell{padding:48px 40px;border-right:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);position:relative;overflow:hidden;transition:background 0.4s;cursor:default}
+.sp-cell::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity 0.35s;background:radial-gradient(circle 280px at var(--glow-x,50%) var(--glow-y,50%),var(--glow-color,rgba(59,92,42,0.18)) 0%,transparent 70%)}
+.sp-cell:hover::before{opacity:1}
+.sp-cell:hover{background:rgba(255,255,255,0.015)}
+
+.cell-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:12px}
+.c-epoch{font-family:'DM Mono',monospace;font-size:9px;color:var(--amber);letter-spacing:1.5px;text-transform:uppercase;background:rgba(200,132,42,0.1);border:1px solid rgba(200,132,42,0.2);padding:4px 10px;border-radius:2px;flex-shrink:0}
+.c-status{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 10px;border-radius:2px;text-transform:uppercase;flex-shrink:0}
+.s-live{background:rgba(59,92,42,0.25);color:var(--fern);border:1px solid rgba(91,127,67,0.25)}
+.s-pipeline{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.3);border:1px solid rgba(255,255,255,0.08)}
+.s-exploratory{background:rgba(160,128,96,0.1);color:var(--fossil);border:1px solid rgba(160,128,96,0.2)}
+.c-taxon{display:inline-block;margin-bottom:16px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:2px;background:rgba(59,92,42,0.08);border:1px solid rgba(59,92,42,0.15);color:var(--moss)}
+.c-name{font-family:'Fraunces',serif;font-size:26px;font-weight:300;color:#fff;letter-spacing:-0.8px;margin-bottom:4px;line-height:1.1}
+.c-sci{font-family:'DM Mono',monospace;font-size:10px;color:var(--amber);letter-spacing:0.5px;font-style:italic;margin-bottom:18px;opacity:0.8}
+.c-desc{font-size:13px;color:rgba(255,255,255,0.42);line-height:1.72;font-weight:300;max-width:360px}
+.c-methods{display:flex;flex-wrap:wrap;gap:7px;margin-top:24px}
+.m-tag{font-family:'DM Mono',monospace;font-size:9px;color:rgba(181,207,156,0.5);background:rgba(59,92,42,0.12);border:1px solid rgba(59,92,42,0.2);padding:4px 9px;border-radius:2px;letter-spacing:0.8px;text-transform:uppercase}
+.approach{position:relative;z-index:1;border-top:1px solid rgba(255,255,255,0.05);padding:72px 56px;display:grid;grid-template-columns:300px 1fr;gap:80px}
+.a-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:12px}
+.a-label::before{content:'';width:24px;height:1px;background:var(--amber);opacity:0.5;display:block}
+.a-title{font-family:'Fraunces',serif;font-size:30px;font-weight:300;color:#fff;letter-spacing:-0.8px;line-height:1.25}
+.a-title em{font-style:italic;color:var(--amber)}
+.a-steps{display:flex;flex-direction:column}
+.a-step{display:grid;grid-template-columns:48px 1fr;gap:24px;padding:28px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.a-step:last-child{border-bottom:none}
+.s-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--amber);opacity:0.45;letter-spacing:1px;padding-top:3px}
+.s-title{font-family:'Fraunces',serif;font-size:18px;font-weight:400;color:rgba(255,255,255,0.82);letter-spacing:-0.3px;margin-bottom:8px}
+.s-desc{font-size:13px;color:rgba(255,255,255,0.33);line-height:1.7;font-weight:300}
+section{padding:88px 56px}
+.sec-tag{font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.sec-tag::before{content:'';width:20px;height:1px;background:var(--accent);opacity:0.5}
+.sec-title{font-family:'Fraunces',serif;font-size:clamp(30px,3.5vw,44px);font-weight:300;letter-spacing:-1px;line-height:1.15;color:var(--ink);margin-bottom:18px}
+.sec-title em{font-style:italic;color:var(--moss)}
+.sec-sub{font-size:15px;color:var(--muted);line-height:1.75;font-weight:300;max-width:520px;margin-bottom:48px}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2px;background:rgba(59,92,42,0.08);border:1px solid rgba(59,92,42,0.1);border-radius:6px;overflow:hidden}
+.tool-card{background:#fff;padding:36px;transition:background 0.2s;cursor:pointer}
+.tool-card:hover{background:var(--moss-pale)}
+.t-chip{display:inline-block;font-family:'DM Mono',monospace;font-size:9px;padding:4px 10px;border-radius:2px;letter-spacing:1px;text-transform:uppercase;margin-bottom:18px;background:rgba(59,92,42,0.08);color:var(--moss);border:1px solid rgba(59,92,42,0.12)}
+.t-chip.amb{background:rgba(200,132,42,0.08);color:var(--amber);border-color:rgba(200,132,42,0.15)}
+.tool-card h3{font-family:'Fraunces',serif;font-size:19px;font-weight:400;color:var(--ink);margin-bottom:10px;line-height:1.3;letter-spacing:-0.3px}
+.tool-card p{font-size:13px;color:var(--muted);line-height:1.65;font-weight:300}
+.tool-foot{margin-top:24px;padding-top:18px;border-top:1px solid rgba(59,92,42,0.07);display:flex;align-items:center;justify-content:space-between}
+.t-meta{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:0.5px}
+.t-link{font-size:12px;color:var(--moss);text-decoration:none;font-weight:500}
+.mission-band{background:var(--moss);color:#fff;padding:80px 56px;position:relative;overflow:visible}
+.mission-band::after{content:'';position:absolute;right:-120px;bottom:-120px;width:500px;height:500px;border-radius:50%;background:rgba(255,255,255,0.03)}
+.mission-inner{max-width:1000px}
+.mission-band .sec-tag{color:var(--fern)}
+.mission-band .sec-tag::before{background:var(--fern)}
+.mission-band .sec-title{color:#fff;font-size:clamp(28px,3vw,42px);max-width:900px;margin-bottom:20px;line-height:1.2}.mission-band .sec-title em{color:var(--fern);font-style:italic}
+.mission-band .sec-sub{color:rgba(255,255,255,0.6);max-width:560px}
+.pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:52px;border-top:1px solid rgba(255,255,255,0.15)}
+.pillar{padding:24px 28px 0 0}
+.p-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--fern);letter-spacing:1.5px;margin-bottom:12px;opacity:0.7}
+.pillar h4{font-family:'Fraunces',serif;font-size:17px;font-weight:400;color:#fff;margin-bottom:10px;letter-spacing:-0.2px}
+.pillar p{font-size:12px;color:rgba(255,255,255,0.52);line-height:1.7;font-weight:300}
+.xlink-section{padding:72px 56px}
+.crosslink{background:var(--bark-pale);border:1px solid rgba(107,76,42,0.15);border-radius:6px;display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
+.cl-text{padding:56px 52px}
+.cl-text .sec-tag{color:var(--bark)}
+.cl-text .sec-tag::before{background:var(--bark)}
+.cl-text .sec-title{font-size:34px}
+.cl-text .sec-sub{margin-bottom:28px}
+.btn-bark{display:inline-block;background:var(--bark);color:#fff;padding:12px 22px;border-radius:4px;font-size:13px;font-weight:500;text-decoration:none;transition:background 0.2s}
+.btn-bark:hover{background:#8a6035}
+.cl-visual{background:linear-gradient(135deg,rgba(107,76,42,0.05) 0%,rgba(59,92,42,0.09) 100%);display:flex;align-items:center;justify-content:center;padding:40px}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;max-width:840px}
+.team-card{background:#fff;border:1px solid rgba(59,92,42,0.1);border-radius:6px;padding:28px;text-align:center;transition:transform 0.2s}
+.team-card:hover{transform:translateY(-2px)}
+.avatar{width:56px;height:56px;border-radius:50%;background:var(--moss-pale);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-family:'Fraunces',serif;font-size:18px;font-weight:400;color:var(--moss)}
+.team-card h4{font-family:'Fraunces',serif;font-size:16px;font-weight:400;color:var(--ink);margin-bottom:4px}
+.team-card .role{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:0.5px}
+footer{background:var(--void);color:rgba(255,255,255,0.35);padding:0 0 48px;display:flex;flex-direction:column;align-items:stretch}
+.footer-inner{padding:0 56px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-logo{font-family:'Fraunces',serif;font-size:15px;font-weight:400;color:rgba(255,255,255,0.6)}
+.f-links{display:flex;gap:28px;list-style:none}
+.f-links a{font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.2s}
+.f-links a:hover{color:rgba(255,255,255,0.7)}
+.f-note{font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,0.18);letter-spacing:0.5px}
+/* ── Hamburger button ── */
+.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;width:40px;height:40px;background:none;border:none;cursor:pointer;padding:6px;border-radius:4px;flex-shrink:0}
+.nav-hamburger span{display:block;width:22px;height:1.5px;background:var(--ink);border-radius:1px;transition:transform 0.25s,opacity 0.25s}
+.nav-hamburger.is-open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-hamburger.is-open span:nth-child(2){opacity:0}
+.nav-hamburger.is-open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+
+/* ── Mobile drawer ── */
+.nav-drawer{display:none;position:fixed;inset:0;z-index:99;background:rgba(247,243,236,0.98);backdrop-filter:blur(16px);flex-direction:column;justify-content:center;align-items:center;gap:8px;opacity:0;pointer-events:none;transition:opacity 0.25s}
+.nav-drawer.is-open{opacity:1;pointer-events:all}
+.nav-drawer a{font-family:'Fraunces',serif;font-size:28px;font-weight:300;color:var(--ink);text-decoration:none;letter-spacing:-0.5px;padding:10px 20px;border-radius:4px;transition:color 0.18s,background 0.18s;text-align:center}
+.nav-drawer a:hover{color:var(--moss)}
+.nav-drawer-ctas{display:flex;flex-direction:column;gap:10px;margin-top:24px;align-items:center;width:100%}
+.nav-drawer-ctas a{font-family:'Instrument Sans',sans-serif;font-size:14px;font-weight:500;padding:13px 32px;border-radius:4px;width:220px;text-align:center}
+.nav-drawer-ctas .nav-cta-refugia{background:var(--moss)!important;color:#fff!important}
+.nav-drawer-ctas .nav-cta-lacuna{background:#2E1F0E!important;color:#C8842A!important;border:1px solid rgba(200,132,42,0.3)!important}
+
+@media(max-width:900px){
+  nav{padding:14px 20px}
+  .nav-links{display:none}
+  .nav-hamburger{display:flex}
+  .nav-drawer{display:flex}
+  .hero{grid-template-columns:1fr;padding:100px 20px 56px}
+  .hero h1{font-size:clamp(38px,9vw,56px)}
+  .hero-visual{display:none}
+  .hero-actions{flex-direction:column;align-items:flex-start;gap:10px}
+  .hero-actions a{width:100%;text-align:center}
+  .stat-row{gap:24px;flex-wrap:wrap;margin-top:36px;padding-top:28px}
+  section{padding:56px 20px}
+  .deext-manifesto{grid-template-columns:1fr;padding:56px 20px 40px;gap:36px}
+  .m-title{font-size:clamp(36px,8vw,52px)}
+  .species-section{padding:0 20px 56px}
+  .species-grid{grid-template-columns:1fr}
+  .sp-cell{padding:32px 24px}
+  .approach{grid-template-columns:1fr;padding:48px 20px;gap:28px}
+  .pillars{grid-template-columns:1fr 1fr;gap:0}
+  .pillar{padding:20px 16px 0 0}
+  .crosslink{grid-template-columns:1fr}
+  .cl-visual{display:none}
+  .cl-text{padding:40px 32px}
+  .xlink-section{padding:48px 20px}
+  .tools-grid{grid-template-columns:1fr}
+  .tool-card{padding:28px 24px}
+  .mission-band{padding:56px 20px}
+  .team-grid{grid-template-columns:1fr 1fr}
+  footer{padding:40px 20px;flex-direction:column;align-items:flex-start}
+  .footer-inner{padding:0 20px;flex-direction:column;align-items:flex-start;gap:16px}
+  .f-links{flex-wrap:wrap;gap:16px}
+  .ticker-band{display:none}
+}
+
+/* ── Nav scroll state ── */
+nav{transition:padding 0.35s cubic-bezier(.4,0,.2,1),border-color 0.35s,background 0.35s}
+nav.scrolled{padding-top:11px;padding-bottom:11px;border-bottom-color:rgba(59,92,42,0.18);background:rgba(247,243,236,0.97)}
+nav.scrolled .nav-logo-img{height:62px}
+.nav-logo-img{transition:height 0.35s cubic-bezier(.4,0,.2,1)}
+
+/* ── Scroll reveal ── */
+[data-reveal]{opacity:0;transform:translateY(20px);transition:opacity 0.55s cubic-bezier(.4,0,.2,1) var(--delay,0ms),transform 0.55s cubic-bezier(.4,0,.2,1) var(--delay,0ms)}
+[data-reveal].is-visible{opacity:1;transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){[data-reveal]{opacity:1;transform:none;transition:none}}
+
+/* ── Genome sequence ticker (footer band) ── */
+.seq-ticker-band{background:transparent;border-top:1px solid rgba(59,92,42,0.12);border-bottom:1px solid rgba(59,92,42,0.08);padding:11px 0;overflow:hidden;position:relative}
+.seq-ticker-inner{display:flex;gap:0;align-items:center;animation:seqTicker 60s linear infinite;white-space:nowrap;width:max-content}
+.seq-frag{font-family:'DM Mono',monospace;font-size:10px;color:rgba(181,207,156,0.38);letter-spacing:0;padding:0;flex-shrink:0;user-select:none}
+.seq-frag::after{content:none}
+.seq-frag .seq-hi{color:rgba(200,132,42,0.65)}
+@keyframes seqTicker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.seq-ticker-inner{animation:none}}
+
+/* ── Noise texture overlay ── */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:0.032;filter:url(#rw-noise);background:var(--cream)}
+</style>
+</head>
+<body>
+
+<!-- Noise filter -->
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="rw-noise" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" result="noiseOut"/>
+    <feColorMatrix type="saturate" values="0" in="noiseOut" result="grayNoise"/>
+    <feBlend in="SourceGraphic" in2="grayNoise" mode="overlay"/>
+  </filter>
+</svg>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-anim">
+      <img class="nav-logo-img" src="rewild-logo.png" alt="Rewild Genomics">
+    </div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#tools">Tools</a></li>
+    <li><a href="#mission">Mission</a></li>
+    <li><a href="#conservation">Conservation</a></li>
+    <li><a href="#research-programs">Research programs</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="megafauna-atlas.html">Atlas</a></li>
+    <li><a href="platform.html" class="nav-cta nav-cta-refugia">Refugia <span class="nav-cta-arrow">↗</span></a></li>
+    <li><a href="lacuna-coming-soon.html" class="nav-cta nav-cta-lacuna">Lacuna <span class="nav-cta-arrow">↗</span></a></li>
+  </ul>
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" id="nav-hamburger">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile nav drawer -->
+<div class="nav-drawer" id="nav-drawer" aria-hidden="true">
+  <a href="#tools" class="drawer-link">Tools</a>
+  <a href="#mission" class="drawer-link">Mission</a>
+  <a href="#conservation" class="drawer-link">Conservation</a>
+  <a href="#research-programs" class="drawer-link">Research</a>
+  <a href="#about" class="drawer-link">About</a>
+  <a href="megafauna-atlas.html" class="drawer-link">Atlas</a>
+  <div class="nav-drawer-ctas">
+    <a href="platform.html" class="nav-cta-refugia">Refugia ↗</a>
+    <a href="lacuna-coming-soon.html" class="nav-cta-lacuna">Lacuna ↗</a>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div style="position:relative;z-index:1">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-tag">Conservation · Genomics</span>
+      <span class="eyebrow-div"></span>
+      <span class="eyebrow-sub">Open science</span>
+    </div>
+    <h1 id="hero-headline">Genomic tools for<br>the species still<br><em>here</em></h1>
+    <p class="hero-sub">We build open-source bioinformatics infrastructure for conservation genomics — and use the same tools to lay the groundwork for de-extinction research when the science is ready.</p>
+    <div class="hero-actions">
+      <a href="platform.html" class="btn-primary">Open Refugia</a>
+      <a href="#tools" class="btn-outline">View all tools</a>
+    </div>
+    <div class="stat-row">
+      <div data-reveal style="--delay:0ms"><div class="stat-num">2</div><div class="stat-label">Active platforms</div></div>
+      <div data-reveal style="--delay:80ms"><div class="stat-num">aDNA</div><div class="stat-label">Ancient genome analysis</div></div>
+      <div data-reveal style="--delay:160ms"><div class="stat-num" data-count="100" data-suffix="%">100%</div><div class="stat-label">Open source</div></div>
+    </div>
+  </div>
+  <div class="hero-visual" style="position:relative;z-index:1">
+    <div style="position:relative;width:100%;max-width:580px;border-radius:6px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.22),0 0 0 1px rgba(59,92,42,0.12);">
+      <img src="dna-hero.png" alt="DNA double helix" style="width:100%;height:680px;object-fit:cover;object-position:center;display:block;">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(247,243,236,0.18) 100%);pointer-events:none;"></div>
+      <div style="position:absolute;bottom:20px;left:20px;font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,0.55);letter-spacing:1.5px;text-transform:uppercase;background:rgba(8,10,7,0.5);padding:5px 10px;border-radius:2px;backdrop-filter:blur(4px);">Ancient DNA · Genome Reconstruction</div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker-band">
+  <div class="ticker-inner">
+    <span class="t-item">Refugia · Conservation Genomics Platform</span><span class="t-item">Lacuna · Ancient DNA Toolkit</span><span class="t-item">Population Structure Analysis</span><span class="t-item">VCF · ADMIXTURE · FST · PCA</span><span class="t-item">Utah Wolf Corridor Mapping</span><span class="t-item">aDNA Damage Correction</span><span class="t-item">Haplotype Calling · Low-Coverage Assembly</span><span class="t-item">Pleistocene Megafauna Atlas</span><span class="t-item">Open-Source Bioinformatics</span><span class="t-item">Canis Lineage Genomics</span>
+    <span class="t-item">Refugia · Conservation Genomics Platform</span><span class="t-item">Lacuna · Ancient DNA Toolkit</span><span class="t-item">Population Structure Analysis</span><span class="t-item">VCF · ADMIXTURE · FST · PCA</span><span class="t-item">Utah Wolf Corridor Mapping</span><span class="t-item">aDNA Damage Correction</span><span class="t-item">Haplotype Calling · Low-Coverage Assembly</span><span class="t-item">Pleistocene Megafauna Atlas</span><span class="t-item">Open-Source Bioinformatics</span><span class="t-item">Canis Lineage Genomics</span>
+  </div>
+</div>
+
+<div id="tools" class="deext-wrapper">
+
+  <div class="deext-manifesto">
+    <div>
+      <div class="m-label">What we build</div>
+      <h2 class="m-title">Open tools for<br>conservation<br><em>genomics</em></h2>
+    </div>
+    <div>
+      <p class="m-statement">Conservation organizations collect field samples, get back genomic data, and hit a wall. Most teams don't have the bioinformatics expertise to go further. We build tools that close that gap — and apply the same infrastructure to ancient DNA research.</p>
+      <div class="m-pillars">
+        <div class="m-pill"><span class="pill-dot"></span>Refugia — population genomics platform for conservation teams</div>
+        <div class="m-pill"><span class="pill-dot"></span>Lacuna — ancient DNA toolkit for Pleistocene and Holocene specimens</div>
+        <div class="m-pill"><span class="pill-dot"></span>Pleistocene Megafauna Atlas — interactive paleoecology reference</div>
+        <div class="m-pill"><span class="pill-dot"></span>Fully open-source, peer-reviewable, no proprietary gatekeeping</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="approach">
+    <div>
+      <div class="a-label">Approach</div>
+      <h3 class="a-title">Rigorous<br>science,<br><em>open</em><br>methods</h3>
+    </div>
+    <div class="a-steps">
+      <div class="a-step">
+        <span class="s-num">01</span>
+        <div><div class="s-title">Conservation Genomics Tooling</div><p class="s-desc">Refugia makes population structure analysis accessible to conservation teams who have genomic data but not bioinformatics capacity. Upload a VCF, get a plain-English report with ADMIXTURE, FST, and PCA — no command line required.</p></div>
+      </div>
+      <div class="a-step">
+        <span class="s-num">02</span>
+        <div><div class="s-title">Ancient DNA Pipeline Development</div><p class="s-desc">Lacuna handles the specific challenges of degraded fossil samples — damage pattern correction, low-coverage assembly, and haplotype calling from Pleistocene and Holocene specimens. Built for Canis lineages and North American megafauna, generalizing outward from there.</p></div>
+      </div>
+      <div class="a-step">
+        <span class="s-num">03</span>
+        <div><div class="s-title">De-extinction Research Programs</div><p class="s-desc">Six target species have been identified for future genomic research programs — Woolly Mammoth, Woolly Rhinoceros, Cave Lion, Quagga, Thylacine, and Short-Faced Bear. The tooling we're building now is the foundation these programs will run on. No active sequencing has begun; the science comes first.</p></div>
+      </div>
+      <div class="a-step">
+        <span class="s-num">04</span>
+        <div><div class="s-title">Open Publication, No Exceptions</div><p class="s-desc">Every pipeline, dataset, and result is published openly. We believe conservation science moves faster when it's shared, and that no single lab should hold a monopoly on the tools that make it possible.</p></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<section id="research" style="background:#fff">
+  <div class="sec-tag">Published tools</div>
+  <h2 class="sec-title">Open genomics<br>infrastructure for <em>conservation</em></h2>
+  <p class="sec-sub">Refugia and Lacuna form the core of our open-source platform. Wolf-specific pipelines live on RewildUtah.com.</p>
+  <div class="tools-grid">
+    <div class="tool-card">
+      <span class="t-chip amb">aDNA · De-extinction</span>
+      <h3>Lacuna</h3>
+      <p>An open-source toolkit for processing, aligning, and annotating ancient DNA sequences from Pleistocene and Holocene specimens, with a focus on Canis lineages and North American megafauna. Handles damage correction, low-coverage assembly, and haplotype calling from degraded fossil samples.</p>
+      <div class="tool-foot"><span class="t-meta">In development · 2025</span><a href="lacuna-coming-soon.html" class="t-link">Follow progress →</a></div>
+    </div>
+    <div class="tool-card">
+      <span class="t-chip">Conservation · GIS</span>
+      <h3>Utah Ecological Corridor Mapping</h3>
+      <p>Identifying viable wolf reintroduction corridors across Utah's public lands using landscape genomics, population viability analysis, and GIS-integrated habitat suitability modeling. Built to directly inform reintroduction policy and move beyond abstract advocacy into data-driven conservation planning.</p>
+      <div class="tool-foot"><span class="t-meta">In progress · 2025</span><a href="#" class="t-link">Follow progress →</a></div>
+    </div>
+    <div class="tool-card" style="border-color:rgba(59,92,42,0.18);background:rgba(59,92,42,0.03)">
+      <span class="t-chip amb">Paleoecology · Interactive</span>
+      <h3>Pleistocene Megafauna Atlas</h3>
+      <p>An interactive map of Pleistocene North American megafauna — 10 species, fossil site locations, historical range overlays, and a timeline from 14,000 BP to present. Includes trophic cascade modeling, rewilding feasibility scores by region, and ecological role data for each species. Click any fossil site to inspect the species in detail.</p>
+      <div class="tool-foot"><span class="t-meta">Live · 2025</span><a href="megafauna-atlas.html" class="t-link">Open Atlas →</a></div>
+    </div>
+  </div>
+  <p style="margin-top:20px;font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:0.3px">
+    Wolf gRNA Designer &amp; mtDNA Pipeline → <a href="https://rewildutah.com" style="color:var(--moss);text-decoration:none">RewildUtah.com ↗</a>
+  </p>
+</section>
+
+<!-- ── Refugia Section ── -->
+<div id="refugia" style="background:#fff;padding:88px 56px;border-top:1px solid rgba(59,92,42,0.07)">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;max-width:1200px;margin:0 auto">
+
+    <!-- Left: text -->
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <div style="width:20px;height:1px;background:#1D5A4A;opacity:0.5"></div>
+        <span style="font-family:'DM Mono',monospace;font-size:10px;color:#1D5A4A;letter-spacing:1.5px;text-transform:uppercase">Platform · Conservation genomics</span>
+      </div>
+      <h2 style="font-family:'Fraunces',serif;font-size:clamp(30px,3.5vw,44px);font-weight:300;letter-spacing:-1px;line-height:1.15;color:var(--ink);margin-bottom:18px">Your VCF file, turned into a<br><em style="font-style:italic;color:#1D5A4A">plain-English report</em></h2>
+      <p style="font-size:15px;color:var(--muted);line-height:1.75;font-weight:300;max-width:460px;margin-bottom:32px">Conservation organizations collect field samples, get back genomic data, and hit a wall — the analysis requires bioinformatics expertise most teams don't have. Refugia closes that gap. Upload a VCF, get a report you can act on.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:36px">
+        <span style="font-family:'DM Mono',monospace;font-size:9px;color:#1D5A4A;background:rgba(29,90,74,0.07);border:1px solid rgba(29,90,74,0.15);padding:5px 11px;border-radius:2px;letter-spacing:0.8px;text-transform:uppercase">Population structure</span>
+        <span style="font-family:'DM Mono',monospace;font-size:9px;color:#1D5A4A;background:rgba(29,90,74,0.07);border:1px solid rgba(29,90,74,0.15);padding:5px 11px;border-radius:2px;letter-spacing:0.8px;text-transform:uppercase">Genetic diversity</span>
+        <span style="font-family:'DM Mono',monospace;font-size:9px;color:#1D5A4A;background:rgba(29,90,74,0.07);border:1px solid rgba(29,90,74,0.15);padding:5px 11px;border-radius:2px;letter-spacing:0.8px;text-transform:uppercase">ADMIXTURE · FST · PCA</span>
+        <span style="font-family:'DM Mono',monospace;font-size:9px;color:#1D5A4A;background:rgba(29,90,74,0.07);border:1px solid rgba(29,90,74,0.15);padding:5px 11px;border-radius:2px;letter-spacing:0.8px;text-transform:uppercase">No command line</span>
+      </div>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+        <a href="platform.html" style="background:var(--ink);color:#fff;padding:13px 26px;border-radius:4px;font-size:13px;font-weight:500;text-decoration:none;display:inline-block;transition:all 0.2s" onmouseover="this.style.background='#1D5A4A'" onmouseout="this.style.background='var(--ink)'">Open Refugia →</a>
+        <a href="platform.html#how-it-works" style="font-size:13px;color:#1D5A4A;text-decoration:none;font-weight:400;border-bottom:1px solid rgba(29,90,74,0.25);padding-bottom:1px">See how it works</a>
+      </div>
+      <div style="margin-top:36px;padding-top:28px;border-top:1px solid rgba(59,92,42,0.08);display:flex;gap:36px">
+        <div><div style="font-family:'Fraunces',serif;font-size:22px;font-weight:300;color:var(--ink);letter-spacing:-0.5px">7</div><div style="font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:0.4px;font-family:'DM Mono',monospace">Analysis types</div></div>
+        <div><div style="font-family:'Fraunces',serif;font-size:22px;font-weight:300;color:var(--ink);letter-spacing:-0.5px">&lt;10m</div><div style="font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:0.4px;font-family:'DM Mono',monospace">Typical run time</div></div>
+        <div><div style="font-family:'Fraunces',serif;font-size:22px;font-weight:300;color:var(--ink);letter-spacing:-0.5px">Free</div><div style="font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:0.4px;font-family:'DM Mono',monospace">Starter tier</div></div>
+      </div>
+    </div>
+
+    <!-- Right: app chrome mock -->
+    <div style="display:flex;align-items:center;justify-content:center">
+      <div style="background:#eae6db;border-radius:10px;border:1px solid rgba(70,58,36,0.14);overflow:hidden;width:100%;max-width:520px;box-shadow:0 24px 64px rgba(20,16,8,0.1),0 0 0 1px rgba(70,58,36,0.06)">
+        <!-- Chrome bar -->
+        <div style="background:#f3f0e8;border-bottom:1px solid rgba(70,58,36,0.1);padding:12px 16px;display:flex;align-items:center;gap:8px">
+          <div style="width:11px;height:11px;border-radius:50%;background:#e87460;flex-shrink:0"></div>
+          <div style="width:11px;height:11px;border-radius:50%;background:#f5be4f;flex-shrink:0"></div>
+          <div style="width:11px;height:11px;border-radius:50%;background:#5bc46a;flex-shrink:0"></div>
+          <div style="flex:1;background:rgba(70,58,36,0.06);border:1px solid rgba(70,58,36,0.08);border-radius:4px;padding:5px 12px;font-family:'DM Mono',monospace;font-size:11px;color:#8c7d66;margin-left:8px">app.refugia.bio</div>
+        </div>
+        <!-- Chrome body -->
+        <div style="display:flex;height:340px">
+          <!-- Sidebar -->
+          <div style="width:140px;background:#f3f0e8;border-right:1px solid rgba(70,58,36,0.08);padding:14px 0;flex-shrink:0">
+            <div style="padding:0 14px 12px;border-bottom:1px solid rgba(70,58,36,0.07);margin-bottom:10px">
+              <div style="font-family:'Fraunces',serif;font-size:13px;font-weight:600;color:#1d5a2e;letter-spacing:-0.04em">Refugia</div>
+              <div style="font-size:8px;color:#b5a68d;letter-spacing:0.1em;text-transform:uppercase;margin-top:2px">by Rewild Genomics</div>
+            </div>
+            <div style="padding:5px 12px;font-size:11px;color:#1d5a2e;display:flex;align-items:center;gap:6px;margin:2px 8px;border-radius:5px;background:#e2f0e7;font-weight:500">◉ Dashboard</div>
+            <div style="padding:5px 12px;font-size:11px;color:#8c7d66;display:flex;align-items:center;gap:6px;margin:2px 8px;border-radius:5px">↑ New analysis</div>
+            <div style="padding:5px 12px;font-size:11px;color:#8c7d66;display:flex;align-items:center;gap:6px;margin:2px 8px;border-radius:5px">≡ Jobs</div>
+            <div style="padding:5px 12px;font-size:11px;color:#8c7d66;display:flex;align-items:center;gap:6px;margin:2px 8px;border-radius:5px">◈ Settings</div>
+          </div>
+          <!-- Main content -->
+          <div style="flex:1;padding:16px;overflow:hidden;background:#eae6db">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+              <div style="font-family:'Fraunces',serif;font-size:16px;color:#141008;letter-spacing:-0.03em;font-weight:500">Dashboard</div>
+              <div style="background:linear-gradient(to bottom,#2e8045,#1d5a2e);color:#fff;padding:5px 12px;border-radius:5px;font-size:11px">+ New analysis</div>
+            </div>
+            <!-- Metrics -->
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px">
+              <div style="background:#fff;border-radius:6px;border:0.5px solid rgba(70,58,36,0.08);padding:10px 12px">
+                <div style="font-size:8.5px;color:#8c7d66;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Populations</div>
+                <div style="font-family:'Fraunces',serif;font-size:22px;color:#141008;letter-spacing:-0.04em;font-weight:500">4</div>
+              </div>
+              <div style="background:#fff;border-radius:6px;border:0.5px solid rgba(70,58,36,0.08);padding:10px 12px">
+                <div style="font-size:8.5px;color:#8c7d66;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Samples</div>
+                <div style="font-family:'Fraunces',serif;font-size:22px;color:#141008;letter-spacing:-0.04em;font-weight:500">87</div>
+              </div>
+              <div style="background:#fff;border-radius:6px;border:0.5px solid rgba(70,58,36,0.08);padding:10px 12px">
+                <div style="font-size:8.5px;color:#8c7d66;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Fst mean</div>
+                <div style="font-family:'Fraunces',serif;font-size:22px;color:#141008;letter-spacing:-0.04em;font-weight:500">0.18</div>
+              </div>
+            </div>
+            <!-- Table -->
+            <div style="background:#fff;border-radius:6px;border:0.5px solid rgba(70,58,36,0.08);overflow:hidden">
+              <div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:0.5px solid rgba(70,58,36,0.06);font-size:10.5px;color:#4a3f30">
+                <span style="flex:1">Utah Wolf Pop A</span><span style="padding:3px 8px;border-radius:8px;font-size:9px;font-weight:500;background:#e2f0e7;color:#1d5a2e">Complete</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:0.5px solid rgba(70,58,36,0.06);font-size:10.5px;color:#4a3f30">
+                <span style="flex:1">Idaho Reference Panel</span><span style="padding:3px 8px;border-radius:8px;font-size:9px;font-weight:500;background:#e0ebf5;color:#14406e">Running</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:9px 12px;font-size:10.5px;color:#4a3f30">
+                <span style="flex:1">Yellowstone cohort '24</span><span style="padding:3px 8px;border-radius:8px;font-size:9px;font-weight:500;background:#fbefda;color:#6e4508">Queued</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="mission" class="mission-band">
+  <div class="mission-inner">
+    <div class="sec-tag">Our mission</div>
+    <h2 class="sec-title" style="max-width:780px;">Conservation genomics should be <em>open</em></h2>
+    <p class="sec-sub">Rewild Genomics builds the open-source genomic infrastructure that conservation teams need and can't access. The same tools that help endangered species today are the foundation for de-extinction research tomorrow. Rigorous work doesn't require a nine-figure budget — it requires the right questions and the willingness to publish everything.</p>
+    <div class="pillars">
+      <div class="pillar" data-reveal style="--delay:0ms"><div class="p-num">01</div><h4>Conservation Tooling</h4><p>Refugia and Lacuna bring population genomics and ancient DNA analysis to teams without institutional bioinformatics capacity.</p></div>
+      <div class="pillar" data-reveal style="--delay:80ms"><div class="p-num">02</div><h4>Genomic Infrastructure</h4><p>Open pipelines for CRISPR design, population genetics, and disease genomics — applicable to conservation and future de-extinction targets.</p></div>
+      <div class="pillar" data-reveal style="--delay:160ms"><div class="p-num">03</div><h4>Conservation Policy</h4><p>Translating genomic research into actionable support for reintroduction programs, habitat protection, and ecological restoration in the west.</p></div>
+      <div class="pillar" data-reveal style="--delay:240ms"><div class="p-num">04</div><h4>Radical Openness</h4><p>Every pipeline, dataset, and result is publicly available and peer-reviewable. No IP walls. No exclusivity.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- Research Context Section -->
+<div style="background:var(--cream);padding:0 56px 88px;">
+  <div style="border:1px solid rgba(59,92,42,0.1);border-radius:6px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;gap:0;">
+    <div style="position:relative;overflow:hidden;min-height:420px;">
+      <img src="lab-equipment.png" alt="Next-generation sequencing equipment" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;">
+      <div style="position:absolute;inset:0;background:linear-gradient(90deg,transparent 60%,rgba(247,243,236,0.08) 100%);pointer-events:none;"></div>
+    </div>
+    <div style="padding:56px 52px;display:flex;flex-direction:column;justify-content:center;background:#fff;">
+      <div class="sec-tag">The work</div>
+      <h2 class="sec-title" style="font-size:clamp(26px,2.8vw,38px);">Computational genomics,<br><em>open methods</em></h2>
+      <p style="font-size:14px;color:var(--muted);line-height:1.8;font-weight:300;margin-bottom:32px;">Rewild Genomics is a computational research initiative. We work with publicly available genomic data from NCBI and GenBank — building the pipelines, tools, and infrastructure that conservation genomics and de-extinction science need. No proprietary data. No IP walls. Every method is published and peer-reviewable.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--moss);background:rgba(59,92,42,0.07);border:1px solid rgba(59,92,42,0.14);padding:5px 11px;border-radius:2px;letter-spacing:0.8px;text-transform:uppercase;">NCBI / GenBank</span>
+        <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--moss);background:rgba(59,92,42,0.07);border:1px solid rgba(59,92,42,0.14);padding:5px 11px;border-radius:2px;letter-spacing:0.8px;text-transform:uppercase;">aDNA analysis</span>
+        <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--moss);background:rgba(59,92,42,0.07);border:1px solid rgba(59,92,42,0.14);padding:5px 11px;border-radius:2px;letter-spacing:0.8px;text-transform:uppercase;">Open pipelines</span>
+        <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--moss);background:rgba(59,92,42,0.07);border:1px solid rgba(59,92,42,0.14);padding:5px 11px;border-radius:2px;letter-spacing:0.8px;text-transform:uppercase;">Peer-reviewable</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Lacuna Section ── -->
+<div id="lacuna" style="background:var(--cream);padding:0 56px 88px;">
+  <div style="border:1px solid rgba(200,132,42,0.18);border-radius:6px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;gap:0;background:#fff;">
+
+    <!-- Left: text -->
+    <div style="padding:56px 52px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <div style="width:20px;height:1px;background:var(--amber);opacity:0.6"></div>
+        <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--amber);letter-spacing:1.5px;text-transform:uppercase">New · aDNA toolkit</span>
+      </div>
+      <h2 style="font-family:'Fraunces',serif;font-size:clamp(28px,3vw,42px);font-weight:300;letter-spacing:-1px;line-height:1.15;color:var(--ink);margin-bottom:16px">Ancient DNA.<br><em style="font-style:italic;color:var(--amber)">Open pipeline.</em></h2>
+      <p style="font-size:14px;color:var(--muted);line-height:1.8;font-weight:300;max-width:420px;margin-bottom:28px">Lacuna is an open-source toolkit for processing, aligning, and annotating ancient DNA sequences from Pleistocene and Holocene specimens, with a focus on Canis lineages and North American megafauna. Handles damage correction, low-coverage assembly, and haplotype calling from degraded fossil samples.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px">
+        <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--amber);background:rgba(200,132,42,0.07);border:1px solid rgba(200,132,42,0.18);padding:5px 11px;border-radius:2px;letter-spacing:0.8px;text-transform:uppercase">Damage correction</span>
+        <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--amber);background:rgba(200,132,42,0.07);border:1px solid rgba(200,132,42,0.18);padding:5px 11px;border-radius:2px;letter-spacing:0.8px;text-transform:uppercase">Low-coverage assembly</span>
+        <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--amber);background:rgba(200,132,42,0.07);border:1px solid rgba(200,132,42,0.18);padding:5px 11px;border-radius:2px;letter-spacing:0.8px;text-transform:uppercase">Haplotype calling</span>
+      </div>
+      <div>
+        <a href="lacuna-coming-soon.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;padding:13px 24px;border-radius:4px;font-size:13px;font-weight:500;text-decoration:none;transition:all 0.2s" onmouseover="this.style.background='#C8842A'" onmouseout="this.style.background='var(--ink)'">
+          Learn more about Lacuna
+          <span style="font-size:11px;background:rgba(255,255,255,0.15);padding:3px 8px;border-radius:2px;font-family:'DM Mono',monospace;letter-spacing:0.5px">Coming soon</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Right: visual -->
+    <div style="background:linear-gradient(135deg,#1a1612 0%,#2c2318 100%);display:flex;align-items:center;justify-content:center;padding:48px;position:relative;overflow:hidden;">
+      <!-- subtle grid bg -->
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(200,132,42,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(200,132,42,0.04) 1px,transparent 1px);background-size:28px 28px;pointer-events:none"></div>
+      <!-- mock card stack -->
+      <div style="position:relative;z-index:1;width:100%;max-width:340px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:rgba(200,132,42,0.5);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Recent · De-extinction genomics</div>
+        <!-- Paper card 1 -->
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(200,132,42,0.15);border-radius:4px;padding:14px 16px;backdrop-filter:blur(4px)">
+          <div style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(200,132,42,0.6);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Nature · 2024 · aDNA methods</div>
+          <div style="font-family:'Fraunces',serif;font-size:13px;color:rgba(255,255,255,0.82);letter-spacing:-0.2px;line-height:1.4">Ancient genome recovery from Pleistocene permafrost specimens</div>
+          <div style="margin-top:8px;display:flex;gap:6px">
+            <span style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(181,207,156,0.45);background:rgba(59,92,42,0.15);border:1px solid rgba(59,92,42,0.2);padding:3px 7px;border-radius:2px;letter-spacing:0.5px">permafrost</span>
+            <span style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(181,207,156,0.45);background:rgba(59,92,42,0.15);border:1px solid rgba(59,92,42,0.2);padding:3px 7px;border-radius:2px;letter-spacing:0.5px">aDNA</span>
+          </div>
+        </div>
+        <!-- Paper card 2 -->
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(200,132,42,0.15);border-radius:4px;padding:14px 16px;backdrop-filter:blur(4px)">
+          <div style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(200,132,42,0.6);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Cell · 2024 · CRISPR design</div>
+          <div style="font-family:'Fraunces',serif;font-size:13px;color:rgba(255,255,255,0.82);letter-spacing:-0.2px;line-height:1.4">High-fidelity trait introgression via base editing in large mammal proxies</div>
+          <div style="margin-top:8px;display:flex;gap:6px">
+            <span style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(181,207,156,0.45);background:rgba(59,92,42,0.15);border:1px solid rgba(59,92,42,0.2);padding:3px 7px;border-radius:2px;letter-spacing:0.5px">CRISPR</span>
+            <span style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(181,207,156,0.45);background:rgba(59,92,42,0.15);border:1px solid rgba(59,92,42,0.2);padding:3px 7px;border-radius:2px;letter-spacing:0.5px">base editing</span>
+          </div>
+        </div>
+        <!-- Paper card 3 muted -->
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:14px 16px;opacity:0.5">
+          <div style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(200,132,42,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Science · 2024 · Population genomics</div>
+          <div style="font-family:'Fraunces',serif;font-size:13px;color:rgba(255,255,255,0.6);letter-spacing:-0.2px;line-height:1.4">Bottleneck signatures in Late Pleistocene megafauna collapse</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="conservation" class="xlink-section">
+  <div class="crosslink">
+    <div class="cl-text">
+      <div class="sec-tag">Conservation partner</div>
+      <h2 class="sec-title">RewildUtah<br><em>.com</em></h2>
+      <p class="sec-sub">Our sister initiative building public and policy support for wolf reintroduction in Utah. Features our wolf genomics tools, published research, and educational resources on historical wolf territory in the Great Basin.</p>
+      <a href="https://rewildutah.com" class="btn-bark">Visit RewildUtah.com ↗</a>
+    </div>
+    <div class="cl-visual">
+      <div style="position:relative;border-radius:6px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.18),0 0 0 1px rgba(59,92,42,0.12);max-width:480px;">
+        <img src="wolf-pack.png" alt="Wolf pack in mountain landscape" style="width:100%;height:340px;object-fit:cover;object-position:center;display:block;">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(8,10,7,0.55) 100%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:16px;left:16px;font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,0.6);letter-spacing:1.5px;text-transform:uppercase;background:rgba(8,10,7,0.5);padding:5px 10px;border-radius:2px;backdrop-filter:blur(4px);">Canis lupus · Great Basin</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="research-programs" style="background:var(--void);padding:96px 56px">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1200px">
+    <div>
+      <div class="sec-tag" style="color:var(--amber)"><span style="background:var(--amber);opacity:0.5;width:20px;height:1px;display:inline-block;margin-right:10px;vertical-align:middle"></span>De-extinction research</div>
+      <h2 class="sec-title" style="color:#fff;margin-bottom:20px">Bringing lost species<br><em style="color:var(--amber)">back into focus</em></h2>
+      <p style="font-size:15px;color:rgba(255,255,255,0.42);line-height:1.8;font-weight:300;margin-bottom:16px">De-extinction is the project of recovering extinct species through genomic reconstruction — sequencing ancient DNA, identifying the genetic variants that defined a species, and using CRISPR-based editing to reintroduce those traits into a living relative.</p>
+      <p style="font-size:15px;color:rgba(255,255,255,0.42);line-height:1.8;font-weight:300;margin-bottom:40px">Rewild Genomics takes an open-science approach. Every pipeline, dataset, and analysis is publicly available and peer-reviewable. We work exclusively with publicly available genomic data from NCBI and GenBank — no proprietary samples, no IP walls. The same tools we build for conservation genomics today are the infrastructure these programs will run on when the science is ready.</p>
+      <a href="de-extinction.html" style="display:inline-flex;align-items:center;gap:10px;background:rgba(200,132,42,0.12);border:1px solid rgba(200,132,42,0.28);color:var(--amber);padding:14px 26px;border-radius:4px;font-size:13px;font-weight:500;text-decoration:none;letter-spacing:0.2px;transition:all 0.2s" onmouseover="this.style.background='rgba(200,132,42,0.2)';this.style.borderColor='rgba(200,132,42,0.5)'" onmouseout="this.style.background='rgba(200,132,42,0.12)';this.style.borderColor='rgba(200,132,42,0.28)'">
+        View the species
+        <span style="font-size:14px">→</span>
+      </a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(200,132,42,0.12);border-radius:4px;padding:20px 24px">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:rgba(200,132,42,0.5);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Approach</div>
+        <div style="font-family:'Fraunces',serif;font-size:15px;color:rgba(255,255,255,0.75);letter-spacing:-0.2px;line-height:1.5">Ancient DNA sequencing, comparative genomics, and CRISPR-based trait introgression — all methods published and reproducible.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(200,132,42,0.12);border-radius:4px;padding:20px 24px">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:rgba(200,132,42,0.5);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Data sources</div>
+        <div style="font-family:'Fraunces',serif;font-size:15px;color:rgba(255,255,255,0.75);letter-spacing:-0.2px;line-height:1.5">Permafrost specimens, museum collections, and fossil deposits — all accessed through NCBI and GenBank.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(200,132,42,0.12);border-radius:4px;padding:20px 24px">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:rgba(200,132,42,0.5);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Species programs</div>
+        <div style="font-family:'Fraunces',serif;font-size:15px;color:rgba(255,255,255,0.75);letter-spacing:-0.2px;line-height:1.5">14 target species across Pleistocene megafauna and historical extinctions, from woolly mammoth to thylacine.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="sec-tag">About</div>
+  <h2 class="sec-title">Student-led,<br><em>research-driven</em></h2>
+  <p class="sec-sub">Rewild Genomics was founded by Andrew Hansen with the goal of doing real, publishable conservation and de-extinction genomics research. We build open tools first, then use them.</p>
+  <div class="team-grid">
+    <div class="team-card" data-reveal style="--delay:0ms"><div class="avatar">AH</div><h4>Andrew Hansen</h4><div class="role">Founder</div></div>
+    <div class="team-card" data-reveal style="--delay:80ms" style="border-style:dashed;background:rgba(59,92,42,0.02)"><div class="avatar" style="background:rgba(59,92,42,0.05);color:var(--sage);font-size:24px">+</div><h4>Collaborators welcome</h4><div class="role">Research · Bioinformatics · Field</div></div>
+    <div class="team-card" data-reveal style="--delay:160ms" style="border-style:dashed;background:rgba(107,76,42,0.02)"><div class="avatar" style="background:rgba(107,76,42,0.05);color:var(--bark);font-size:24px">+</div><h4>Advisors welcome</h4><div class="role">Faculty · Industry · Conservation</div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="seq-ticker-band" aria-hidden="true">
+    <div class="seq-ticker-inner" id="seq-ticker-inner"></div>
+  </div>
+  <div style="padding:36px 56px 0;width:100%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px">
+    <span class="f-logo">Rewild Genomics</span>
+    <ul class="f-links">
+      <li><a href="#tools">Tools</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#mission">Mission</a></li>
+      <li><a href="#research-programs">De-extinction</a></li>
+      <li><a href="megafauna-atlas.html">Atlas</a></li>
+      <li><a href="platform.html">Refugia</a></li>
+      <li><a href="https://rewildutah.com">RewildUtah.com</a></li>
+      <li><a href="#about">Contact</a></li>
+    </ul>
+    <span class="f-note">Rewild Genomics · Open Science · Utah</span>
+  </div>
+</footer>
+
+<script>
+// ── 1. Nav scroll state ──
+(function(){
+  const nav = document.querySelector('nav');
+  function tick(){ nav.classList.toggle('scrolled', window.scrollY > 60); }
+  window.addEventListener('scroll', tick, {passive:true});
+  tick();
+})();
+
+// ── 2. Counter animation ──
+function animateCounter(el){
+  if(el._counted) return;
+  el._counted = true;
+  const target = parseInt(el.dataset.count, 10);
+  const suffix = el.dataset.suffix || '';
+  const duration = 2200;
+  const start = performance.now();
+  (function step(now){
+    const p = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(eased * target) + suffix;
+    if(p < 1) requestAnimationFrame(step);
+  })(start);
+}
+
+// ── 3. Unified scroll reveal ──
+(function(){
+  document.querySelectorAll('.sp-cell').forEach((el, i) => {
+    el.setAttribute('data-reveal', '');
+    el.style.setProperty('--delay', (i * 80) + 'ms');
+  });
+  document.querySelectorAll('.tool-card').forEach((el, i) => {
+    el.setAttribute('data-reveal', '');
+    el.style.setProperty('--delay', (i * 80) + 'ms');
+  });
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(!entry.isIntersecting) return;
+      entry.target.classList.add('is-visible');
+      entry.target.querySelectorAll('[data-count]').forEach(animateCounter);
+      obs.unobserve(entry.target);
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('[data-reveal]').forEach(el => obs.observe(el));
+})();
+
+// ── 4. Genome sequence ticker ──
+(function(){
+  const ticker = document.getElementById('seq-ticker-inner');
+  if (!ticker) return;
+
+  // Real-ish sequence fragments (actual codon patterns)
+  const frags = [
+    'ATCGGAATCGGATCAATGCCTAA',
+    'GCTAGCTAGCTAGGCAATCGGAT',
+    'TTAGGGCTATAGCGATCGATCGAT',
+    'AATCGGCAATGCTAGCGATTCCA',
+    'CATGCGATCGATCGAATTCGATCA',
+    'GGATCATGCTAGCTAGATCGATCG',
+    'TCGATCGATCGAATCGGCATGCAT',
+    'ATGCATGCATCGGATCAATGCGAT',
+    'CGATTCGATCGATCGAATCGGCAT',
+    'GATCGATCGAATGCTAGCTAGCTA',
+    'AATCGGAATCGGATCATGCATGCA',
+    'GCTAGATCGATCGATTCGATCGAA',
+  ];
+
+  // Render with subtle amber highlights on specific bases
+  function highlightSeq(seq) {
+    return seq.split('').map(b => {
+      if (b === 'A') return `<span class="seq-hi">${b}</span>`;
+      return b;
+    }).join('');
+  }
+
+  // Double for seamless loop
+  const all = [...frags, ...frags];
+  all.forEach(f => {
+    const span = document.createElement('span');
+    span.className = 'seq-frag';
+    span.innerHTML = highlightSeq(f);
+    ticker.appendChild(span);
+  });
+})();
+
+// ── 6. Species card hover glow (mouse-tracking) ──
+(function(){
+  document.querySelectorAll('.sp-cell').forEach(cell => {
+    cell.addEventListener('mousemove', e => {
+      const rect = cell.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1) + '%';
+      const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1) + '%';
+      cell.style.setProperty('--glow-x', x);
+      cell.style.setProperty('--glow-y', y);
+    });
+  });
+})();
+// ── 7. Hero headline scramble ──
+(function(){
+  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  const el = document.getElementById('hero-headline');
+  if(!el) return;
+
+  const CHARS = 'CGAT';
+  const DURATION = 1800;
+  const SETTLE_RATE = 0.55;
+  const SCRAMBLE_FPS = 30;
+
+  // Collect text nodes, skipping <em> (keep it intact visually)
+  function getSegments(node) {
+    const segs = [];
+    node.childNodes.forEach(n => {
+      if(n.nodeType === Node.TEXT_NODE) {
+        segs.push({ type: 'text', node: n, original: n.textContent });
+      } else if(n.nodeName === 'EM') {
+        // Scramble the em text too but re-wrap it
+        segs.push({ type: 'em', node: n, original: n.textContent });
+      } else if(n.nodeName === 'BR') {
+        segs.push({ type: 'br' });
+      }
+    });
+    return segs;
+  }
+
+  const segs = getSegments(el);
+  const start = performance.now();
+  let lastScramble = 0;
+  let scrambleCache = {};
+
+  function rand(str) {
+    return str.split('').map(c => {
+      if(c === ' ' || c === '\n') return c;
+      return CHARS[Math.floor(Math.random() * CHARS.length)];
+    }).join('');
+  }
+
+  function tick(now) {
+    const p = Math.min((now - start) / DURATION, 1);
+    const shouldRefresh = (now - lastScramble) >= (1000 / SCRAMBLE_FPS);
+    if(shouldRefresh) lastScramble = now;
+    segs.forEach((s, i) => {
+      if(s.type === 'br') return;
+      const settleP = Math.max(0, (p - (1 - SETTLE_RATE)) / SETTLE_RATE);
+      const lockLen = Math.floor(s.original.length * settleP);
+      const locked = s.original.slice(0, lockLen);
+      const tail = s.original.slice(lockLen);
+      if(shouldRefresh || !scrambleCache[i]) {
+        scrambleCache[i] = rand(tail);
+      }
+      const full = locked + scrambleCache[i];
+      if(s.type === 'text') s.node.textContent = full;
+      else if(s.type === 'em') s.node.textContent = full;
+    });
+    if(p < 1) requestAnimationFrame(tick);
+    else {
+      // Restore exactly
+      segs.forEach(s => {
+        if(s.type === 'text') s.node.textContent = s.original;
+        else if(s.type === 'em') s.node.textContent = s.original;
+      });
+    }
+  }
+
+  requestAnimationFrame(tick);
+})();
+
+// ── 8. Mobile nav hamburger ──
+(function(){
+  const btn = document.getElementById('nav-hamburger');
+  const drawer = document.getElementById('nav-drawer');
+  if(!btn || !drawer) return;
+  function toggle(open){
+    btn.classList.toggle('is-open', open);
+    drawer.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', open);
+    drawer.setAttribute('aria-hidden', !open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  btn.addEventListener('click', () => toggle(!btn.classList.contains('is-open')));
+  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => toggle(false)));
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') toggle(false); });
+})();
+</script>
+</html>
